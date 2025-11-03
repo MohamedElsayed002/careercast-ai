@@ -14,9 +14,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useTRPC } from "@/trpc/client"
+import { useQuery } from "@tanstack/react-query"
 
 const Header = () => {
-
+    const trpc = useTRPC()
+    const { data: user } = useQuery(trpc.getUser.queryOptions())
     const { data } = authClient.useSession()
     const { hasActiveSubscription, isLoading } = useHasActiveSubscription()
     const userName = data?.user?.name || data?.user?.email?.split('@')[0] || 'User'
@@ -54,7 +57,7 @@ const Header = () => {
                                             </Avatar>
                                             <div className="hidden md:block">
                                                 <p className="text-sm font-medium text-white">{userName}</p>
-                                                {hasActiveSubscription && !isLoading && (
+                                                {user?.isPro && hasActiveSubscription && !isLoading && (
                                                     <div className="flex items-center gap-1 mt-0.5">
                                                         <Crown className="w-3 h-3 text-yellow-300" />
                                                         <span className="text-xs text-white/80">Pro Member</span>
@@ -67,7 +70,7 @@ const Header = () => {
                                         <DropdownMenuLabel>
                                             <Link href='/user'>My account</Link>
                                         </DropdownMenuLabel>
-                                        {!hasActiveSubscription && !isLoading && (
+                                        { !user?.isPro && !isLoading && (
                                             <DropdownMenuItem>
                                                 <h1
                                                     onClick={() => authClient.checkout({ slug: "pro" })}
@@ -78,7 +81,7 @@ const Header = () => {
                                             </DropdownMenuItem>
                                         )}
                                         {
-                                            hasActiveSubscription && !isLoading && (
+                                            user?.isPro && hasActiveSubscription && !isLoading && (
                                                 <DropdownMenuItem>
                                                     <h1
                                                         onClick={() => authClient.customer.portal()}
