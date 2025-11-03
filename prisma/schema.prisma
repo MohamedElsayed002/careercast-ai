@@ -16,18 +16,25 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now()) @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  podcasts      Podcast[]
-  trialsUsed    Int       @default(0)
-  isPro         Boolean   @default(false)
+  id                 String    @id
+  name               String
+  email              String
+  emailVerified      Boolean   @default(false)
+  image              String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @default(now()) @updatedAt
+  sessions           Session[]
+  accounts           Account[]
+  podcasts           Podcast[]
+  trialsUsed         Int       @default(0)
+  
+  // Subscription fields
+  isPro              Boolean   @default(false)
+  subscriptionId     String?   // Polar subscription ID
+  subscriptionStatus String?   // active, trialing, canceled, past_due, etc.
+  subscriptionEndsAt DateTime? // When subscription/trial ends
+  customerId         String?   // Polar customer ID
+  lastPaymentAt      DateTime? // Track last successful payment
 
   @@unique([email])
   @@map("user")

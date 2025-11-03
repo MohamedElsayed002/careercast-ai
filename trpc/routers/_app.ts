@@ -26,6 +26,7 @@ export const appRouter = createTRPCRouter({
         },
         select: {
           name: true,
+          isPro: true,
           podcasts: {
             orderBy: { createdAt: 'desc' },
             select: {
@@ -42,7 +43,7 @@ export const appRouter = createTRPCRouter({
           }
         }
       })
-      
+
       return user
     }),
   generateImage: premiumProcedure
