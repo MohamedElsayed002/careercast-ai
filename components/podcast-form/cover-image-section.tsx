@@ -68,7 +68,7 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
                 <CardHeader>
                     <CardTitle className="text-2xl">Cover Image</CardTitle>
                     <CardDescription>
-                        Upload a cover image for your podcast (optional)
+                        Upload a cover image for your podcast (required)
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -103,16 +103,18 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
                             <div className="flex gap-2">
                                 <Input
                                     type='text'
-                                    placeholder="Describe the image you want to generate..."
+                                    placeholder="Paused :)"
                                     value={imagePrompt}
                                     onChange={(e) => setImagePrompt(e.target.value)}
                                     className="flex-1"
                                     // disabled={!hasActiveSubscription}
+                                    disabled={true}
                                 />
                                 <Button
                                     type="button"
                                     onClick={handleGenerateImage}
-                                    disabled={mutate.isPending || !imagePrompt.trim()}
+                                    // disabled={mutate.isPending || !imagePrompt.trim()}
+                                    disabled={true}
                                 >
                                     {mutate.isPending ? (
                                         <>

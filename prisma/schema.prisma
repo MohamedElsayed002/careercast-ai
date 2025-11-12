@@ -90,6 +90,7 @@ model Podcast {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   message   String
+  title     String?
   audioUrl  String
   audioId   String?
   pdfUrl    String

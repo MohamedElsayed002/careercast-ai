@@ -3,8 +3,9 @@ import { z } from 'zod'
 export const formSchema = z.object({
         title: z.string().min(3, "Title must be at least 3 characters").max(100, "Title must be less than 100 characters"),
         description: z.string().min(10, "Description must be at least 10 characters").max(1000, "Description must be less than 1000 characters"),
-        voice: z.string().min(1, "Please select a voice"),
-        image: z.string().optional(),
+        voice1: z.string().min(1, "Please select the first voice"),
+        voice2: z.string().min(1, "Please select the second voice"),
+        image: z.string(),
 })
 
 

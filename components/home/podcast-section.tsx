@@ -13,7 +13,8 @@ import { PodcastsLoader } from "../loader"
 export const PodcastSection = () => {
 
     const trpc = useTRPC()
-    const { isLoading, data: recentPodcasts } = useQuery(trpc.getAllPodcast.queryOptions())
+    const { isLoading, data: recentPodcasts } = useQuery(trpc.getHomePodcast.queryOptions())
+    
     if (isLoading) {
         return (
             <div className="bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900">
@@ -42,7 +43,9 @@ export const PodcastSection = () => {
         )
     }
 
+    if(recentPodcasts && recentPodcasts.length === 0) return
     const totalPodcasts = recentPodcasts!.length
+
     return (
         <div className="bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900">
             <section id="podcasts" className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
@@ -76,7 +79,16 @@ export const PodcastSection = () => {
                             </div>
                         )}
                         {totalPodcasts > 0 ? (
-                            <PodcastList podcasts={recentPodcasts ?? []} />
+                            <PodcastList
+                                podcasts={
+                                    recentPodcasts
+                                        ? recentPodcasts.map((p) => ({
+                                            ...p,
+                                            title: p.title || '',
+                                        }))
+                                        : []
+                                }
+                            />
                         ) : (
                             <div className="text-center py-20">
                                 <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 mb-6">

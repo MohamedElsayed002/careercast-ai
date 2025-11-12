@@ -44,7 +44,7 @@ export const GeneratedContentSection = ({ audioURL, pdfURL }: GeneratedContentSe
     }
 
     return (
-        <div className="mt-8 space-y-6">
+        <div className="mt-8 space-y-6 py-5">
             <Card className="shadow-lg border-2 border-primary/20">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-2xl">

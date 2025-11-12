@@ -14,11 +14,13 @@ import {
     Mic,
     Music2,
     Loader2,
+    AlertCircle,
 } from "lucide-react"
 import { formSchema } from "@/types"
 import { PodcastDetailsSection } from "./podcast-form/podcast-details-section"
 import { CoverImageSection } from "./podcast-form/cover-image-section"
 import { GeneratedContentSection } from "./podcast-form/generated-content-section"
+import Header from "./header"
 
 
 
@@ -36,7 +38,8 @@ export const CreatePodcastForm = () => {
         defaultValues: {
             title: '',
             description: '',
-            voice: '',
+            voice1: '',
+            voice2: '',
             image: '',
         }
     })
@@ -60,12 +63,16 @@ export const CreatePodcastForm = () => {
     }))
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // console.log(values)
-        mutate.mutate({ message: values.description, voice: values.voice, image: values.image })
+        if(!values.image) {
+            toast.error('Image is required')
+            return
+        }
+        mutate.mutate({ title: values.title,message: values.description, voice1: values.voice1, voice2: values.voice2, image: values.image })
     }
 
     return (
         <div className='bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900'>
+            <Header/>
             <div className='w-full max-w-4xl mx-auto px-4 sm:px-6'>
                 {/* Header Section */}
                 <div className="text-center mb-8">
@@ -74,7 +81,7 @@ export const CreatePodcastForm = () => {
                         <h1 className="text-4xl font-bold text-foreground">Create Your Podcast</h1>
                     </div>
                     <p className="text-muted-foreground text-lg">
-                        Transform your ideas into professional podcasts with AI-powered voices
+                        Create realistic debate podcasts between two AI voices discussing your topic
                     </p>
                 </div>
 
@@ -106,7 +113,10 @@ export const CreatePodcastForm = () => {
                         </div>
                     </form>
                 </Form>
-
+                <h1 className='flex gap-2 pb-4'>
+                    <AlertCircle/>
+                    I reduced the audio duration and image quality because each time cost me 0.20$ 
+                </h1>
                 <GeneratedContentSection audioURL={data.audioURL} pdfURL={data.pdfURL} />
             </div>
         </div>

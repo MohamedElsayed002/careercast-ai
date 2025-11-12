@@ -2,6 +2,7 @@
 import { PricingSection } from "./pricing-section"
 import { HeroSection } from "./hero-section"
 import { PodcastSection } from "./podcast-section"
+import { DemoVideoSection } from "./demo-video-section"
 
 
 
@@ -11,10 +12,16 @@ export function HomePage() {
       {/* Hero Section */}
       <HeroSection />
 
-      {/* Podcasts Section */}
-      <PodcastSection/>
+      {/* Demo Video Section */}
+      <DemoVideoSection
+        youtubeUrl={process.env.NEXT_PUBLIC_DEMO_VIDEO_URL}
+        videoId={process.env.NEXT_PUBLIC_DEMO_VIDEO_ID}
+      />
 
-                  {/* Pricing Section */}
+      {/* Podcasts Section */}
+      <PodcastSection />
+
+      {/* Pricing Section */}
       <PricingSection />
 
 

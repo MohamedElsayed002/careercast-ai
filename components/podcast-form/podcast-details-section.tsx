@@ -35,7 +35,8 @@ interface PodcastDetailsSectionProps {
 }
 
 export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
-    const voice = form.watch('voice')
+    const voice1 = form.watch('voice1')
+    const voice2 = form.watch('voice2')
 
     return (
         <Card className="shadow-lg border-2">
@@ -45,7 +46,7 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                     Podcast Details
                 </CardTitle>
                 <CardDescription>
-                    Fill in the details below to generate your podcast
+                    Fill in the details below to generate your debate podcast
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -75,13 +76,13 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                         <FormItem>
                             <FormLabel className="text-base font-semibold">Description</FormLabel>
                             <FormDescription>
-                                Describe what your podcast is about (10-1000 characters)
+                                Describe the debate topic for your podcast (10-1000 characters)
                             </FormDescription>
                             <FormControl>
                                 <Textarea
                                     rows={6}
                                     className="resize-none focus:ring-2 focus:ring-primary"
-                                    placeholder="Write a detailed description for your podcast content..."
+                                    placeholder="Write a detailed description for your debate topic..."
                                     {...field}
                                 />
                             </FormControl>
@@ -89,38 +90,73 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                         </FormItem>
                     )}
                 />
-                <FormField
-                    control={form.control}
-                    name="voice"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel className="text-base font-semibold">AI Voice</FormLabel>
-                            <FormDescription>
-                                Select the perfect voice for your podcast
-                            </FormDescription>
-                            <FormControl>
-                                <Select onValueChange={field.onChange} value={field.value}>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Choose a voice..." />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {voices.map((voice) => (
-                                            <SelectItem key={voice.value} value={voice.value}>
-                                                <div className="flex flex-col">
-                                                    <span className="font-medium">{voice.label}</span>
-                                                    <span className="text-xs text-muted-foreground">{voice.description}</span>
-                                                </div>
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                {voice && (
-                    <audio src={`/${voice}.mp3`} autoPlay className='hidden' />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="voice1"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-base font-semibold">Speaker 1 Voice</FormLabel>
+                                <FormDescription>
+                                    Select the voice for the first debater
+                                </FormDescription>
+                                <FormControl>
+                                    <Select onValueChange={field.onChange} value={field.value}>
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Choose voice 1..." />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {voices.map((voice) => (
+                                                <SelectItem key={voice.value} value={voice.value} disabled={voice.value === voice2}>
+                                                    <div className="flex flex-col">
+                                                        <span className="font-medium">{voice.label}</span>
+                                                        <span className="text-xs text-muted-foreground">{voice.description}</span>
+                                                    </div>
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="voice2"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-base font-semibold">Speaker 2 Voice</FormLabel>
+                                <FormDescription>
+                                    Select the voice for the second debater
+                                </FormDescription>
+                                <FormControl>
+                                    <Select onValueChange={field.onChange} value={field.value}>
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Choose voice 2..." />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {voices.map((voice) => (
+                                                <SelectItem key={voice.value} value={voice.value} disabled={voice.value === voice1}>
+                                                    <div className="flex flex-col">
+                                                        <span className="font-medium">{voice.label}</span>
+                                                        <span className="text-xs text-muted-foreground">{voice.description}</span>
+                                                    </div>
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+                {voice1 && (
+                    <audio src={`/${voice1}.mp3`} autoPlay className='hidden' />
+                )}
+                {voice2 && (
+                    <audio src={`/${voice2}.mp3`} autoPlay className='hidden' />
                 )}
             </CardContent>
         </Card>

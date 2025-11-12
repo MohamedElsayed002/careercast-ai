@@ -1,7 +1,6 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
@@ -64,36 +63,6 @@ export function LoginForm() {
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)}>
                             <div className="grid gap-6">
-                                <div className="flex flex-col gap-4">
-                                    <Button
-                                        variant='outline'
-                                        className="w-full"
-                                        type='button'
-                                        disabled={isPending}
-                                    >
-                                        <Image
-                                            src="/logo/github.svg"
-                                            width={20}
-                                            height={20}
-                                            alt='Github'
-                                        />
-                                        Continue with Github
-                                    </Button>
-                                    <Button
-                                        variant='outline'
-                                        className="w-full"
-                                        type='button'
-                                        disabled={isPending}
-                                    >
-                                        <Image 
-                                            src='/logo/google.svg'
-                                            width={20}
-                                            height={20}
-                                            alt='Google'
-                                        />
-                                        Continue with Google
-                                    </Button>
-                                </div>
                                 <div className="grid gap-6">
                                     <FormField
                                         control={form.control}

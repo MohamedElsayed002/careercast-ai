@@ -11,6 +11,7 @@ type PodcastItem = {
     createdAt: string;
     userId: string;
     message: string;
+    title: string;
     audioUrl: string;
     audioId: string | null;
     pdfUrl: string;
@@ -95,7 +96,7 @@ export function PodcastList(props: { podcasts: PodcastItem[] }) {
                                     </div>
                                     <div className="absolute bottom-4 left-4 right-4">
                                         <CardTitle className="text-lg leading-6 line-clamp-2 font-bold text-white drop-shadow-lg">
-                                            {p.message}
+                                            {p.title}
                                         </CardTitle>
                                     </div>
                                 </div>
