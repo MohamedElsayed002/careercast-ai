@@ -29,6 +29,9 @@ import {
 import { Sparkles } from "lucide-react"
 import { voices } from "@/lib/utils"
 import { formSchema } from "@/types"
+import { useTRPC } from "@/trpc/client"
+import { useQuery } from "@tanstack/react-query"
+import Link from "next/link"
 
 interface PodcastDetailsSectionProps {
     form: UseFormReturn<z.infer<typeof formSchema>>
@@ -37,6 +40,10 @@ interface PodcastDetailsSectionProps {
 export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
     const voice1 = form.watch('voice1')
     const voice2 = form.watch('voice2')
+
+    const trpc = useTRPC()
+    const { data: credentials } = useQuery(trpc.getCredential.queryOptions(undefined))
+
 
     return (
         <Card className="shadow-lg border-2">
@@ -85,6 +92,73 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                                     placeholder="Write a detailed description for your debate topic..."
                                     {...field}
                                 />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name='credential'
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="text-base font-semibold">
+                                Credentials (API Key)
+                            </FormLabel>
+                            <FormDescription>
+                                <p>Select the API credential to be used for generating the podcast</p>
+                                <p>
+                                    Don&apos;t have any credentials?{' '}
+                                    <Link href="/user" className="text-primary underline">
+                                        Add your credentials here.
+                                    </Link>
+                                </p>
+                            </FormDescription>
+
+                            <FormControl>
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select credential..." />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {credentials && credentials.length > 0 ? (
+                                            credentials.map((credential) => (
+                                                <SelectItem key={credential.id} value={credential.id}>
+                                                    {credential.name}
+                                                </SelectItem>
+                                            ))
+                                        ) : (
+                                            <SelectItem value="no-credentials" disabled>
+                                                No credentials available
+                                            </SelectItem>
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                            </FormControl>
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="duration"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="text-base font-semibold">Podcast Duration</FormLabel>
+                            <FormDescription>
+                                Select how long you want the podcast to be
+                            </FormDescription>
+                            <FormControl>
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select duration..." />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="1">1 minute</SelectItem>
+                                        <SelectItem value="5">5 minutes</SelectItem>
+                                        <SelectItem value="10">10 minutes</SelectItem>
+                                        <SelectItem value="20">20 minutes</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </FormControl>
                             <FormMessage />
                         </FormItem>

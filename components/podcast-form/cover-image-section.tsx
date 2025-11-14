@@ -59,7 +59,7 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
             toast.error('Please enter a prompt to generate an image')
             return
         }
-        mutate.mutate({message: imagePrompt})
+        mutate.mutate({ message: imagePrompt })
     }
 
     return (

@@ -6,7 +6,7 @@ import { z } from 'zod'
 
 import { Button } from "./ui/button"
 import { Form } from "./ui/form"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { useTRPC } from "@/trpc/client"
 import { toast } from "sonner"
 import { useState } from "react"
@@ -38,9 +38,11 @@ export const CreatePodcastForm = () => {
         defaultValues: {
             title: '',
             description: '',
+            duration: '1',
             voice1: '',
             voice2: '',
             image: '',
+            credential: ''
         }
     })
 
@@ -63,16 +65,24 @@ export const CreatePodcastForm = () => {
     }))
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        if(!values.image) {
+        if (!values.image) {
             toast.error('Image is required')
             return
         }
-        mutate.mutate({ title: values.title,message: values.description, voice1: values.voice1, voice2: values.voice2, image: values.image })
+        mutate.mutate({
+            title: values.title,
+            message: values.description,
+            duration: values.duration,
+            voice1: values.voice1,
+            voice2: values.voice2,
+            image: values.image,
+            credential: values.credential
+        })
     }
 
     return (
         <div className='bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900'>
-            <Header/>
+            <Header />
             <div className='w-full max-w-4xl mx-auto px-4 sm:px-6'>
                 {/* Header Section */}
                 <div className="text-center mb-8">
@@ -114,8 +124,8 @@ export const CreatePodcastForm = () => {
                     </form>
                 </Form>
                 <h1 className='flex gap-2 pb-4'>
-                    <AlertCircle/>
-                    I reduced the audio duration and image quality because each time cost me 0.20$ 
+                    <AlertCircle />
+                    I reduced the audio duration and image quality because each time cost me 0.20$
                 </h1>
                 <GeneratedContentSection audioURL={data.audioURL} pdfURL={data.pdfURL} />
             </div>

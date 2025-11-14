@@ -48,6 +48,3 @@ next-env.d.ts
 .env.sentry-build-plugin
 
 .vercel
-
-# temporary audio files
-/tmp

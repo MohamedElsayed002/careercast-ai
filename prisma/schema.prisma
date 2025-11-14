@@ -26,6 +26,7 @@ model User {
   sessions           Session[]
   accounts           Account[]
   podcasts           Podcast[]
+  credentials       Credential[]
   trialsUsed         Int       @default(0)
   
   // Subscription fields
@@ -100,4 +101,17 @@ model Podcast {
 
   @@index([userId])
   @@map("podcast")
+}
+
+
+model Credential {
+  id        String   @id @default(cuid())
+  userId    String
+  name     String
+  value    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("credential")
 }

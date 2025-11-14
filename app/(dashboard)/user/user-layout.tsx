@@ -4,6 +4,7 @@ import { PodcastList } from "@/components/podcast/podcast-list"
 import { NavButton } from "@/components/ui/nav-button"
 import { useTRPC } from "@/trpc/client"
 import { useQuery } from "@tanstack/react-query"
+import Link from "next/link"
 
 
 export function UserLayout() {
@@ -40,11 +41,17 @@ export function UserLayout() {
                             <div className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold shadow-lg">
                                 {user?.podcasts.length} {user?.podcasts.length === 1 ? 'Podcast' : 'Podcasts'}
                             </div>
+                            {/* Navigate to credentials page */}
+                            <div className="bg-white/80 hover:bg-white/90 text-purple-600 font-semibold px-4 py-3 rounded-lg shadow-md border border-purple-200/50 hover:border-purple-300/50">
+                                <Link   href="/user/credentials">
+                                    View Credentials
+                                </Link>
+                            </div>
                         </div>
                     </div>
 
                     {/* Stats Cards */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                         <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-6 rounded-2xl shadow-xl text-white">
                             <div className="text-3xl font-bold">{user?.podcasts.length}</div>
                             <div className="text-purple-100 mt-1">Total Podcasts</div>
@@ -56,6 +63,11 @@ export function UserLayout() {
                         <div className="bg-gradient-to-br from-yellow-500 to-orange-500 p-6 rounded-2xl shadow-xl text-white">
                             <div className="text-3xl font-bold">📄</div>
                             <div className="text-yellow-100 mt-1">PDF Summaries</div>
+                        </div>
+                        {/* Total Credentials */}
+                        <div className="bg-gradient-to-br from-green-500 to-teal-500 p-6 rounded-2xl shadow-xl text-white">
+                            <div className="text-3xl font-bold">{user?.credentials.length}</div>
+                            <div className="text-green-100 mt-1">Total Credentials</div>
                         </div>
                     </div>
 

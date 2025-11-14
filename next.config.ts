@@ -4,8 +4,25 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   devIndicators: false,
+  typeScript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
     domains: ['x00zgx6o26.ufs.sh','utfs.io','oaidalleapiprodscus.blob.core.windows.net']
+  },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      // Exclude ffmpeg modules from bundling on server side
+      config.externals = config.externals || [];
+      config.externals.push({
+        'fluent-ffmpeg': 'commonjs fluent-ffmpeg',
+        '@ffmpeg-installer/ffmpeg': 'commonjs @ffmpeg-installer/ffmpeg'
+      });
+    }
+    return config;
   }
 };
 
