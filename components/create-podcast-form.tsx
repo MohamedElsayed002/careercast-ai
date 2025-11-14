@@ -69,7 +69,7 @@ export const CreatePodcastForm = () => {
             toast.error('Image is required')
             return
         }
-        mutate.mutate({
+        mutate.mutate({ 
             title: values.title,
             message: values.description,
             duration: values.duration,

@@ -42,8 +42,8 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
     const voice2 = form.watch('voice2')
 
     const trpc = useTRPC()
-    const { data: credentials } = useQuery(trpc.getCredential.queryOptions(undefined))
-
+    const { data : credentials} = useQuery(trpc.getCredential.queryOptions(undefined))
+    
 
     return (
         <Card className="shadow-lg border-2">
@@ -100,14 +100,14 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                 <FormField
                     control={form.control}
                     name='credential'
-                    render={({ field }) => (
+                    render={({field}) => (
                         <FormItem>
                             <FormLabel className="text-base font-semibold">
                                 Credentials (API Key)
                             </FormLabel>
                             <FormDescription>
                                 <p>Select the API credential to be used for generating the podcast</p>
-                                <p>
+                                <p> 
                                     Don&apos;t have any credentials?{' '}
                                     <Link href="/user" className="text-primary underline">
                                         Add your credentials here.

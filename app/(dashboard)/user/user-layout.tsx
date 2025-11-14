@@ -1,6 +1,7 @@
 "use client"
 
 import { PodcastList } from "@/components/podcast/podcast-list"
+import { PodcastListUser } from "@/components/podcast/podcast-list-user"
 import { NavButton } from "@/components/ui/nav-button"
 import { useTRPC } from "@/trpc/client"
 import { useQuery } from "@tanstack/react-query"
@@ -73,10 +74,11 @@ export function UserLayout() {
 
                     {/* Podcast List */}
                     <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-purple-200/50 dark:border-purple-800/50">
-                        <PodcastList
+                        <PodcastListUser
                             podcasts={(user?.podcasts ?? []).map(p => ({
                                 ...p,
                                 title: p.title ?? '(untitled)',
+                                status: p.status ?? "PRIVATE"
                             }))}
                         />
                     </div>

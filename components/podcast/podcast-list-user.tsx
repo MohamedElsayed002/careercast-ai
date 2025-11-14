@@ -4,7 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import {  FileText, Download, Music2 } from "lucide-react";
+import { FileText, Download, Music2, Loader2, Globe, Lock } from "lucide-react";
+import { useTRPC } from "@/trpc/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 type PodcastItem = {
     id: string;
@@ -29,13 +32,32 @@ const gradientColors = [
     "from-blue-500 via-purple-500 to-fuchsia-500",
 ];
 
-export function PodcastList(props: { podcasts: PodcastItem[] }) {
+export function PodcastListUser(props: { podcasts: PodcastItem[] }) {
     const { podcasts } = props;
+
+    const queryClient = useQueryClient()
+    const trpc = useTRPC()
     const [mounted, setMounted] = useState(false);
     useEffect(() => {
         const t = setTimeout(() => setMounted(true), 20);
         return () => clearTimeout(t);
     }, []);
+
+    const { mutate, isPending } = useMutation(trpc.changePodcastStatus.mutationOptions({
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [
+                    trpc.getUser.queryOptions(undefined).queryKey,
+                    trpc.getPodcastsWithPagination.queryOptions({}).queryKey,
+                    trpc.getHomePodcast.queryOptions(undefined).queryKey
+                ],
+            })
+            toast.success("Podcast status updated successfully!")
+        },
+        onError: () => {
+            toast.error("Failed to update podcast status.")
+        }
+    }))
 
     if (!podcasts?.length) {
         return (
@@ -65,6 +87,7 @@ export function PodcastList(props: { podcasts: PodcastItem[] }) {
                 const created = new Date(p.createdAt);
                 const dateLabel = created.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
                 const gradient = gradientColors[idx % gradientColors.length];
+                const isPublic = p.status === 'PUBLIC'
                 return (
                     <div
                         key={p.id}
@@ -95,6 +118,11 @@ export function PodcastList(props: { podcasts: PodcastItem[] }) {
                                             {dateLabel}
                                         </Badge>
                                     </div>
+                                    {/* <div className="absolute inset-0 capitalize top-4 left-4 bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1 rounded-full text-sm font-medium text-white shadow-lg"> */}
+                                    <Badge className="absolute top-4 left-4  bg-gradient-to-r from-purple-600 to-pink-600 text-white border-white/30 backdrop-blur-sm">
+                                        {p.status.toUpperCase()}
+                                    </Badge>
+                                    {/* </div> */}
                                     <div className="absolute bottom-4 left-4 right-4">
                                         <CardTitle className="text-lg leading-6 line-clamp-2 font-bold text-white drop-shadow-lg">
                                             {p.title}
@@ -114,6 +142,56 @@ export function PodcastList(props: { podcasts: PodcastItem[] }) {
                                 </CardHeader>
                             )}
                             <CardContent className="p-6 space-y-4">
+                                {/* Status Toggle */}
+                                <div className="rounded-xl bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-900/50 dark:to-gray-900/50 p-4 border border-gray-200/50 dark:border-gray-800/50">
+                                    <div className="flex items-center justify-between gap-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className={`p-2 rounded-lg transition-all duration-300 ${isPublic
+                                                    ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                                                    : 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400'
+                                                }`}>
+                                                {isPublic ? (
+                                                    <Globe className="w-5 h-5" />
+                                                ) : (
+                                                    <Lock className="w-5 h-5" />
+                                                )}
+                                            </div>
+                                            <div>
+                                                <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                                    {isPublic ? 'Public' : 'Private'}
+                                                </div>
+                                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                    {isPublic ? 'Anyone can view' : 'Only you can view'}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Toggle Switch */}
+                                        <button
+                                            onClick={() => mutate({ podcastId: p.id, status: isPublic ? 'PRIVATE' : 'PUBLIC' })}
+                                            disabled={isPending}
+                                            className={`relative inline-flex h-8 w-14 items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${isPublic
+                                                    ? 'bg-gradient-to-r from-green-500 to-emerald-500 focus:ring-green-500'
+                                                    : 'bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700 focus:ring-gray-400'
+                                                }`}
+                                        >
+                                            <span className="sr-only">Toggle status</span>
+                                            <span
+                                                className={`inline-flex h-6 w-6 items-center justify-center transform rounded-full bg-white shadow-lg transition-all duration-300 ${isPublic ? 'translate-x-7' : 'translate-x-1'
+                                                    }`}
+                                            >
+                                                {isPending ? (
+                                                    <Loader2 className="w-3 h-3 animate-spin text-gray-600" />
+                                                ) : isPublic ? (
+                                                    <Globe className="w-3 h-3 text-green-600" />
+                                                ) : (
+                                                    <Lock className="w-3 h-3 text-gray-600" />
+                                                )}
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+
                                 {/* Audio Player */}
                                 <div className="rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-4 border border-purple-200/50 dark:border-purple-800/50">
                                     <div className="flex items-center gap-2 mb-2">
@@ -122,7 +200,7 @@ export function PodcastList(props: { podcasts: PodcastItem[] }) {
                                     </div>
                                     <audio controls src={p.audioUrl} className="w-full rounded-lg" />
                                 </div>
-                                
+
                                 {/* Action Buttons */}
                                 <div className="flex items-center gap-3">
                                     <Button
@@ -146,6 +224,7 @@ export function PodcastList(props: { podcasts: PodcastItem[] }) {
                                     </Button>
                                 </div>
                             </CardContent>
+
                         </Card>
                     </div>
                 );

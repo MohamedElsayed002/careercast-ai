@@ -86,6 +86,12 @@ model Verification {
   @@map("verification")
 }
 
+
+enum StatusType  {
+  PRIVATE 
+  PUBLIC
+}
+
 model Podcast {
   id        String   @id @default(cuid())
   userId    String
@@ -95,6 +101,7 @@ model Podcast {
   audioUrl  String
   audioId   String?
   pdfUrl    String
+  status    StatusType @default(PRIVATE)
   pdfId     String?
   imageUrl  String?
   createdAt DateTime @default(now())

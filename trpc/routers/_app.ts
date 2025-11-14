@@ -7,6 +7,7 @@ import { createPdfBytes } from '@/utils/pdf-utils';
 import { generateImage, createDebateText, generateDebateAudio } from '@/actions';
 import prisma from '@/utils/db';
 import { TRPCError } from '@trpc/server';
+import { Prisma } from '@/src/generated/prisma';
 export const appRouter = createTRPCRouter({
   getHomePodcast: baseProcedure
     .query(async () => {
@@ -14,53 +15,63 @@ export const appRouter = createTRPCRouter({
         orderBy: {
           createdAt: 'desc'
         },
+        where: {
+          status: 'PUBLIC'
+        },
         take: 4
       })
       return podcasts
     }),
-  getPodcastsWithPagination: baseProcedure
-    .input(z.object({
-      page: z.number().min(1).default(1),
-      limit: z.number().min(1).max(50).default(6),
-      search: z.string().optional().default(''),
-    }))
-    .query(async ({ input }) => {
-      const { page, limit, search } = input;
-      const skip = (page - 1) * limit;
+getPodcastsWithPagination: baseProcedure
+  .input(z.object({
+    page: z.number().min(1).default(1),
+    limit: z.number().min(1).max(50).default(6),
+    search: z.string().optional().default(''),
+  }))
+  .query(async ({ input }) => {
+    const { page, limit, search } = input;
+    const skip = (page - 1) * limit;
 
-      const where = search
+    const where: Prisma.PodcastWhereInput = {
+      status: "PUBLIC",
+      ...(search
         ? {
-          message: {
-            contains: search,
-            mode: 'insensitive' as const,
-          },
-          title: {
-            contains: search,
-            mode: 'insensitive' as const,
-          },
-        }
-        : {};
+            OR: [
+              {
+                title: {
+                  contains: search,
+                  mode: Prisma.QueryMode.insensitive,
+                },
+              },
+              {
+                message: {
+                  contains: search,
+                  mode: Prisma.QueryMode.insensitive,
+                },
+              },
+            ],
+          }
+        : {}),
+    };
 
-      const [podcasts, total] = await Promise.all([
-        prisma.podcast.findMany({
-          where,
-          orderBy: {
-            createdAt: 'desc',
-          },
-          skip,
-          take: limit,
-        }),
-        prisma.podcast.count({ where }),
-      ]);
+    const [podcasts, total] = await Promise.all([
+      prisma.podcast.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.podcast.count({ where }),
+    ]);
 
-      return {
-        podcasts,
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      };
-    }),
+    return {
+      podcasts,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }),
   getUser: protectedProcedure
     .query(async ({ ctx }) => {
       const user = await prisma.user.findFirstOrThrow({
@@ -78,6 +89,7 @@ export const appRouter = createTRPCRouter({
               audioUrl: true,
               audioId: true,
               pdfUrl: true,
+              status: true,
               title: true,
               pdfId: true,
               imageUrl: true,
@@ -132,6 +144,25 @@ export const appRouter = createTRPCRouter({
       })
       return credential
     }),
+  deleteCredential: protectedProcedure
+    .input(z.object({
+      id: z.string().min(1, "Credential ID is required"),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const { id } = input
+
+      if (!id) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Credential ID is required' })
+      }
+
+      await prisma.credential.delete({
+        where: {
+          id,
+          userId: ctx.auth.user.id
+        }
+      })
+      return { success: true }
+    }),
   generateImage: premiumProcedure
     .input(z.object({ message: z.string().min(1) }))
     .mutation(async ({ input, ctx }) => {
@@ -144,7 +175,6 @@ export const appRouter = createTRPCRouter({
       const user = await prisma.user.findUniqueOrThrow({
         where: { id: ctx.auth.user.id }
       })
-
 
       if (!user.isPro) {
         throw new TRPCError({ code: 'FORBIDDEN', message: 'subscribe to generate image' })
@@ -200,26 +230,6 @@ export const appRouter = createTRPCRouter({
         }
       })
       return credentials
-    }),
-  deleteCredential: protectedProcedure
-    .input(z.object({
-      id: z.string().min(1, "Credential ID is required")
-    }))
-    .mutation(async ({ input, ctx }) => {
-      const { id } = input
-
-      const credential = await prisma.credential.delete({
-        where: {
-          id,
-          userId: ctx.auth.user.id
-        }
-      })
-
-      if(!credential){
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Credential not found' })
-      }
-
-      return { success: true }
     }),
   createPodcast: protectedProcedure
     .input(z.object({
@@ -356,8 +366,37 @@ export const appRouter = createTRPCRouter({
         audioUrl,
         pdfUrl,
       };
-    })
+    }),
 
+  changePodcastStatus: protectedProcedure
+    .input(z.object({
+      podcastId: z.string().min(1),
+      status: z.enum(['PUBLIC', 'PRIVATE'])
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const { podcastId, status } = input;
+
+      const podcast = await prisma.podcast.findUnique({
+        where: {
+          id: podcastId,
+          userId: ctx.auth.user.id
+        }
+      });
+      if (!podcast) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Podcast not found' });
+      }
+
+      await prisma.podcast.update({
+        where: {
+          id: podcastId
+        },
+        data: {
+          status
+        }
+      });
+
+      return { success: true };
+    })
 });
 // export type definition of API
 export type AppRouter = typeof appRouter;

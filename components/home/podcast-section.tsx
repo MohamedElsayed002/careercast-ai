@@ -14,7 +14,7 @@ export const PodcastSection = () => {
 
     const trpc = useTRPC()
     const { isLoading, data: recentPodcasts } = useQuery(trpc.getHomePodcast.queryOptions())
-
+    
     if (isLoading) {
         return (
             <div className="bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900">
@@ -43,7 +43,7 @@ export const PodcastSection = () => {
         )
     }
 
-    if (recentPodcasts && recentPodcasts.length === 0) return
+    if(recentPodcasts && recentPodcasts.length === 0) return
     const totalPodcasts = recentPodcasts!.length
 
     return (

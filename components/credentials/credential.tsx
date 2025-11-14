@@ -1,25 +1,27 @@
-"use client"
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "../ui/button";
+import { useTRPC } from "@/trpc/client";
+import { toast } from "sonner";
+import { Trash } from "lucide-react";
 
-import { Trash } from "lucide-react"
-import { Button } from "../ui/button"
-import { BreadcrumbsCred } from "./breadcrumbs-cred"
-import { DialogCred } from "./dialog-cred"
-import { useTRPC } from "@/trpc/client"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { toast } from "sonner"
+interface CredentialProps {
+    id: string;
+    name: string;
+    createdAt: string;
+    value: string;
+}
 
-export const Credentials = () => {
+export const Credential = ({ cred }: { cred: CredentialProps }) => {
+
     const trpc = useTRPC()
     const queryClient = useQueryClient()
 
-    const { data: credentials, isLoading, error } = useQuery(trpc.getUserCredentials.queryOptions(undefined))
     const { mutate, isPending } = useMutation(trpc.deleteCredential.mutationOptions({
         onSuccess: () => {
-            // Invalidate and refetch credentials after deletion
             queryClient.invalidateQueries({
                 queryKey: trpc.getUserCredentials.queryOptions(undefined).queryKey
             })
-            toast.success("Credential deleted successfully.")
+            toast.success("Credential deleted successfully!")
         },
         onError: (error) => {
             toast.error(`Error deleting credential: ${error.message}`)
@@ -27,53 +29,27 @@ export const Credentials = () => {
     }))
 
     return (
-        <div className='w-4/5 mx-auto mt-5'>
-            <div>
-                <BreadcrumbsCred />
-                <Button variant="ghost" className="mt-4 mb-6">
-                    Manage your API credentials here.
-                </Button>
-            </div>
-            <div className="bg-white/10 p-6 rounded-lg shadow-lg border border-white/20">
-                <h2 className="text-2xl font-bold mb-4 text-white">Your API Credentials</h2>
-                <DialogCred />
-            </div>
-
-            {/* Fetch Credentials */}
-            <div className="mt-4">
-                {isLoading && (
-                    <p className="text-white">Loading credentials...</p>
-                )}
-                {error && (
-                    <p className="text-red-400">Error loading credentials. Please try again.</p>
-                )}
-                {!isLoading && !error && credentials && credentials.length > 0 && (
-                    credentials.map((cred) => (
-                        <div key={cred.id} className="bg-white/10 p-4 rounded-lg shadow-md border border-white/20 my-5">
-                            <div className="flex justify-between">
-                                <div>
-                                    <h3 className="text-xl font-semibold text-white">{cred.name}</h3>
-                                    <p className="text-white/70">ID: {cred.id}</p>
-                                    <p className="text-white/50 text-sm">Created: {new Date(cred.createdAt).toLocaleDateString()}</p>
-                                </div>
-                                <div>
-                                    <Button
-                                        variant="destructive"
-                                        size="sm" className="flex items-center"
-                                        onClick={() => mutate({ id: cred.id })}
-                                        disabled={isPending}
-                                    >
-                                        <Trash className="mr-2 size-5" />
-                                        Delete
-                                    </Button>
-                                </div>
+        <div key={cred.id} className="bg-white/10 p-4 rounded-lg shadow-md border border-white/20 mt-4">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h3 className="text-xl font-semibold text-white">{cred.name}</h3>
+                    <p className="text-white/70">ID: {cred.id}</p>
+                    <p className="text-white/50 text-sm">Created: {new Date(cred.createdAt).toLocaleDateString()}</p>
+                </div>
+                <div>
+                    <Button
+                        variant="destructive"
+                        onClick={() => mutate({ id: cred.id })}
+                        disabled={isPending}
+                    >
+                        {isPending ? 'Deleting...' : (
+                            <div className="flex items-center gap-2">
+                                <Trash className="w-4 h-4" />
+                                Delete
                             </div>
-                        </div>
-                    ))
-                )}
-                {!isLoading && !error && credentials && credentials.length === 0 && (
-                    <p className="text-white mt-4">No credentials found. Add your first credential above.</p>
-                )}
+                        )}
+                    </Button>
+                </div>
             </div>
         </div>
     )
