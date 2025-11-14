@@ -201,6 +201,26 @@ export const appRouter = createTRPCRouter({
       })
       return credentials
     }),
+  deleteCredential: protectedProcedure
+    .input(z.object({
+      id: z.string().min(1, "Credential ID is required")
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const { id } = input
+
+      const credential = await prisma.credential.delete({
+        where: {
+          id,
+          userId: ctx.auth.user.id
+        }
+      })
+
+      if(!credential){
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Credential not found' })
+      }
+
+      return { success: true }
+    }),
   createPodcast: protectedProcedure
     .input(z.object({
       title: z.string().min(1), message: z.string().min(1),
