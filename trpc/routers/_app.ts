@@ -8,6 +8,8 @@ import { generateImage, createDebateText, generateDebateAudio } from '@/actions'
 import prisma from '@/utils/db';
 import { TRPCError } from '@trpc/server';
 import { Prisma } from '@/src/generated/prisma';
+import { encrypt, decrypt } from '@/lib/encryption';
+
 export const appRouter = createTRPCRouter({
   getHomePodcast: baseProcedure
     .query(async () => {
@@ -139,7 +141,7 @@ getPodcastsWithPagination: baseProcedure
         data: {
           userId: ctx.auth.user.id,
           name,
-          value,
+          value: encrypt(value),
         }
       })
       return credential
@@ -268,10 +270,10 @@ getPodcastsWithPagination: baseProcedure
       }
 
       // Generate debate text with two speakers
-      const debateData = await createDebateText(message, duration, credentialValue?.value);
+      const debateData = await createDebateText(message, duration, decrypt(credentialValue?.value));
 
       // Generate audio for the debate
-      const audioBytes = await generateDebateAudio(debateData.dialogue, voice1, voice2, credentialValue.value);
+      const audioBytes = await generateDebateAudio(debateData.dialogue, voice1, voice2, decrypt(credentialValue.value));
 
       const audioFilename = `ai-audio-${uuid()}.mp3`;
       const audioUtFile = new UTFile([audioBytes as any], audioFilename, { type: 'audio/mpeg' });
