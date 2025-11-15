@@ -72,7 +72,7 @@ export const CreatePodcastForm = () => {
         mutate.mutate({ 
             title: values.title,
             message: values.description,
-            duration: values.duration,
+            duration: values.duration as "1" | "5" | "10" | "20",
             voice1: values.voice1,
             voice2: values.voice2,
             image: values.image,
