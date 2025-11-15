@@ -8,6 +8,7 @@ import { useTRPC } from "@/trpc/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { Credential } from "./credential"
+import { CredentialCardSkeleton } from "./credential-skeleton"
 
 export const Credentials = () => {
     const trpc = useTRPC()
@@ -30,7 +31,11 @@ export const Credentials = () => {
             {/* Fetch Credentials */}
             <div className="mt-4">
                 {isLoading && (
-                    <p className="text-white">Loading credentials...</p>
+                    <div className='flex flex-col'>
+                        <CredentialCardSkeleton/>
+                        <CredentialCardSkeleton/>
+                        <CredentialCardSkeleton/>
+                    </div>
                 )}
                 {error && (
                     <p className="text-red-400">Error loading credentials. Please try again.</p>

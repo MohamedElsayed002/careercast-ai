@@ -1,18 +1,19 @@
 "use client"
 
+import { PodcastsLoader } from "@/components/loader"
 import { PodcastList } from "@/components/podcast/podcast-list"
 import { PodcastListUser } from "@/components/podcast/podcast-list-user"
 import { NavButton } from "@/components/ui/nav-button"
 import { useTRPC } from "@/trpc/client"
 import { useQuery } from "@tanstack/react-query"
-import { PlusIcon } from "lucide-react"
+import { Loader, PlusIcon } from "lucide-react"
 import Link from "next/link"
 
 
 export function UserLayout() {
 
     const trpc = useTRPC()
-    const {data: user} = useQuery(trpc.getUser.queryOptions())
+    const { data: user, isPending } = useQuery(trpc.getUser.queryOptions())
 
 
     return (
@@ -36,17 +37,27 @@ export function UserLayout() {
                                 Your Podcasts
                             </h1>
                             <p className="text-lg text-gray-700 dark:text-gray-300">
-                                Welcome back, <span className="font-semibold text-purple-600">{user?.name}</span>! 🎉
+                                {
+                                    isPending ? <Loader className='inline-block size-4 animate-spin' /> : (
+                                        <>
+                                            <p>Welcome back, <span className="font-semibold text-purple-600">{user?.name}</span>! 🎉 </p>
+                                        </>
+                                    )
+                                }
                             </p>
                         </div>
                         <div className="hidden sm:flex items-center gap-3">
                             <div className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold shadow-lg">
-                                {user?.podcasts.length} {user?.podcasts.length === 1 ? 'Podcast' : 'Podcasts'}
+                                {
+                                    isPending ? <Loader className='inline-block size-4 animate-spin' />
+                                        :
+                                        user?.podcasts.length} {user?.podcasts.length === 1 ? 'Podcast' : 'Podcasts'
+                                }
                             </div>
                             {/* Navigate to credentials page */}
                             <div className="bg-white/80 hover:bg-white/90 text-purple-600 font-semibold px-4 py-3 rounded-lg shadow-md border border-purple-200/50 hover:border-purple-300/50">
-                                <Link className="flex items-center gap-1"   href="/user/credentials">
-                                    <PlusIcon className="size-4"/>
+                                <Link className="flex items-center gap-1" href="/user/credentials">
+                                    <PlusIcon className="size-4" />
                                     Add Credentials
                                 </Link>
                             </div>
@@ -56,7 +67,11 @@ export function UserLayout() {
                     {/* Stats Cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                         <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-6 rounded-2xl shadow-xl text-white">
-                            <div className="text-3xl font-bold">{user?.podcasts.length}</div>
+                            {
+                                isPending ? <Loader className='inline-block size-4 animate-spin' /> : (
+                                    <div className="text-3xl font-bold">{user?.podcasts.length}</div>
+                                )
+                            }
                             <div className="text-purple-100 mt-1">Total Podcasts</div>
                         </div>
                         <div className="bg-gradient-to-br from-cyan-500 to-blue-500 p-6 rounded-2xl shadow-xl text-white">
@@ -69,21 +84,37 @@ export function UserLayout() {
                         </div>
                         {/* Total Credentials */}
                         <div className="bg-gradient-to-br from-green-500 to-teal-500 p-6 rounded-2xl shadow-xl text-white">
-                            <div className="text-3xl font-bold">{user?.credentials.length}</div>
+                            {
+                                isPending ? <Loader className='inline-block size-4 animate-spin' /> : (
+                                    <div className="text-3xl font-bold">{user?.credentials.length}</div>
+                                )
+                            }
                             <div className="text-green-100 mt-1">Total Credentials</div>
                         </div>
                     </div>
 
                     {/* Podcast List */}
-                    <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-purple-200/50 dark:border-purple-800/50">
-                        <PodcastListUser
-                            podcasts={(user?.podcasts ?? []).map(p => ({
-                                ...p,
-                                title: p.title ?? '(untitled)',
-                                status: p.status ?? "PRIVATE"
-                            }))}
-                        />
-                    </div>
+                    {!isPending && (
+                        <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-purple-200/50 dark:border-purple-800/50">
+                            <PodcastListUser
+                                podcasts={(user?.podcasts ?? []).map(p => ({
+                                    ...p,
+                                    title: p.title ?? '(untitled)',
+                                    status: p.status ?? "PRIVATE"
+                                }))}
+                            />
+                        </div>
+                    )}
+                    
+                    {/* Loading Podcast */}
+                    {isPending && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            <PodcastsLoader />
+                            <PodcastsLoader />
+                            <PodcastsLoader />
+                            <PodcastsLoader />
+                        </div>
+                    )}
                 </div>
             </div>
 
