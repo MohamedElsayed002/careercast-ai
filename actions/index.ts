@@ -1,44 +1,41 @@
-import { generateObject, generateText } from "ai";
+import { generateObject } from "ai";
 import { z } from 'zod'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as Sentry from "@sentry/nextjs";
 import { createOpenAI } from "@ai-sdk/openai"
 import OpenAI from "openai";
-import prisma from "@/utils/db";
 import os from 'os';
 import { v4 as uuid } from 'uuid';
+import prisma from "@/utils/db";
+import { decrypt } from "@/lib/encryption";
 
 
-// import { headers } from "next/headers";
-// import { auth } from "@/utils/auth";
+// const SYSTEM_BASE = `
+//     You are Podcastr Assistant - a focused assistant for Podcastr, a podcast generator web app.
+//     Only answer questions about the product or convert user topics into short podcast scripts.
+//     If the user asks unrelated factual questions that require web access, politely say you cannot browse and offer podcast help instead.
+// `
 
+// const EpisodeSchema = z.object({
+//     title: z.string(),
+//     summary: z.string(),
+//     segments: z.array(
+//         z.object({
+//             id: z.string(),
+//             title: z.string(),
+//             full_text: z.string(),
+//             durationSec: z.number()
+//         })
+//     )
+// })
 
-const SYSTEM_BASE = `
-    You are Podcastr Assistant - a focused assistant for Podcastr, a podcast generator web app.
-    Only answer questions about the product or convert user topics into short podcast scripts.
-    If the user asks unrelated factual questions that require web access, politely say you cannot browse and offer podcast help instead.
-`
-
-const EpisodeSchema = z.object({
-    title: z.string(),
-    summary: z.string(),
-    segments: z.array(
-        z.object({
-            id: z.string(),
-            title: z.string(),
-            full_text: z.string(),
-            durationSec: z.number()
-        })
-    )
-})
-
-type SegmentsType = {
-    id: string;
-    title: string;
-    full_text: string;
-    durationSec: number
-}
+// type SegmentsType = {
+//     id: string;
+//     title: string;
+//     full_text: string;
+//     durationSec: number
+// }
 
 const DebateSchema = z.object({
     title: z.string(),
@@ -322,7 +319,7 @@ REMEMBER: The total word count across all dialogue.text fields MUST be at least 
     }
 }
 
-export async function generateAudio(text: string, voice: string, credential: string) {
+export async function generateAudio(text: string, voice: string, credential: string, voiceSpeed: number) {
 
     const openai = new OpenAI({
         apiKey: credential
@@ -333,7 +330,7 @@ export async function generateAudio(text: string, voice: string, credential: str
         model: 'gpt-4o-mini-tts',
         voice: voice,
         input: text,
-        speed: 1,
+        speed: voiceSpeed,
     })
 
     const result = await response.arrayBuffer()
@@ -344,7 +341,8 @@ export async function generateDebateAudio(
     dialogue: Array<{ speaker: "SPEAKER1" | "SPEAKER2"; text: string }>,
     voice1: string,
     voice2: string,
-    credential: string
+    credential: string,
+    voiceSpeed: number
 ): Promise<Buffer> {
 
     const ffmpegModule = (await import('fluent-ffmpeg')).default;
@@ -374,7 +372,7 @@ export async function generateDebateAudio(
             const batchPromises = batch.map(async (item, batchIndex) => {
                 const globalIndex = i + batchIndex;
                 const voice = item.speaker === "SPEAKER1" ? voice1 : voice2;
-                const audioBytes = await generateAudio(item.text, voice, credential); // your existing TTS call
+                const audioBytes = await generateAudio(item.text, voice, credential, voiceSpeed); // your existing TTS call
 
                 const tempFile = path.join(tempDir, `audio-${globalIndex}.mp3`);
                 await fs.promises.writeFile(tempFile, audioBytes);
@@ -447,10 +445,21 @@ export async function generateDebateAudio(
 // }
 
 
-export async function generateImage(prompt: string) {
-    const openai = new OpenAI()
+export async function generateImage(prompt: string, credential: string) {
+    const credentialValue = await prisma.credential.findUnique({
+        where: { id: credential }
+    })
+
+    if (!credentialValue) {
+        throw new Error('Invalid credential')
+    }
+
+    const openai = new OpenAI({
+        apiKey: decrypt(credentialValue?.value)
+    })
+
     const response = await openai.images.generate({
-        // model: 'dall-e-2',
+        model: 'dall-e-2',
         n: 1,
         size: '256x256',
         // quality: 'standard',

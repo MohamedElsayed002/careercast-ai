@@ -7,7 +7,8 @@ export const formSchema = z.object({
         voice1: z.string(),
         voice2: z.string(),
         duration: z.string(),
-        credential: z.string()
+        credential: z.string(),
+        voiceSpeed: z.number().min(0.8).max(1.5).optional()
 })
 
 

@@ -1,6 +1,5 @@
 "use client"
 
-import { Podcast } from "@/src/generated/prisma"
 import { useTRPC } from "@/trpc/client"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import Image from "next/image"

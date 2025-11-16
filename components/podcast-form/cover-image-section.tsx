@@ -21,6 +21,7 @@ import { Loader2, Sparkles } from "lucide-react"
 import { formSchema } from "@/types"
 import { useMutation } from "@tanstack/react-query"
 import { useTRPC } from "@/trpc/client"
+import { useHasActiveSubscription } from "@/features/subscriptions/hooks/use-subscription"
 
 interface CoverImageSectionProps {
     form: UseFormReturn<z.infer<typeof formSchema>>
@@ -30,7 +31,7 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
     const [uploadImage, setUploadImage] = useState(false)
     const [images, setImages] = useState<string[]>([])
     const [imagePrompt, setImagePrompt] = useState('')
-
+    const {hasActiveSubscription} = useHasActiveSubscription()
     const trpc = useTRPC()
     const mutate = useMutation(trpc.generateImage.mutationOptions({
         onSuccess: (data) => {
@@ -59,7 +60,12 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
             toast.error('Please enter a prompt to generate an image')
             return
         }
-        mutate.mutate({message: imagePrompt})
+        const credential = form.getValues('credential')
+        if (!credential) {
+            toast.error('Please enter your API credential in the Podcast Details section')
+            return
+        }
+        mutate.mutate({message: imagePrompt,credential})
     }
 
     return (
@@ -103,18 +109,17 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
                             <div className="flex gap-2">
                                 <Input
                                     type='text'
-                                    placeholder="Paused :)"
+                                    placeholder="Describe the image you want to generate for your podcast"
                                     value={imagePrompt}
                                     onChange={(e) => setImagePrompt(e.target.value)}
                                     className="flex-1"
-                                    // disabled={!hasActiveSubscription}
-                                    disabled={true}
+                                    disabled={hasActiveSubscription ? false : true}
                                 />
                                 <Button
                                     type="button"
                                     onClick={handleGenerateImage}
-                                    // disabled={mutate.isPending || !imagePrompt.trim()}
-                                    disabled={true}
+                                    disabled={mutate.isPending || !imagePrompt.trim()}
+                                    // disabled={true}
                                 >
                                     {mutate.isPending ? (
                                         <>

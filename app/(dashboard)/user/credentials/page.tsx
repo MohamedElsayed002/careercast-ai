@@ -1,7 +1,12 @@
 import { requireAuth } from "@/utils/auth-utils"
 import Header from "@/components/header";
 import { Credentials } from "@/components/credentials/credentials";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+    title: "Podcastr | Credential Page",
+    description: "Save your API credentials securely",
+  };
 
 const Page = async  () => {
     await requireAuth()

@@ -14,7 +14,7 @@ export async function POST(req: Request) {
         }
 
         // Generate image from OpenAI
-        const imageOpenaiUrl = await generateImage(prompt);
+        const imageOpenaiUrl = await generateImage(prompt,'123');
 
         if (!imageOpenaiUrl) {
             return NextResponse.json({ error: 'Image generation returned empty response' }, { status: 502 });

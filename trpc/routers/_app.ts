@@ -166,9 +166,12 @@ getPodcastsWithPagination: baseProcedure
       return { success: true }
     }),
   generateImage: premiumProcedure
-    .input(z.object({ message: z.string().min(1) }))
+    .input(z.object({ 
+      message: z.string().min(1),
+      credential: z.string().min(1)
+     }))
     .mutation(async ({ input, ctx }) => {
-      const { message } = input
+      const { message, credential } = input
 
       if (!message) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'message is required' })
@@ -182,7 +185,7 @@ getPodcastsWithPagination: baseProcedure
         throw new TRPCError({ code: 'FORBIDDEN', message: 'subscribe to generate image' })
       }
 
-      const imageOpenAIUrl = await generateImage(message)
+      const imageOpenAIUrl = await generateImage(message,credential)
 
       if (!imageOpenAIUrl) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'failed for generating image' })
@@ -240,10 +243,11 @@ getPodcastsWithPagination: baseProcedure
       voice1: z.string(),
       voice2: z.string(),
       image: z.string(),
-      credential: z.string()
+      credential: z.string(),
+      voiceSpeed: z.number().min(0.8).max(1.5).optional()
     }))
     .mutation(async ({ input, ctx }) => {
-      const { title, message, duration, voice1, voice2, image, credential } = input;
+      const { title, message, duration, voice1, voice2, image, credential, voiceSpeed } = input;
       const authUser: any = (ctx as any).auth;
       const userId: string | undefined = authUser?.user?.id ?? authUser?.id ?? authUser?.userId;
       if (!userId) {
@@ -273,7 +277,13 @@ getPodcastsWithPagination: baseProcedure
       const debateData = await createDebateText(message, duration, decrypt(credentialValue?.value));
 
       // Generate audio for the debate
-      const audioBytes = await generateDebateAudio(debateData.dialogue, voice1, voice2, decrypt(credentialValue.value));
+      const audioBytes = await generateDebateAudio(
+        debateData.dialogue,
+        voice1,
+        voice2,
+        decrypt(credentialValue.value),
+        voiceSpeed ?? 1
+      );
 
       const audioFilename = `ai-audio-${uuid()}.mp3`;
       const audioUtFile = new UTFile([audioBytes as any], audioFilename, { type: 'audio/mpeg' });

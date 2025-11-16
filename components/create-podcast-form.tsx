@@ -6,7 +6,7 @@ import { z } from 'zod'
 
 import { Button } from "./ui/button"
 import { Form } from "./ui/form"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { useTRPC } from "@/trpc/client"
 import { toast } from "sonner"
 import { useState } from "react"
@@ -37,6 +37,7 @@ export const CreatePodcastForm = () => {
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: '',
+            voiceSpeed: 1,
             description: '',
             duration: '1',
             voice1: '',
@@ -69,6 +70,7 @@ export const CreatePodcastForm = () => {
             toast.error('Image is required')
             return
         }
+        
         mutate.mutate({ 
             title: values.title,
             message: values.description,
@@ -76,7 +78,8 @@ export const CreatePodcastForm = () => {
             voice1: values.voice1,
             voice2: values.voice2,
             image: values.image,
-            credential: values.credential
+            credential: values.credential,
+            voiceSpeed: values.voiceSpeed
         })
     }
 
@@ -98,7 +101,6 @@ export const CreatePodcastForm = () => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <PodcastDetailsSection form={form} />
-                        <CoverImageSection form={form} />
 
                         {/* Generate Podcast Button */}
                         <div className="mt-8">

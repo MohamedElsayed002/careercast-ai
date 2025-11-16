@@ -30,13 +30,13 @@ export const Credential = ({ cred }: { cred: CredentialProps }) => {
 
     return (
         <div key={cred.id} className="bg-white/10 p-4 rounded-lg shadow-md border border-white/20 mt-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row items-center justify-between">
                 <div>
                     <h3 className="text-xl font-semibold text-white">{cred.name}</h3>
                     <p className="text-white/70">ID: {cred.id}</p>
                     <p className="text-white/50 text-sm">Created: {new Date(cred.createdAt).toLocaleDateString()}</p>
                 </div>
-                <div>
+                <div className='mt-4 md:mt-0'>
                     <Button
                         variant="destructive"
                         onClick={() => mutate({ id: cred.id })}

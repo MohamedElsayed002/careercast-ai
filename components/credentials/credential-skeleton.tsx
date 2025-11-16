@@ -6,11 +6,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function CredentialCardSkeleton() {
     return (
         <div
-            className="bg-white/10 p-4 rounded-lg shadow-md border border-white/20 mt-4"
+            className="bg-white/10 p-4 rounded-lg shadow-md border border-white/20 my-4"
             role="status"
             aria-busy="true"
         >
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row items-center justify-between">
                 {/* left column (title + meta lines) */}
                 <div className="flex-1 pr-4">
                     <Skeleton className="h-6 w-48 rounded-md" />
@@ -23,7 +23,7 @@ export function CredentialCardSkeleton() {
                 </div>
 
                 {/* right column (button) */}
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 mt-4 md:mt-0">
                     <Skeleton className="h-10 w-24 rounded-md" />
                 </div>
             </div>

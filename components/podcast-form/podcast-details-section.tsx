@@ -32,6 +32,8 @@ import { formSchema } from "@/types"
 import { useTRPC } from "@/trpc/client"
 import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
+import { Slider } from "../ui/slider"
+import { CoverImageSection } from "./cover-image-section"
 
 interface PodcastDetailsSectionProps {
     form: UseFormReturn<z.infer<typeof formSchema>>
@@ -138,6 +140,36 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                         </FormItem>
                     )}
                 />
+                <FormField 
+                
+                    control={form.control}
+                    name='voiceSpeed'
+                    render={({field}) => (
+                        <FormItem>
+                            <FormLabel className="text-base font-semibold">
+                                Voice Speed
+                            </FormLabel>
+                            <FormDescription>
+                                Choose the speed of the AI voices in the podcast
+                            </FormDescription>
+                            <FormControl>
+                                <Slider
+                                    min={0.8}
+                                    max={1.5}
+                                    step={0.1}
+                                    value={[field.value ?? 1]}
+                                    onValueChange={(v) => field.onChange(v[0])}
+                                    className="w-full"
+                                />
+                            </FormControl>
+                            <p className='text-sm text-muted-foreground mt-2'>
+                                Current: <span className='font-semibold'>
+                                    {field.value ?? 1}x
+                                </span>
+                            </p>
+                        </FormItem>
+                    )}
+                />
                 <FormField
                     control={form.control}
                     name="duration"
@@ -232,6 +264,9 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                 {voice2 && (
                     <audio src={`/${voice2}.mp3`} autoPlay className='hidden' />
                 )}
+
+
+                <CoverImageSection form={form} />
             </CardContent>
         </Card>
     )

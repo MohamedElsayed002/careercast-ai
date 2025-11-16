@@ -1,7 +1,6 @@
 "use client"
 
 import { PodcastsLoader } from "@/components/loader"
-import { PodcastList } from "@/components/podcast/podcast-list"
 import { PodcastListUser } from "@/components/podcast/podcast-list-user"
 import { NavButton } from "@/components/ui/nav-button"
 import { useTRPC } from "@/trpc/client"
@@ -26,7 +25,7 @@ export function UserLayout() {
             <div className="relative z-10">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 space-y-8">
                     {/* Header */}
-                    <div className="flex items-center justify-between">
+                    <div className="flex-col md:flex-row flex items-center justify-between">
                         <div className="space-y-2">
                             <div className="flex items-center gap-4">
                                 <NavButton href="/" className="text-purple-600 hover:text-purple-700 hover:bg-purple-50">
@@ -46,7 +45,7 @@ export function UserLayout() {
                                 }
                             </p>
                         </div>
-                        <div className="hidden sm:flex items-center gap-3">
+                        <div className="mt-4 flex items-center gap-3">
                             <div className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold shadow-lg">
                                 {
                                     isPending ? <Loader className='inline-block size-4 animate-spin' />
