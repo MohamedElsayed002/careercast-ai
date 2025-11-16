@@ -19,6 +19,7 @@ import { formSchema } from "@/types"
 import { PodcastDetailsSection } from "./podcast-form/podcast-details-section"
 import { CoverImageSection } from "./podcast-form/cover-image-section"
 import { GeneratedContentSection } from "./podcast-form/generated-content-section"
+import Header from "./header"
 
 
 
@@ -66,6 +67,7 @@ export const CreatePodcastForm = () => {
 
     return (
         <div className='bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900'>
+            <Header/>
             <div className='w-full max-w-4xl mx-auto px-4 sm:px-6'>
                 {/* Header Section */}
                 <div className="text-center mb-8">

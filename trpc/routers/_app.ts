@@ -7,6 +7,7 @@ import { createPdfBytes } from '@/utils/pdf-utils';
 import { createText, generateAudio, generateImage } from '@/actions';
 import prisma from '@/utils/db';
 import { TRPCError } from '@trpc/server';
+import { Prisma } from '@/src/generated/prisma';
 export const appRouter = createTRPCRouter({
   getAllPodcast: baseProcedure
     .query(async () => {
@@ -17,6 +18,49 @@ export const appRouter = createTRPCRouter({
         take: 4
       })
       return podcasts
+    }),
+  getPodcastsWithPagination: baseProcedure
+    .input(z.object({
+      page: z.number().min(1).default(1),
+      limit: z.number().min(1).max(50).default(6),
+      search: z.string().optional().default(''),
+    }))
+    .query(async ({ input }) => {
+      const { page, limit, search } = input;
+      const skip = (page - 1) * limit;
+
+      const where: Prisma.PodcastWhereInput = {
+        ...(search
+          ? {
+            OR: [
+              {
+                message: {
+                  contains: search,
+                  mode: Prisma.QueryMode.insensitive,
+                },
+              },
+            ],
+          }
+          : {}),
+      };
+
+      const [podcasts, total] = await Promise.all([
+        prisma.podcast.findMany({
+          where,
+          orderBy: { createdAt: "desc" },
+          skip,
+          take: limit,
+        }),
+        prisma.podcast.count({ where }),
+      ]);
+
+      return {
+        podcasts,
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      };
     }),
   getUser: protectedProcedure
     .query(async ({ ctx }) => {

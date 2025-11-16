@@ -3,14 +3,17 @@ import { Button } from "../ui/button"
 import { ArrowRight, FileText, ImageIcon, Mic, Music2, Sparkles } from "lucide-react"
 import { Card, CardContent } from "../ui/card"
 import prisma from "@/utils/db"
+import Header from "../header"
 
 export const HeroSection = async () => {
 
   const totalPodcasts = await prisma.podcast.count()
 
     return (
-        <section className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-pink-600 to-cyan-600 text-white">
+        <section className="bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 text-white">
         {/* Animated background elements */}
+        <Header />
+        <div className="relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" />
           <div className="absolute top-0 right-0 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000" />
@@ -105,6 +108,7 @@ export const HeroSection = async () => {
                 </CardContent>
               </Card>
             </div>
+          </div>
           </div>
         </div>
 

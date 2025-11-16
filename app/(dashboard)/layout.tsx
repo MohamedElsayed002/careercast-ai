@@ -6,7 +6,6 @@ import React from "react"
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <main>
-            <Header />
             {children}
             <Footer />
         </main>

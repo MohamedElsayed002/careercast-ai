@@ -26,29 +26,34 @@ const Header = () => {
     const userInitials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 
     return (
-        <header className="top-0 z-50 w-full   bg-gradient-to-br from-purple-600 via-pink-600 to-cyan-600">
+        <header className="bg-inherit top-0 z-50 w-full">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
-                    <Link href='/' className="flex items-center gap-2 group">
+                    <Link href='/' className="flex items-center gap-2 group cursor-pointer">
                         <div className="relative">
                             <div className="absolute inset-0 bg-white/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
                             <div className="relative bg-white/10 backdrop-blur-md rounded-full p-2 border border-white/20">
                                 <Mic className="w-5 h-5 text-white" />
                             </div>
                         </div>
-                        <h1 className="text-2xl font-bold text-white">
+                        <h1 className="text-xl md:text-xl font-bold text-white">
                             Podcastr
                         </h1>
                     </Link>
 
                     {/* Navigation & Auth */}
                     <div className="flex items-center gap-3">
+                        <Button asChild variant="outline">
+                            <Link href='/all-podcasts' className="cursor-pointer">
+                                All Podcasts
+                            </Link>
+                        </Button>
                         {data ? (
                             <>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger>
-                                        <div className="hidden sm:flex items-center gap-3 px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20">
+                                        <div className="sm:flex items-center gap-3 px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20">
                                             <Avatar className="h-8 w-8 border-2 border-white/30">
                                                 <AvatarImage src={data.user?.image || undefined} alt={userName} />
                                                 <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-400 text-white text-sm font-semibold">
@@ -70,7 +75,7 @@ const Header = () => {
                                         <DropdownMenuLabel>
                                             <Link href='/user'>My account</Link>
                                         </DropdownMenuLabel>
-                                        { !user?.isPro && !isLoading && (
+                                        {!user?.isPro && !isLoading && (
                                             <DropdownMenuItem>
                                                 <h1
                                                     onClick={() => authClient.checkout({ slug: "pro" })}

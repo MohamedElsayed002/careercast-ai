@@ -46,6 +46,7 @@ export async function createText(message: string) {
         model: openaiVercel('gpt-4o-mini'),
         schema: EpisodeSchema,
         prompt,
+        maxOutputTokens: 200,
         experimental_telemetry: {
             isEnabled: true,
             recordInputs: true,
@@ -62,7 +63,7 @@ export async function generateAudio(text: string, voice: string) {
         model: 'gpt-4o-mini-tts',
         voice: voice,
         input: text,
-        speed: 0.85,
+        speed: 1,
     })
 
     const result = await response.arrayBuffer()
