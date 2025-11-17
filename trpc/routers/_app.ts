@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { baseProcedure, createTRPCRouter, premiumProcedure, protectedProcedure } from '../init';
+import { adminProcedure, baseProcedure, createTRPCRouter, premiumProcedure, protectedProcedure } from '../init';
 import { UTFile } from 'uploadthing/server';
 import { v4 as uuid } from 'uuid';
 import { utapi } from '@/utils/server';
@@ -82,6 +82,7 @@ getPodcastsWithPagination: baseProcedure
         },
         select: {
           name: true,
+          role:true,
           isPro: true,
           podcasts: {
             orderBy: { createdAt: 'desc' },
@@ -408,7 +409,14 @@ getPodcastsWithPagination: baseProcedure
       });
 
       return { success: true };
-    })
+    }),
+
+    // Admin procedures can be added here
+    allUsers: adminProcedure
+      .query(async ({ctx}) => {
+        const users = await prisma.user.findMany({})
+        return users
+      })
 });
 // export type definition of API
 export type AppRouter = typeof appRouter;

@@ -75,6 +75,11 @@ const Header = () => {
                                         <DropdownMenuLabel>
                                             <Link href='/user'>My account</Link>
                                         </DropdownMenuLabel>
+                                        {user?.role === 'ADMIN' && (
+                                            <DropdownMenuItem>
+                                                <Link href='/admin/dashboard'>Admin Dashboard</Link>
+                                            </DropdownMenuItem>
+                                        )}
                                         {!user?.isPro && !isLoading && (
                                             <DropdownMenuItem>
                                                 <h1

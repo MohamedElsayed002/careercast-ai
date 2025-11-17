@@ -1,4 +1,5 @@
 import { polarClient } from '@/utils/auth';
+import prisma from '@/utils/db';
 import { getSession } from '@/utils/server';
 import { initTRPC, TRPCError } from '@trpc/server';
 import { cache } from 'react';
@@ -22,31 +23,50 @@ const t = initTRPC.create({
 export const createTRPCRouter = t.router;
 export const createCallerFactory = t.createCallerFactory;
 export const baseProcedure = t.procedure;
-export const protectedProcedure = baseProcedure.use(async ({ctx,next}) => {
+export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
   const user = await getSession()
 
-  if(!user) {
+  if (!user) {
     throw new TRPCError({
       code: 'UNAUTHORIZED',
       message: 'u r unauthorized'
     })
   }
 
-  return next({ctx: {...ctx, auth: user}})
+  const userRole = await prisma.user.findUnique({
+    where: {
+      id: user.user.id
+    }
+  })
+
+  return next({ ctx: { ...ctx, auth: user, role: userRole?.role } })
 })
 export const premiumProcedure = protectedProcedure.use(
-  async ({ctx,next}) => {
+  async ({ ctx, next }) => {
     const customer = await polarClient.customers.getStateExternal({
       externalId: ctx.auth.user.id
     })
 
-    if(!customer.activeSubscriptions || customer.activeSubscriptions.length === 0) {
+
+    if (!customer.activeSubscriptions || customer.activeSubscriptions.length === 0) {
       throw new TRPCError({
         code: 'FORBIDDEN',
         message: 'Active subscription'
       })
     }
 
-    return next({ctx : {...ctx,customer}})
+    return next({ ctx: { ...ctx, customer } })
+  }
+)
+export const adminProcedure = protectedProcedure.use(
+  async ({ ctx, next }) => {
+    if (ctx.role !== 'ADMIN') {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'Admin access only'
+      })
+    }
+
+    return next({ ctx })
   }
 )
