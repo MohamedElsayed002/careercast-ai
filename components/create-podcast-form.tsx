@@ -125,10 +125,6 @@ export const CreatePodcastForm = () => {
                         </div>
                     </form>
                 </Form>
-                <h1 className='flex gap-2 pb-4'>
-                    <AlertCircle />
-                    I reduced the audio duration and image quality because each time cost me 0.20$
-                </h1>
                 <GeneratedContentSection audioURL={data.audioURL} pdfURL={data.pdfURL} />
             </div>
         </div>
