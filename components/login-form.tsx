@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { authClient } from "@/utils/auth-client"
+import { SocialMediaButtons } from "./social-media-buttons"
 
 const loginSchema = z.object({
     email: z.string().min(1, "Email is required").email("Not a valid email"),
@@ -63,7 +64,9 @@ export function LoginForm() {
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)}>
                             <div className="grid gap-6">
+                                <SocialMediaButtons/>
                                 <div className="grid gap-6">
+
                                     <FormField
                                         control={form.control}
                                         name='email'
