@@ -13,10 +13,17 @@ export const SocialMediaButtons = () => {
         });
     };
 
+    const signInWithGoogle = async () => {
+        await authClient.signIn.social({
+            provider:'google',
+            callbackURL:'/'
+        })
+    }
+
     return (
         <div className="flex flex-col gap-4">
             <Button
-                variant="outline"
+                variant="ghost"
                 className="w-full flex items-center gap-2"
                 type="button"
                 onClick={signInWithGitHub}
@@ -28,6 +35,20 @@ export const SocialMediaButtons = () => {
                     alt="Github"
                 />
                 Continue with Github
+            </Button>
+            <Button
+                variant="ghost"
+                className="w-full flex items-center gap-2"
+                type="button"
+                onClick={signInWithGoogle}
+            >
+                <Image
+                    src="/logo/google.svg"
+                    width={20}
+                    height={20}
+                    alt="Google"
+                />
+                Continue with Google
             </Button>
         </div>
     );
