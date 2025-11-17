@@ -103,15 +103,16 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
                             <div className="flex gap-2">
                                 <Input
                                     type='text'
-                                    placeholder="Describe the image you want to generate..."
+                                    placeholder="Paused / Just upload image..."
                                     value={imagePrompt}
                                     onChange={(e) => setImagePrompt(e.target.value)}
                                     className="flex-1"
+                                    disabled={true}
                                     // disabled={!hasActiveSubscription}
                                 />
                                 <Button
                                     type="button"
-                                    onClick={handleGenerateImage}
+                                    onClick={() => console.log('Paused for now')}
                                     disabled={mutate.isPending || !imagePrompt.trim()}
                                 >
                                     {mutate.isPending ? (
