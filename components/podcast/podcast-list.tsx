@@ -79,10 +79,9 @@ export function PodcastList(props: { podcasts: PodcastItem[] }) {
 
                         <Card className={`relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden`}>
                             {/* Image Header */}
-                            {p.imageUrl ? (
                                 <div className="relative w-full h-48 overflow-hidden">
                                     <Image
-                                        src={p.imageUrl}
+                                        src={p.imageUrl ? p.imageUrl : '/image.png'}
                                         alt={p.message}
                                         fill
                                         className="object-cover"
@@ -99,18 +98,6 @@ export function PodcastList(props: { podcasts: PodcastItem[] }) {
                                         </CardTitle>
                                     </div>
                                 </div>
-                            ) : (
-                                <CardHeader className={`bg-gradient-to-br ${gradient} p-6 text-white`}>
-                                    <div className="flex items-start justify-between gap-3">
-                                        <CardTitle className="text-lg leading-6 line-clamp-2 font-bold text-white">
-                                            {p.message}
-                                        </CardTitle>
-                                        <Badge className="shrink-0 bg-white/20 text-white border-white/30 backdrop-blur-sm">
-                                            {dateLabel}
-                                        </Badge>
-                                    </div>
-                                </CardHeader>
-                            )}
                             <CardContent className="p-6 space-y-4">
                                 {/* Audio Player */}
                                 <div className="rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-4 border border-purple-200/50 dark:border-purple-800/50">

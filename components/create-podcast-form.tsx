@@ -61,7 +61,10 @@ export const CreatePodcastForm = () => {
     }))
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // console.log(values)
+        if(!values.image) {
+            toast.error("Please upload a cover image for your podcast.")
+            return
+        }
         mutate.mutate({ message: values.description, voice: values.voice, image: values.image })
     }
 
