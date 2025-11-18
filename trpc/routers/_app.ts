@@ -24,20 +24,20 @@ export const appRouter = createTRPCRouter({
       })
       return podcasts
     }),
-getPodcastsWithPagination: baseProcedure
-  .input(z.object({
-    page: z.number().min(1).default(1),
-    limit: z.number().min(1).max(50).default(6),
-    search: z.string().optional().default(''),
-  }))
-  .query(async ({ input }) => {
-    const { page, limit, search } = input;
-    const skip = (page - 1) * limit;
+  getPodcastsWithPagination: baseProcedure
+    .input(z.object({
+      page: z.number().min(1).default(1),
+      limit: z.number().min(1).max(50).default(6),
+      search: z.string().optional().default(''),
+    }))
+    .query(async ({ input }) => {
+      const { page, limit, search } = input;
+      const skip = (page - 1) * limit;
 
-    const where: Prisma.PodcastWhereInput = {
-      status: "PUBLIC",
-      ...(search
-        ? {
+      const where: Prisma.PodcastWhereInput = {
+        status: "PUBLIC",
+        ...(search
+          ? {
             OR: [
               {
                 title: {
@@ -53,27 +53,27 @@ getPodcastsWithPagination: baseProcedure
               },
             ],
           }
-        : {}),
-    };
+          : {}),
+      };
 
-    const [podcasts, total] = await Promise.all([
-      prisma.podcast.findMany({
-        where,
-        orderBy: { createdAt: "desc" },
-        skip,
-        take: limit,
-      }),
-      prisma.podcast.count({ where }),
-    ]);
+      const [podcasts, total] = await Promise.all([
+        prisma.podcast.findMany({
+          where,
+          orderBy: { createdAt: "desc" },
+          skip,
+          take: limit,
+        }),
+        prisma.podcast.count({ where }),
+      ]);
 
-    return {
-      podcasts,
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
-    };
-  }),
+      return {
+        podcasts,
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      };
+    }),
   getUser: protectedProcedure
     .query(async ({ ctx }) => {
       const user = await prisma.user.findFirstOrThrow({
@@ -82,7 +82,7 @@ getPodcastsWithPagination: baseProcedure
         },
         select: {
           name: true,
-          role:true,
+          role: true,
           isPro: true,
           podcasts: {
             orderBy: { createdAt: 'desc' },
@@ -167,10 +167,10 @@ getPodcastsWithPagination: baseProcedure
       return { success: true }
     }),
   generateImage: premiumProcedure
-    .input(z.object({ 
+    .input(z.object({
       message: z.string().min(1),
       credential: z.string().min(1)
-     }))
+    }))
     .mutation(async ({ input, ctx }) => {
       const { message, credential } = input
 
@@ -186,7 +186,7 @@ getPodcastsWithPagination: baseProcedure
         throw new TRPCError({ code: 'FORBIDDEN', message: 'subscribe to generate image' })
       }
 
-      const imageOpenAIUrl = await generateImage(message,credential)
+      const imageOpenAIUrl = await generateImage(message, credential)
 
       if (!imageOpenAIUrl) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'failed for generating image' })
@@ -411,12 +411,63 @@ getPodcastsWithPagination: baseProcedure
       return { success: true };
     }),
 
-    // Admin procedures can be added here
-    allUsers: adminProcedure
-      .query(async ({ctx}) => {
-        const users = await prisma.user.findMany({})
-        return users
+  // Admin procedures can be added here
+  allUsers: adminProcedure
+    .query(async ({ ctx }) => {
+      const users = await prisma.user.findMany({
+        select: {
+          name:true,
+          email: true,
+          id: true,
+          role:true,
+          isPro: true,
+          _count: {
+            select:{
+              podcasts: true
+            }
+          }
+        }
       })
+      return users.map((user) => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isPro: user.isPro,
+        podcasts: user._count.podcasts
+      }))
+    }),
+  adminDashboardStats: adminProcedure
+    .query(async ({ ctx }) => {
+      const totalUsers = await prisma.user.count()
+      const totalPodcasts = await prisma.podcast.count()
+      const proUsers = await prisma.user.count({
+        where: {
+          isPro: true
+        }
+      })
+      const freeUsers = totalUsers - proUsers
+
+      return {
+        totalUsers,
+        totalPodcasts,
+        proUsers,
+        freeUsers
+      }
+    }),
+  deleteUser: adminProcedure
+    .input(z.object({
+      userId: z.string().min(1)
+    }))
+    .mutation(async ({ input }) => {
+      const { userId } = input
+      await prisma.user.delete({
+        where: {
+          id: userId
+        }
+      })
+      return { success: true }
+    })
 });
 // export type definition of API
 export type AppRouter = typeof appRouter;
