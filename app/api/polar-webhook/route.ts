@@ -1,10 +1,11 @@
 import prisma from "@/utils/db";
+import { sendEmail } from "@/utils/nodemailer";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
     const body = await req.json();
     console.log('Webhook received:', body.type);
-    
+
     try {
         // Events that ENABLE Pro features
         if (
@@ -14,32 +15,50 @@ export async function POST(req: Request) {
         ) {
             if (body.data.product?.name === 'Podcast Generator Pro') {
                 const userId = body.data.customer?.external_id || body.data.user_id;
-                
+
                 if (!userId) {
-                    return NextResponse.json({ 
-                        ok: false, 
-                        reason: 'No user ID found' 
+                    return NextResponse.json({
+                        ok: false,
+                        reason: 'No user ID found'
                     }, { status: 400 });
                 }
 
                 console.log('Enabling Pro for user:', userId);
-                
+
                 await prisma.user.update({
                     where: { id: userId },
-                    data: { 
+                    data: {
                         isPro: true,
                         subscriptionId: body.data.id,
                         subscriptionStatus: body.data.status,
-                        subscriptionEndsAt: body.data.current_period_end 
-                            ? new Date(body.data.current_period_end) 
+                        subscriptionEndsAt: body.data.current_period_end
+                            ? new Date(body.data.current_period_end)
                             : null,
                         customerId: body.data.customer_id || body.data.customer?.id,
                     }
                 });
 
-                return NextResponse.json({ 
-                    ok: true, 
-                    message: 'Pro enabled' 
+                const user = await prisma.user.findUnique({
+                    where: { id: userId }
+                })
+
+                if (!user) {
+                    return NextResponse.json({
+                        ok: false,
+                        reason: 'User not found after update'
+                    }, { status: 404 });
+                }
+
+                await sendEmail(
+                    user?.email || '',
+                    'Your Podcast Generator Pro Subscription is Active!',
+                    `Hello ${user.name || 'User'},\n\n`,
+                    `<p>Hello ${user.name || 'User'},</p>`
+                )
+
+                return NextResponse.json({
+                    ok: true,
+                    message: 'Pro enabled'
                 });
             }
         }
@@ -53,9 +72,9 @@ export async function POST(req: Request) {
             const userId = body.data.customer?.external_id || body.data.user_id;
 
             if (!userId) {
-                return NextResponse.json({ 
-                    ok: false, 
-                    reason: 'No user ID found' 
+                return NextResponse.json({
+                    ok: false,
+                    reason: 'No user ID found'
                 }, { status: 400 });
             }
 
@@ -63,18 +82,29 @@ export async function POST(req: Request) {
 
             await prisma.user.update({
                 where: { id: userId },
-                data: { 
+                data: {
                     isPro: false,
                     subscriptionStatus: body.data.status || 'canceled',
-                    subscriptionEndsAt: body.data.ends_at 
-                        ? new Date(body.data.ends_at) 
+                    subscriptionEndsAt: body.data.ends_at
+                        ? new Date(body.data.ends_at)
                         : null,
                 }
             });
 
-            return NextResponse.json({ 
-                ok: true, 
-                message: 'Pro disabled' 
+            const user = await prisma.user.findUnique({
+                where: { id: userId }
+            })
+
+            await sendEmail(
+                user?.email || '',
+                'Deactivated subscription',
+                'can you tell me why unsubscribe',
+                '<p>See you soon</p>'
+            )
+
+            return NextResponse.json({
+                ok: true,
+                message: 'Pro disabled'
             });
         }
 
@@ -84,9 +114,9 @@ export async function POST(req: Request) {
             const userId = body.data.customer?.external_id || body.data.user_id;
 
             if (!userId) {
-                return NextResponse.json({ 
-                    ok: false, 
-                    reason: 'No user ID found' 
+                return NextResponse.json({
+                    ok: false,
+                    reason: 'No user ID found'
                 }, { status: 400 });
             }
 
@@ -94,15 +124,26 @@ export async function POST(req: Request) {
 
             await prisma.user.update({
                 where: { id: userId },
-                data: { 
+                data: {
                     isPro: false,
                     subscriptionStatus: 'refunded',
                 }
             });
 
-            return NextResponse.json({ 
-                ok: true, 
-                message: 'Refund processed, Pro disabled' 
+            const user = await prisma.user.findUnique({
+                where: { id: userId }
+            })
+
+            await sendEmail(
+                user?.email || '',
+                'Deactivated subscription',
+                'can you tell me why unsubscribe',
+                '<p>See you soon</p>'
+            )
+
+            return NextResponse.json({
+                ok: true,
+                message: 'Refund processed, Pro disabled'
             });
         }
 
@@ -111,11 +152,11 @@ export async function POST(req: Request) {
             console.log('111: Successful payment for user:', body.data.customer?.external_id || body.data.user_id);
             if (body.data.product?.name === 'Podcast Generator Pro') {
                 const userId = body.data.customer?.external_id || body.data.user_id;
-                
+
                 if (!userId) {
-                    return NextResponse.json({ 
-                        ok: false, 
-                        reason: 'No user ID found' 
+                    return NextResponse.json({
+                        ok: false,
+                        reason: 'No user ID found'
                     }, { status: 400 });
                 }
 
@@ -123,16 +164,16 @@ export async function POST(req: Request) {
 
                 await prisma.user.update({
                     where: { id: userId },
-                    data: { 
+                    data: {
                         isPro: true,
                         subscriptionStatus: 'active',
                         lastPaymentAt: new Date(),
                     }
                 });
 
-                return NextResponse.json({ 
-                    ok: true, 
-                    message: 'Payment confirmed, Pro enabled' 
+                return NextResponse.json({
+                    ok: true,
+                    message: 'Payment confirmed, Pro enabled'
                 });
             }
         }
@@ -143,9 +184,9 @@ export async function POST(req: Request) {
             const userId = body.data.customer?.external_id || body.data.user_id;
 
             if (!userId) {
-                return NextResponse.json({ 
-                    ok: false, 
-                    reason: 'No user ID found' 
+                return NextResponse.json({
+                    ok: false,
+                    reason: 'No user ID found'
                 }, { status: 400 });
             }
 
@@ -157,33 +198,33 @@ export async function POST(req: Request) {
 
             await prisma.user.update({
                 where: { id: userId },
-                data: { 
+                data: {
                     isPro,
                     subscriptionStatus: body.data.status,
-                    subscriptionEndsAt: body.data.current_period_end 
-                        ? new Date(body.data.current_period_end) 
+                    subscriptionEndsAt: body.data.current_period_end
+                        ? new Date(body.data.current_period_end)
                         : null,
                 }
             });
 
-            return NextResponse.json({ 
-                ok: true, 
-                message: 'Subscription updated' 
+            return NextResponse.json({
+                ok: true,
+                message: 'Subscription updated'
             });
         }
 
         console.log('Unhandled webhook event:', body.type);
-        return NextResponse.json({ 
-            ok: true, 
-            message: 'Event received but not handled' 
+        return NextResponse.json({
+            ok: true,
+            message: 'Event received but not handled'
         });
 
     } catch (error) {
         console.error('Webhook error:', error);
-        return NextResponse.json({ 
-            ok: false, 
-            reason: 'Database update failed', 
-            error: error instanceof Error ? error.message : 'Unknown error' 
+        return NextResponse.json({
+            ok: false,
+            reason: 'Database update failed',
+            error: error instanceof Error ? error.message : 'Unknown error'
         }, { status: 500 });
     }
 }
