@@ -416,13 +416,13 @@ export const appRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       const users = await prisma.user.findMany({
         select: {
-          name:true,
+          name: true,
           email: true,
           id: true,
-          role:true,
+          role: true,
           isPro: true,
           _count: {
-            select:{
+            select: {
               podcasts: true
             }
           }
@@ -459,14 +459,44 @@ export const appRouter = createTRPCRouter({
     .input(z.object({
       userId: z.string().min(1)
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
       const { userId } = input
+
+      if (ctx.auth.user.id === userId) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'you can not delete yourself.' })
+      }
+      
       await prisma.user.delete({
         where: {
           id: userId
         }
       })
       return { success: true }
+    }),
+  getUserByAdmin: adminProcedure
+    .input(z.object({
+      userId: z.string().min(1)
+    }))
+    .query(async ({ input }) => {
+      const { userId } = input
+      const user = await prisma.user.findUnique({
+        where: { id: userId }
+      })
+      return user
+    }),
+  getUserPodcastsPublic: adminProcedure
+    .input(z.object({
+      userId: z.string().min(1)
+    }))
+    .query(async ({ input }) => {
+      const { userId } = input
+      const userPodcasts = await prisma.podcast.findMany({
+        where: {
+          userId: userId,
+          status: 'PUBLIC'
+        },
+      })
+      return userPodcasts
     })
 });
 // export type definition of API

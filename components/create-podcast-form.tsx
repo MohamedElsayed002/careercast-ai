@@ -14,11 +14,9 @@ import {
     Mic,
     Music2,
     Loader2,
-    AlertCircle,
 } from "lucide-react"
 import { formSchema } from "@/types"
 import { PodcastDetailsSection } from "./podcast-form/podcast-details-section"
-import { CoverImageSection } from "./podcast-form/cover-image-section"
 import { GeneratedContentSection } from "./podcast-form/generated-content-section"
 import Header from "./header"
 

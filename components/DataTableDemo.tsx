@@ -36,9 +36,8 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
-import { useTRPC } from "@/trpc/client"
-import { useMutation } from "@tanstack/react-query"
 import { DeleteButton } from "./delete-button"
+import Link from "next/link"
 
 export type UserData = {
   id: string
@@ -70,7 +69,7 @@ export const columns: ColumnDef<UserData>[] = [
       const name = row.getValue("name") as string
       const email = row.original.email
       const image = row.original.image
-      
+
       // Show name if exists, otherwise show email
       const displayName = name || email
 
@@ -93,7 +92,7 @@ export const columns: ColumnDef<UserData>[] = [
               <User className="h-5 w-5 text-muted-foreground" />
             )}
           </div>
-          
+
           {/* User info */}
           <div className="flex flex-col">
             <span className="font-medium">{displayName}</span>
@@ -161,7 +160,7 @@ export const columns: ColumnDef<UserData>[] = [
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent className="text-center" align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -173,11 +172,16 @@ export const columns: ColumnDef<UserData>[] = [
               Copy email
             </DropdownMenuItem>
             <DropdownMenuItem>
-              {/* Delete Button */}
-              <DeleteButton user={user.id}/>
+              <Link href={`/admin/user/${user.id}`}>View profile</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>View profile</DropdownMenuItem>
-            <DropdownMenuItem>All Podcasts</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`/admin/user/${user.id}/podcasts`}>All Podcasts</Link>
+            </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              {/* Delete Button */}
+              <DeleteButton user={user.id} />
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -185,7 +189,7 @@ export const columns: ColumnDef<UserData>[] = [
   },
 ]
 
-export function DataTableDemo({data} : {data: any}) {
+export function DataTableDemo({ data }: { data: any }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -262,9 +266,9 @@ export function DataTableDemo({data} : {data: any}) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}

@@ -9,13 +9,12 @@ const DashboardPage = async () => {
     // const data = await caller.allUsers()
     // const stats = await caller.adminDashboardStats()
     const [data,stats] = await Promise.all([
-        // fetch any other data needed for the dashboard
         caller.allUsers(),
         caller.adminDashboardStats()
     ])
 
     return (
-        <div className="bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900">
             <Header/>
             <div className="w-4/5 mx-auto py-10">
                 <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
