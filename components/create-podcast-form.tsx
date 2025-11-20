@@ -41,7 +41,10 @@ export const CreatePodcastForm = () => {
             voice1: '',
             voice2: '',
             image: '',
-            credential: ''
+            credential: '',
+            imageModel: 'dall-e-2',
+            audioModel: 'gpt-4o-mini-tts',
+            textModel: 'gpt-4o-mini',
         }
     })
 
@@ -64,21 +67,23 @@ export const CreatePodcastForm = () => {
     }))
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        if (!values.image) {
-            toast.error('Image is required')
-            return
-        }
-        
-        mutate.mutate({ 
-            title: values.title,
-            message: values.description,
-            duration: values.duration as "1" | "5" | "10" | "20",
-            voice1: values.voice1,
-            voice2: values.voice2,
-            image: values.image,
-            credential: values.credential,
-            voiceSpeed: values.voiceSpeed
-        })
+        // if (!values.image) {
+        //     toast.error('Image is required')
+        //     return
+        // }
+        console.log(values)
+        // mutate.mutate({ 
+        //     title: values.title,
+        //     message: values.description,
+        //     duration: values.duration as "1" | "5" | "10" | "20",
+        //     voice1: values.voice1,
+        //     voice2: values.voice2,
+        //     image: values.image,
+        //     credential: values.credential,
+        //     voiceSpeed: values.voiceSpeed,
+        //     audioModel: values.audioModel,
+        //     textModel: values.textModel
+        // })
     }
 
     return (

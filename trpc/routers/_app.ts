@@ -169,10 +169,11 @@ export const appRouter = createTRPCRouter({
   generateImage: premiumProcedure
     .input(z.object({
       message: z.string().min(1),
-      credential: z.string().min(1)
+      credential: z.string().min(1),
+      imageModel: z.string().min(1)
     }))
     .mutation(async ({ input, ctx }) => {
-      const { message, credential } = input
+      const { message, credential, imageModel } = input
 
       if (!message) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'message is required' })
@@ -186,7 +187,7 @@ export const appRouter = createTRPCRouter({
         throw new TRPCError({ code: 'FORBIDDEN', message: 'subscribe to generate image' })
       }
 
-      const imageOpenAIUrl = await generateImage(message, credential)
+      const imageOpenAIUrl = await generateImage(message, credential,imageModel)
 
       if (!imageOpenAIUrl) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'failed for generating image' })
@@ -245,10 +246,22 @@ export const appRouter = createTRPCRouter({
       voice2: z.string(),
       image: z.string(),
       credential: z.string(),
-      voiceSpeed: z.number().min(0.8).max(1.5).optional()
+      voiceSpeed: z.number().min(0.8).max(1.5).optional(),
+      audioModel: z.string(),
+      textModel: z.string()
     }))
     .mutation(async ({ input, ctx }) => {
-      const { title, message, duration, voice1, voice2, image, credential, voiceSpeed } = input;
+      const { title,
+              message,
+              duration,
+              voice1,
+              voice2,
+              image,
+              credential,
+              voiceSpeed,
+              textModel,
+              audioModel
+             } = input;
       const authUser: any = (ctx as any).auth;
       const userId: string | undefined = authUser?.user?.id ?? authUser?.id ?? authUser?.userId;
       if (!userId) {
@@ -275,7 +288,12 @@ export const appRouter = createTRPCRouter({
       }
 
       // Generate debate text with two speakers
-      const debateData = await createDebateText(message, duration, decrypt(credentialValue?.value));
+      const debateData = await createDebateText(
+        message,
+        duration,
+        decrypt(credentialValue?.value),
+        textModel
+      );
 
       // Generate audio for the debate
       const audioBytes = await generateDebateAudio(
@@ -283,7 +301,8 @@ export const appRouter = createTRPCRouter({
         voice1,
         voice2,
         decrypt(credentialValue.value),
-        voiceSpeed ?? 1
+        voiceSpeed ?? 1,
+        audioModel
       );
 
       const audioFilename = `ai-audio-${uuid()}.mp3`;
@@ -499,5 +518,5 @@ export const appRouter = createTRPCRouter({
       return userPodcasts
     })
 });
-// export type definition of API
+
 export type AppRouter = typeof appRouter;

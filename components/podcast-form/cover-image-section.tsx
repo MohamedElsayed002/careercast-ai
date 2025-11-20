@@ -61,11 +61,18 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
             return
         }
         const credential = form.getValues('credential')
+        const imageModel = form.getValues('imageModel')
         if (!credential) {
             toast.error('Please enter your API credential in the Podcast Details section')
             return
         }
-        mutate.mutate({message: imagePrompt,credential})
+
+        if(!imageModel) {
+            toast.error("Please choose image model")
+            return 
+        }
+
+        mutate.mutate({message: imagePrompt,credential,imageModel})
     }
 
     return (

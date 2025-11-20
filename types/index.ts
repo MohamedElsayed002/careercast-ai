@@ -1,15 +1,45 @@
 import { z } from 'zod'
 
+
 export const formSchema = z.object({
-        title: z.string().min(3, "Title must be at least 3 characters").max(100, "Title must be less than 100 characters"),
-        description: z.string().min(10, "Description must be at least 10 characters").max(1000, "Description must be less than 1000 characters"),
-        image: z.string(),
-        voice1: z.string(),
-        voice2: z.string(),
-        duration: z.string(),
-        credential: z.string(),
-        voiceSpeed: z.number().min(0.8).max(1.5).optional()
-})
+    title: z
+        .string()
+        .min(3, "Title must be at least 3 characters")
+        .max(100, "Title must be less than 100 characters"),
+
+    description: z
+        .string()
+        .min(10, "Description must be at least 10 characters")
+        .max(1000, "Description must be less than 1000 characters"),
+
+    // If it's a URL or base64, validate it:
+    image: z
+        .string()
+        .url("Image must be a valid URL")
+        .min(1, "Image is required"),
+
+    // Voices required (usually model IDs)
+    voice1: z.string().min(1, "Voice 1 is required"),
+    voice2: z.string().min(1, "Voice 2 is required"),
+
+    // Duration must be a number, not a string:
+    duration: z.string(),
+
+    credential: z
+        .string()
+        .min(3, "Credential must be at least 3 characters"),
+
+    voiceSpeed: z.number()
+        .min(0.8, "Minimum speed is 0.8")
+        .max(1.5, "Maximum speed is 1.5"),
+
+    imageModel: z.string().min(1, "Image model is required"),
+
+    audioModel: z.string().min(1, "Audio model is required"),
+
+    textModel: z.string().min(1, "Text model is required"),
+});
+
 
 
 interface UploadThingTypes {
@@ -26,7 +56,7 @@ interface UploadThingTypes {
     type: string
     ufsUrl: string
     url: string
-}   
+}
 
 
 export interface PricingFeature {

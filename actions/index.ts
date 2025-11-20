@@ -58,60 +58,12 @@ const parseTargetMinutes = (duration: string) => {
     return 1; // default to 1 minute
 }
 
-
-// One Person 
-// export async function createText(message: string) {
-//     const targetMinutes = parseTargetMinutes(message); // will be 1
-//     // choose conservative words/minute to reduce tokens
-//     const wordsPerMin = 120;
-//     const targetWords = targetMinutes * wordsPerMin; // e.g., 120 words
-//     const minWords = Math.round(targetWords * 0.9);
-//     const maxWords = Math.round(targetWords * 1.1);
-
-//     const prompt = `
-//         ${SYSTEM_BASE}
-//         User: create a podcast episode about "${message}"
-//         CONSTRAINTS (VERY IMPORTANT):
-//             - The whole episode must be approximately ${targetMinutes} minute(s) long.
-//             - Total words: between ${minWords} and ${maxWords} words.
-//             - Produce a concise script. Keep language simple and brief.
-//             - Use 1-2 short segments only (prefer 1). Each segment should be 40-90 seconds combined.
-//             - Do NOT expand with long anecdotes or many examples.
-//             - Return ONLY valid JSON with fields: title, summary, segments (array of {id,title,full_text,durationSec}).
-//             - Do not include any extra explanation or text outside that JSON.
-//     `
-
-//     const maxOutputTokensEstimate = Math.round(maxWords * 1.8); // rough token estimate (words->tokens). adjust down if needed.
-
-//     const { object } = await generateObject({
-//         model: openaiVercel('gpt-4o-mini'),
-//         schema: EpisodeSchema,
-//         prompt,
-//         // <-- limit output tokens so model cannot generate huge text
-//         // If your library uses a different param name, replace with the appropriate one:
-//         maxOutputTokens: maxOutputTokensEstimate,
-//         experimental_telemetry: {
-//             isEnabled: true,
-//             recordInputs: true,
-//             recordOutputs: true
-//         }
-//     })
-
-//     // safety: ensure audio length <= 60s by trimming if model returns long durations
-//     const totalSec = object.segments.reduce((s: number, seg: SegmentsType) => s + (seg.durationSec || 0), 0)
-//     if (totalSec > 60) {
-//         // simple trim: keep first segment only and recompute durationSec
-//         const first = object.segments[0]
-//         first.durationSec = Math.min(60, first.durationSec || 60)
-//         object.segments = [first]
-//     }
-
-//     const full_text = object.segments.map((item) => item.full_text).join(' ')
-//     return full_text
-// }
-
 // Two
-export async function createDebateText(message: string, duration: string = "1", credential: string) {
+export async function createDebateText(
+    message: string,
+    duration: string = "1",
+    credential: string,
+    model: string) {
     const targetMinutes = parseTargetMinutes(duration);
     // Use conservative words per minute (160-170 wpm is typical for speech)
     // We use 160 to ensure we get enough content and account for pauses
@@ -171,7 +123,7 @@ REMEMBER: The total word count across all dialogue.text fields MUST be at least 
 
     try {
         const result = await generateObject({
-            model: openaiVercel('gpt-4o-mini'),
+            model: openaiVercel(model),
             schema: DebateSchema,
             prompt,
             maxOutputTokens: maxOutputTokensEstimate,
@@ -319,7 +271,13 @@ REMEMBER: The total word count across all dialogue.text fields MUST be at least 
     }
 }
 
-export async function generateAudio(text: string, voice: string, credential: string, voiceSpeed: number) {
+export async function generateAudio(
+    text: string,
+    voice: string,
+    credential: string,
+    voiceSpeed: number,
+    model: string
+) {
 
     const openai = new OpenAI({
         apiKey: credential
@@ -327,8 +285,8 @@ export async function generateAudio(text: string, voice: string, credential: str
 
     // keep audio speed 1, but ensure the text length is short (<~140 words)
     const response = await openai.audio.speech.create({
-        model: 'gpt-4o-mini-tts',
-        voice: voice,
+        model,
+        voice,
         input: text,
         speed: voiceSpeed,
     })
@@ -342,7 +300,8 @@ export async function generateDebateAudio(
     voice1: string,
     voice2: string,
     credential: string,
-    voiceSpeed: number
+    voiceSpeed: number,
+    audioModel: string,
 ): Promise<Buffer> {
 
     const ffmpegModule = (await import('fluent-ffmpeg')).default;
@@ -372,7 +331,7 @@ export async function generateDebateAudio(
             const batchPromises = batch.map(async (item, batchIndex) => {
                 const globalIndex = i + batchIndex;
                 const voice = item.speaker === "SPEAKER1" ? voice1 : voice2;
-                const audioBytes = await generateAudio(item.text, voice, credential, voiceSpeed); // your existing TTS call
+                const audioBytes = await generateAudio(item.text, voice, credential, voiceSpeed,audioModel); // your existing TTS call
 
                 const tempFile = path.join(tempDir, `audio-${globalIndex}.mp3`);
                 await fs.promises.writeFile(tempFile, audioBytes);
@@ -444,8 +403,15 @@ export async function generateDebateAudio(
 //     return response.choices[0].message?.content
 // }
 
+type optionsType = {
+    model: string,
+    n: number,
+    size?: "auto" | "1024x1024" | "1536x1024" | "1024x1536" | "256x256" | "512x512" | "1792x1024" | "1024x1792" | null,
+    prompt: string,
+    quality?: "standard" | "hd" | "low" | "medium" | "high" | "auto" | null
+}   
 
-export async function generateImage(prompt: string, credential: string) {
+export async function generateImage(prompt: string, credential: string, model: string) {
     const credentialValue = await prisma.credential.findUnique({
         where: { id: credential }
     })
@@ -458,13 +424,19 @@ export async function generateImage(prompt: string, credential: string) {
         apiKey: decrypt(credentialValue?.value)
     })
 
-    const response = await openai.images.generate({
-        model: 'dall-e-2',
+    const options: optionsType = {
+        model,
         n: 1,
-        size: '256x256',
-        // quality: 'standard',
-        prompt,
-    });
+        size: "1024x1024",
+        prompt
+    }
+
+    if (model.startsWith('dall-e-3')) {
+        options.quality = "standard"
+    }
+
+    const response = await openai.images.generate(options)
+
 
     return response.data?.[0]?.url;
 }

@@ -26,7 +26,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Sparkles } from "lucide-react"
+import { InfoIcon, Sparkles } from "lucide-react"
 import { voices } from "@/lib/utils"
 import { formSchema } from "@/types"
 import { useTRPC } from "@/trpc/client"
@@ -34,6 +34,8 @@ import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
 import { Slider } from "../ui/slider"
 import { CoverImageSection } from "./cover-image-section"
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card"
+import { formatPriceForDisplay, InfoHover, PRICE_MAP } from "./info-hover"
 
 interface PodcastDetailsSectionProps {
     form: UseFormReturn<z.infer<typeof formSchema>>
@@ -44,8 +46,8 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
     const voice2 = form.watch('voice2')
 
     const trpc = useTRPC()
-    const { data : credentials} = useQuery(trpc.getCredential.queryOptions(undefined))
-    
+    const { data: credentials } = useQuery(trpc.getCredential.queryOptions(undefined))
+
 
     return (
         <Card className="shadow-lg border-2">
@@ -102,14 +104,14 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                 <FormField
                     control={form.control}
                     name='credential'
-                    render={({field}) => (
+                    render={({ field }) => (
                         <FormItem>
                             <FormLabel className="text-base font-semibold">
                                 Credentials (API Key)
                             </FormLabel>
                             <FormDescription>
                                 <p>Select the API credential to be used for generating the podcast</p>
-                                <p> 
+                                <p>
                                     Don&apos;t have any credentials?{' '}
                                     <Link href="/user" className="text-primary underline">
                                         Add your credentials here.
@@ -140,11 +142,11 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                         </FormItem>
                     )}
                 />
-                <FormField 
-                
+                <FormField
+
                     control={form.control}
                     name='voiceSpeed'
-                    render={({field}) => (
+                    render={({ field }) => (
                         <FormItem>
                             <FormLabel className="text-base font-semibold">
                                 Voice Speed
@@ -264,6 +266,193 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                 {voice2 && (
                     <audio src={`/${voice2}.mp3`} autoPlay className='hidden' />
                 )}
+
+                {/* Models */}
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                    <FormField
+                        control={form.control}
+                        name="textModel"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-base font-semibold">Text Model</FormLabel>
+
+                                <FormDescription className="flex justify-between items-center">
+                                    <span>Select the model to generate the text for dialogue</span>
+
+                                    {/* Reusable hover showing the currently selected model details */}
+                                    <div>
+                                        <InfoHover modelKey={field.value || "gpt-4o-mini"} />
+                                    </div>
+                                </FormDescription>
+
+                                <FormControl>
+                                    <Select onValueChange={(v) => field.onChange(v)} value={field.value}>
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Choose text model" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="gpt-4o-mini" className="flex justify-between items-center">
+                                                <div className="flex flex-col">
+                                                    <span className="font-medium">gpt-4o-mini</span>
+                                                    <span className="text-xs text-muted-foreground">Low-cost, fast</span>
+                                                </div>
+                                                <div className="text-sm">{formatPriceForDisplay(PRICE_MAP["gpt-4o-mini"].pricePer1MInput)} / 1M in</div>
+                                            </SelectItem>
+
+                                            <SelectItem value="gpt-4-turbo" className="flex justify-between items-center">
+                                                <div className="flex flex-col">
+                                                    <span className="font-medium">gpt-4-turbo</span>
+                                                    <span className="text-xs text-muted-foreground">Balanced quality</span>
+                                                </div>
+                                                <div className="text-sm">{formatPriceForDisplay(PRICE_MAP["gpt-4-turbo"].pricePer1MInput)} / 1M in</div>
+                                            </SelectItem>
+
+                                            <SelectItem value="gpt-5" className="flex justify-between items-center">
+                                                <div className="flex flex-col">
+                                                    <span className="font-medium">gpt-5</span>
+                                                    <span className="text-xs text-muted-foreground">Highest quality</span>
+                                                </div>
+                                                <div className="text-sm">{formatPriceForDisplay(PRICE_MAP["gpt-5"].pricePer1MInput)} / 1M in</div>
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="audioModel"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-base font-semibold">Audio Model</FormLabel>
+
+                                <FormDescription className="flex justify-between items-center">
+                                    <span>Select the model to generate the audio</span>
+                                    <div>
+                                        <InfoHover modelKey={field.value || "tts-1"} />
+                                    </div>
+                                </FormDescription>
+
+                                <FormControl>
+                                    <Select onValueChange={(v) => field.onChange(v)} value={field.value}>
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Choose audio model" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="gpt-4o-mini-tts" className="flex justify-between items-center">
+                                                <div className="flex flex-col">
+                                                    <span className="font-medium">gpt-4o-mini-tts</span>
+                                                    <span className="text-xs text-muted-foreground">Low-cost TTS</span>
+                                                </div>
+                                                <div className="text-sm">{formatPriceForDisplay(PRICE_MAP["gpt-4o-mini-tts"].pricePerUnit)} / {PRICE_MAP["gpt-4o-mini-tts"].unit}</div>
+                                            </SelectItem>
+
+                                            <SelectItem value="tts-1" className="flex justify-between items-center">
+                                                <div className="flex flex-col">
+                                                    <span className="font-medium">tts-1</span>
+                                                    <span className="text-xs text-muted-foreground">Realtime</span>
+                                                </div>
+                                                <div className="text-sm">{formatPriceForDisplay(PRICE_MAP["tts-1"].pricePerUnit)} / {PRICE_MAP["tts-1"].unit}</div>
+                                            </SelectItem>
+
+                                            <SelectItem value="tts-1-hd" className="flex justify-between items-center">
+                                                <div className="flex flex-col">
+                                                    <span className="font-medium">tts-1-hd</span>
+                                                    <span className="text-xs text-muted-foreground">High fidelity</span>
+                                                </div>
+                                                <div className="text-sm">{formatPriceForDisplay(PRICE_MAP["tts-1-hd"].pricePerUnit)} / {PRICE_MAP["tts-1-hd"].unit}</div>
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                </div>
+
+                {/* Image Model */}
+                <FormField
+                    control={form.control}
+                    name="imageModel"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="text-base font-semibold">Image Model</FormLabel>
+                            <FormDescription className="flex flex-row justify-between">
+                                <span>Select the model to generate the image</span>
+                                <div>
+                                    <HoverCard>
+                                        <HoverCardTrigger>
+                                            <InfoIcon className='size-4 -mt-5' />
+                                        </HoverCardTrigger>
+                                        <HoverCardContent className="w-72">
+                                            <div className="space-y-3">
+                                                <h4 className="text-sm font-semibold">Image model — quick cost & quality</h4>
+
+                                                <div className="border rounded-md p-3">
+                                                    <div className="flex justify-between items-start">
+                                                        <div>
+                                                            <div className="text-sm font-medium">DALL·E-3 — Standard</div>
+                                                            <div className="text-xs text-muted-foreground">Best overall quality & prompt fidelity</div>
+                                                        </div>
+                                                        <div className="text-sm font-semibold">$0.04</div>
+                                                    </div>
+                                                    <div className="mt-1 text-xs text-muted-foreground">Cost: per <strong>1024×1024</strong> image</div>
+                                                </div>
+                                                <div className="border rounded-md p-3">
+                                                    <div className="flex justify-between items-start">
+                                                        <div>
+                                                            <div className="text-sm font-medium">DALL·E-2</div>
+                                                            <div className="text-xs text-muted-foreground">Lower cost — good for drafts and batch runs</div>
+                                                        </div>
+                                                        <div className="text-sm font-semibold">$0.016</div>
+                                                    </div>
+                                                    <div className="mt-1 text-xs text-muted-foreground">Cost: per <strong>1024×1024</strong> image</div>
+                                                </div>
+
+                                                <div className="text-xs text-muted-foreground">
+                                                    Note: prices & quality options may change. These figures are for 1024×1024 images. (Updated Nov 19, 2025)
+                                                </div>
+                                            </div>
+                                        </HoverCardContent>
+                                    </HoverCard>
+                                </div>
+                            </FormDescription>
+                            <FormControl>
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Choose image model" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="dall-e-2">
+                                            <div className='flex flex-col'>
+                                                <span className='font-medium'>dall-e-2</span>
+                                                <span className='text-xs text-muted-foreground'>
+                                                    Image low quality
+                                                </span>
+                                            </div>
+                                        </SelectItem>
+                                        <SelectItem value="dall-e-3">
+                                            <div className='flex flex-col'>
+                                                <span className='font-medium'>dall-e-3</span>
+                                                <span className='text-xs text-muted-foreground'>
+                                                    Image high quality
+                                                </span>
+                                            </div>
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
 
                 <CoverImageSection form={form} />
