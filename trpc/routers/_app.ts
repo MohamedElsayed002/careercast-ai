@@ -3,8 +3,8 @@ import { adminProcedure, baseProcedure, createTRPCRouter, premiumProcedure, prot
 import { UTFile } from 'uploadthing/server';
 import { v4 as uuid } from 'uuid';
 import { utapi } from '@/utils/server';
-import { createPdfBytes } from '@/utils/pdf-utils';
-import { generateImage, createDebateText, generateDebateAudio } from '@/actions';
+import { createPdfBytes, createPodcastPdfBytes } from '@/utils/pdf-utils';
+import { generateImage, createDebateText, generateDebateAudio, generateSummaryAndExercise, PodcastEducationalContent } from '@/actions';
 import prisma from '@/utils/db';
 import { TRPCError } from '@trpc/server';
 import { Prisma } from '@/src/generated/prisma';
@@ -187,7 +187,7 @@ export const appRouter = createTRPCRouter({
         throw new TRPCError({ code: 'FORBIDDEN', message: 'subscribe to generate image' })
       }
 
-      const imageOpenAIUrl = await generateImage(message, credential,imageModel)
+      const imageOpenAIUrl = await generateImage(message, credential, imageModel)
 
       if (!imageOpenAIUrl) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'failed for generating image' })
@@ -252,16 +252,16 @@ export const appRouter = createTRPCRouter({
     }))
     .mutation(async ({ input, ctx }) => {
       const { title,
-              message,
-              duration,
-              voice1,
-              voice2,
-              image,
-              credential,
-              voiceSpeed,
-              textModel,
-              audioModel
-             } = input;
+        message,
+        duration,
+        voice1,
+        voice2,
+        image,
+        credential,
+        voiceSpeed,
+        textModel,
+        audioModel
+      } = input;
       const authUser: any = (ctx as any).auth;
       const userId: string | undefined = authUser?.user?.id ?? authUser?.id ?? authUser?.userId;
       if (!userId) {
@@ -294,6 +294,19 @@ export const appRouter = createTRPCRouter({
         decrypt(credentialValue?.value),
         textModel
       );
+
+      // Generate Summary
+      let summaryData: PodcastEducationalContent | null = null
+
+      if (duration !== "1") {
+        summaryData = await generateSummaryAndExercise(
+          debateData.title,
+          debateData.dialogue,
+          decrypt(credentialValue.value),
+          textModel
+        )
+      }
+
 
       // Generate audio for the debate
       const audioBytes = await generateDebateAudio(
@@ -335,14 +348,30 @@ export const appRouter = createTRPCRouter({
       const audioUrl = audioUpload[0]?.data?.url ?? '';
       const audioId = audioUpload[0]?.data?.customId
 
+
       // Create transcript text from dialogue for PDF
       const transcriptText = debateData.dialogue.map(item =>
         `${item.speaker === 'SPEAKER1' ? 'Speaker 1' : 'Speaker 2'}: ${item.text}`
       ).join('\n\n');
 
-      // for summarizing the podcast
-      // const summary = await generateSummarize(transcriptText);
-      const pdfBytes = await createPdfBytes('Podcast Summary', transcriptText ?? 'No summary generated');
+      const summaryForPdf = typeof summaryData?.summary === 'string'
+        ? { overview: summaryData?.summary ?? '', keyPoints: [], conclusion: '' }
+        : (summaryData?.summary ?? { overview: '', keyPoints: [], conclusion: '' });
+
+      let pdfBytes = null
+
+      if (summaryData) {
+        pdfBytes = await createPodcastPdfBytes({
+          title: debateData.title,
+          script: debateData.dialogue,
+          summary: summaryForPdf,
+          vocabulary: summaryData?.vocabulary,
+          exercises: summaryData?.exercises
+        });
+      } else {
+        pdfBytes = await createPdfBytes('Podcast Summary', transcriptText ?? "No summary generated")
+      }
+
       const pdfBuffer = Buffer.from(pdfBytes);
       const pdfFilename = `podcast-brief-${uuid()}.pdf`;
       const pdfUtFile = new UTFile([pdfBuffer], pdfFilename, { type: 'application/pdf' });
@@ -484,7 +513,7 @@ export const appRouter = createTRPCRouter({
       if (ctx.auth.user.id === userId) {
         throw new TRPCError({ code: 'FORBIDDEN', message: 'you can not delete yourself.' })
       }
-      
+
       await prisma.user.delete({
         where: {
           id: userId

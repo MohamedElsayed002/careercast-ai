@@ -11,31 +11,6 @@ import prisma from "@/utils/db";
 import { decrypt } from "@/lib/encryption";
 
 
-// const SYSTEM_BASE = `
-//     You are Podcastr Assistant - a focused assistant for Podcastr, a podcast generator web app.
-//     Only answer questions about the product or convert user topics into short podcast scripts.
-//     If the user asks unrelated factual questions that require web access, politely say you cannot browse and offer podcast help instead.
-// `
-
-// const EpisodeSchema = z.object({
-//     title: z.string(),
-//     summary: z.string(),
-//     segments: z.array(
-//         z.object({
-//             id: z.string(),
-//             title: z.string(),
-//             full_text: z.string(),
-//             durationSec: z.number()
-//         })
-//     )
-// })
-
-// type SegmentsType = {
-//     id: string;
-//     title: string;
-//     full_text: string;
-//     durationSec: number
-// }
 
 const DebateSchema = z.object({
     title: z.string(),
@@ -47,6 +22,44 @@ const DebateSchema = z.object({
         })
     )
 })
+
+// Schema for the summary and educational content 
+const PodcastEducationalContentSchema = z.object({
+    summary: z.object({
+        overview: z.string().describe("A comprehensive 3-4 paragraph summary of the entire podcast debate"),
+        keyPoints: z.array(z.string()).describe("5-7 main points discussed in the debate"),
+        conclusion: z.string().describe("The overall conclusion or takeaway from the debate")
+    }),
+    vocabulary: z.array(
+        z.object({
+            word: z.string(),
+            definition: z.string(),
+            context: z.string().describe("How the word was used in the podcast"),
+            example: z.string().describe("An example sentence using the word")
+        })
+    ).length(10),
+    exercises: z.object({
+        comprehensionQuestions: z.array(
+            z.object({
+                question: z.string(),
+                answer: z.string(),
+                type: z.enum(["multiple_choice", "short_answer", "true_false"])
+            })
+        ).length(5).describe("5 comprehension questions about the podcast content"),
+        vocabularyExercises: z.array(
+            z.object({
+                question: z.string(),
+                answer: z.string(),
+                type: z.enum(["fill_in_blank", "matching", "definition"])
+            })
+        ).length(5).describe("5 vocabulary exercises"),
+        discussionPrompts: z.array(z.string()).length(3).describe("3 thought-provoking discussion questions")
+    })
+});
+
+export type PodcastEducationalContent = z.infer<typeof PodcastEducationalContentSchema>;
+
+
 
 // Parse minutes from duration string (1, 5, 10, 20)
 const parseTargetMinutes = (duration: string) => {
@@ -225,7 +238,7 @@ REMEMBER: The total word count across all dialogue.text fields MUST be at least 
             data: finalDialogue,
             message,
         })
-
+        console.log('line 241', object)
         return {
             title: object.title || `Debate: ${message}`,
             summary: object.summary || `A debate about ${message}`,
@@ -271,6 +284,266 @@ REMEMBER: The total word count across all dialogue.text fields MUST be at least 
     }
 }
 
+// Helper function to remove emojis and special characters that can't be encoded in WinAnsi
+function sanitizeForPDF(text: string): string {
+    // Remove emojis and special Unicode characters
+    return text.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '')
+        .replace(/[^\x00-\xFF]/g, '') // Remove non-Latin characters
+        .trim();
+}
+
+// Helper function to sanitize entire object recursively
+function sanitizeObject<T>(obj: T): T {
+    if (typeof obj === 'string') {
+        return sanitizeForPDF(obj) as T;
+    }
+    if (Array.isArray(obj)) {
+        return obj.map(item => sanitizeObject(item)) as T;
+    }
+    if (obj !== null && typeof obj === 'object') {
+        const sanitized: any = {};
+        for (const [key, value] of Object.entries(obj)) {
+            sanitized[key] = sanitizeObject(value);
+        }
+        return sanitized;
+    }
+    return obj;
+}
+
+export async function generateSummaryAndExercise(
+    debateTitle: string,
+    debateDialogue: Array<{ speaker: "SPEAKER1" | "SPEAKER2"; text: string }>,
+    credential: string,
+    model: string = "gpt-4o"
+) {
+    const openaiVercel = createOpenAI({
+        apiKey: credential
+    });
+
+    // Prepare the full dialogue text for analysis
+    const fullDialogue = debateDialogue
+        .map((item) => `${item.speaker}: ${item.text}`)
+        .join("\n\n");
+
+    console.log('full dialogue length:', fullDialogue.length);
+
+    // Enhanced prompt with explicit instructions
+    const prompt = `You are an educational content creator analyzing a podcast debate titled "${debateTitle}".
+
+Here is the full transcript of the debate:
+
+${fullDialogue}
+
+CRITICAL INSTRUCTIONS:
+1. DO NOT use emojis or special Unicode characters anywhere in your response
+2. Generate ALL required fields - do not stop early
+3. Follow the exact schema structure provided
+
+Generate comprehensive educational content including:
+
+1. SUMMARY (REQUIRED - all 3 fields must be filled):
+   - overview: Write a detailed 3-4 paragraph summary (400-500 words) capturing the main themes, arguments, and flow of the debate
+   - keyPoints: Extract exactly 5-7 most important points discussed as an array of strings
+   - conclusion: Write a 2-3 sentence summary (100-150 words) of the overall takeaway or resolution
+
+2. VOCABULARY (REQUIRED - exactly 10 words):
+   - Select 10 challenging or important words from the debate
+   - For EACH word provide: word, definition, context (how used in podcast), example (a new example sentence)
+   - Focus on advanced vocabulary, technical terms, or key concepts
+   - DO NOT use emojis or special characters
+
+3. EXERCISES (REQUIRED - all 3 sections must be filled):
+   a) comprehensionQuestions: Create exactly 5 questions
+      - Each question must have: question, answer, type (multiple_choice, short_answer, or true_false)
+      - Test understanding of the debate content
+   
+   b) vocabularyExercises: Create exactly 5 exercises
+      - Each exercise must have: question, answer, type (fill_in_blank, matching, or definition)
+      - Use the vocabulary words from section 2
+   
+   c) discussionPrompts: Create exactly 3 thought-provoking questions
+      - Each should be a complete question encouraging critical thinking
+
+REMEMBER: 
+- Generate ALL fields completely
+- Use only standard ASCII characters (no emojis, no special Unicode)
+- Do not stop generating until ALL sections are complete`;
+
+    try {
+        const result = await generateObject({
+            model: openaiVercel(model),
+            schema: PodcastEducationalContentSchema,
+            prompt,
+            maxOutputTokens: 6000, // Increased for complete response
+            temperature: 0.7,
+            experimental_telemetry: {
+                isEnabled: true,
+                recordInputs: true,
+                recordOutputs: true
+            }
+        });
+
+        // Sanitize the entire result to remove emojis
+        const sanitizedResult = sanitizeObject(result.object);
+
+        Sentry.logger.info('Generated Educational Content', {
+            title: debateTitle,
+            vocabularyCount: sanitizedResult.vocabulary.length,
+            exerciseCount: sanitizedResult.exercises.comprehensionQuestions.length,
+            hasSummary: !!sanitizedResult.summary,
+            hasConclusion: !!sanitizedResult.summary?.conclusion
+        });
+
+        // Validate that all required fields are present
+        if (!sanitizedResult.summary?.conclusion) {
+            console.warn('Missing conclusion, using fallback');
+            sanitizedResult.summary.conclusion = `This debate on ${debateTitle} provided multiple perspectives and insights into the topic.`;
+        }
+
+        if (!sanitizedResult.vocabulary || sanitizedResult.vocabulary.length < 10) {
+            console.warn('Insufficient vocabulary, padding with defaults');
+            const vocabLength = sanitizedResult.vocabulary?.length || 0;
+            const vocabPadding = Array(10 - vocabLength).fill(null).map((_, i) => ({
+                word: `term${vocabLength + i + 1}`,
+                definition: "An important term from the discussion",
+                context: "This term was used in the context of the debate",
+                example: "This term can be used to describe the concept discussed."
+            }));
+            sanitizedResult.vocabulary = [...(sanitizedResult.vocabulary || []), ...vocabPadding];
+        }
+
+        if (!sanitizedResult.exercises) {
+            console.warn('Missing exercises, using fallback');
+            sanitizedResult.exercises = {
+                comprehensionQuestions: Array(5).fill(null).map((_, i) => ({
+                    question: `What was discussed about point ${i + 1} in the debate?`,
+                    answer: "Based on the debate content",
+                    type: "short_answer" as const
+                })),
+                vocabularyExercises: Array(5).fill(null).map((_, i) => ({
+                    question: `Define the term used in context ${i + 1}`,
+                    answer: "Definition from vocabulary",
+                    type: "definition" as const
+                })),
+                discussionPrompts: [
+                    "What were the main arguments presented?",
+                    "How do the perspectives differ?",
+                    "What are the implications of this discussion?"
+                ]
+            };
+        }
+
+        return {
+            summary: sanitizedResult.summary,
+            vocabulary: sanitizedResult.vocabulary,
+            exercises: sanitizedResult.exercises
+        };
+    } catch (error: any) {
+        console.error('Error generating educational content:', error);
+
+        // Log more details about the error
+        if (error.cause) {
+            console.error('Error cause:', JSON.stringify(error.cause, null, 2));
+        }
+        if (error.text) {
+            console.error('Generated text:', error.text);
+        }
+
+        Sentry.captureException(error, {
+            extra: {
+                debateTitle,
+                dialogueLength: debateDialogue.length,
+                errorMessage: error.message,
+                errorCause: error.cause
+            }
+        });
+
+        // Return comprehensive fallback educational content
+        return {
+            summary: {
+                overview: `This podcast debate on "${debateTitle}" explores various perspectives and arguments. The speakers engage in a thoughtful discussion, presenting evidence and reasoning to support their viewpoints. Throughout the conversation, they examine different aspects of the topic, challenge each other's assumptions, and work toward a deeper understanding of the subject matter. The debate provides valuable insights into the complexities and nuances surrounding this important topic.`,
+                keyPoints: [
+                    "Multiple perspectives were presented on the topic",
+                    "Speakers provided evidence and reasoning for their arguments",
+                    "Key concepts and terminology were explored in depth",
+                    "Counterarguments were addressed thoughtfully",
+                    "The discussion maintained a balanced approach",
+                    "Real-world implications were considered",
+                    "The debate encouraged critical thinking about the subject"
+                ],
+                conclusion: `The debate on ${debateTitle} provided a comprehensive exploration of the topic, offering listeners multiple viewpoints and encouraging deeper reflection on the subject matter.`
+            },
+            vocabulary: Array(10).fill(null).map((_, i) => ({
+                word: `concept${i + 1}`,
+                definition: `An important term or concept discussed in the debate about ${debateTitle}`,
+                context: `This term was used by the speakers when discussing key aspects of ${debateTitle}`,
+                example: `Understanding this concept helps illuminate the broader discussion about ${debateTitle}.`
+            })),
+            exercises: {
+                comprehensionQuestions: [
+                    {
+                        question: `What was the main topic of the debate about ${debateTitle}?`,
+                        answer: `The debate focused on exploring different perspectives and arguments related to ${debateTitle}.`,
+                        type: "short_answer" as const
+                    },
+                    {
+                        question: `Which speaker presented the opening argument?`,
+                        answer: "SPEAKER1 presented the opening perspective on the topic.",
+                        type: "multiple_choice" as const
+                    },
+                    {
+                        question: `Did both speakers agree on all points discussed?`,
+                        answer: "False - the speakers presented different viewpoints and engaged in debate.",
+                        type: "true_false" as const
+                    },
+                    {
+                        question: `What evidence or examples were used in the debate?`,
+                        answer: "The speakers used various examples and reasoning to support their arguments.",
+                        type: "short_answer" as const
+                    },
+                    {
+                        question: `What was the overall tone of the discussion?`,
+                        answer: "The discussion was respectful and focused on exploring different perspectives.",
+                        type: "short_answer" as const
+                    }
+                ],
+                vocabularyExercises: [
+                    {
+                        question: `The debate explored several _____ related to the main topic.`,
+                        answer: "concepts",
+                        type: "fill_in_blank" as const
+                    },
+                    {
+                        question: `Define the term used to describe the main argument in the debate.`,
+                        answer: "A thesis or central claim that the speaker supports with evidence.",
+                        type: "definition" as const
+                    },
+                    {
+                        question: `Match the vocabulary term with its usage in the podcast.`,
+                        answer: "Terms matched to their contextual usage in the debate.",
+                        type: "matching" as const
+                    },
+                    {
+                        question: `Complete the sentence: A counterargument is _____.`,
+                        answer: "an opposing viewpoint or challenge to the main argument",
+                        type: "fill_in_blank" as const
+                    },
+                    {
+                        question: `What term describes the final thoughts or takeaway from the debate?`,
+                        answer: "Conclusion or summary",
+                        type: "definition" as const
+                    }
+                ],
+                discussionPrompts: [
+                    `What were the strongest arguments presented in the debate about ${debateTitle}, and why did they resonate with you?`,
+                    `How might the different perspectives discussed in this debate apply to real-world situations or current events?`,
+                    `If you were participating in this debate, what additional points or perspectives would you contribute to the discussion?`
+                ]
+            }
+        };
+    }
+}
+
 export async function generateAudio(
     text: string,
     voice: string,
@@ -282,6 +555,7 @@ export async function generateAudio(
     const openai = new OpenAI({
         apiKey: credential
     })
+
 
     // keep audio speed 1, but ensure the text length is short (<~140 words)
     const response = await openai.audio.speech.create({
@@ -331,7 +605,7 @@ export async function generateDebateAudio(
             const batchPromises = batch.map(async (item, batchIndex) => {
                 const globalIndex = i + batchIndex;
                 const voice = item.speaker === "SPEAKER1" ? voice1 : voice2;
-                const audioBytes = await generateAudio(item.text, voice, credential, voiceSpeed,audioModel); // your existing TTS call
+                const audioBytes = await generateAudio(item.text, voice, credential, voiceSpeed, audioModel); // your existing TTS call
 
                 const tempFile = path.join(tempDir, `audio-${globalIndex}.mp3`);
                 await fs.promises.writeFile(tempFile, audioBytes);
@@ -383,25 +657,6 @@ export async function generateDebateAudio(
     }
 }
 
-// export async function generateSummarize(text: string) {
-//     const response = await openai.chat.completions.create({
-//         model: 'gpt-3.5-turbo',
-//         messages: [
-//             {
-//                 role: 'user',
-//                 content: `Summarize the following podcast transcript into a concise brief (3-4 short paragraphs or 80-120 words) with a short title and 3 bullet "Key takeaways". Keep it simple:
-
-//                 ---TRANSCRIPT---
-//                 ${text}
-//                 ---END---`
-//             }
-//         ],
-//         max_completion_tokens: 200, // reduced from 450
-//         temperature: 0.2
-//     })
-
-//     return response.choices[0].message?.content
-// }
 
 type optionsType = {
     model: string,
@@ -409,7 +664,7 @@ type optionsType = {
     size?: "auto" | "1024x1024" | "1536x1024" | "1024x1536" | "256x256" | "512x512" | "1792x1024" | "1024x1792" | null,
     prompt: string,
     quality?: "standard" | "hd" | "low" | "medium" | "high" | "auto" | null
-}   
+}
 
 export async function generateImage(prompt: string, credential: string, model: string) {
     const credentialValue = await prisma.credential.findUnique({

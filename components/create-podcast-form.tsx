@@ -71,19 +71,18 @@ export const CreatePodcastForm = () => {
         //     toast.error('Image is required')
         //     return
         // }
-        console.log(values)
-        // mutate.mutate({ 
-        //     title: values.title,
-        //     message: values.description,
-        //     duration: values.duration as "1" | "5" | "10" | "20",
-        //     voice1: values.voice1,
-        //     voice2: values.voice2,
-        //     image: values.image,
-        //     credential: values.credential,
-        //     voiceSpeed: values.voiceSpeed,
-        //     audioModel: values.audioModel,
-        //     textModel: values.textModel
-        // })
+        mutate.mutate({ 
+            title: values.title,
+            message: values.description,
+            duration: values.duration as "1" | "5" | "10" | "20",
+            voice1: values.voice1,
+            voice2: values.voice2,
+            image: values.image,
+            credential: values.credential,
+            voiceSpeed: values.voiceSpeed,
+            audioModel: values.audioModel,
+            textModel: values.textModel
+        })
     }
 
     return (
