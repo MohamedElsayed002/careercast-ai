@@ -9,67 +9,10 @@ import os from 'os';
 import { v4 as uuid } from 'uuid';
 import prisma from "@/utils/db";
 import { decrypt } from "@/lib/encryption";
+import { DebateSchema, optionsType, PodcastEducationalContentSchema } from "@/types";
+import { parseTargetMinutes, sanitizeForPDF, sanitizeObject } from "@/lib/utils";
 
 
-
-const DebateSchema = z.object({
-    title: z.string(),
-    summary: z.string(),
-    dialogue: z.array(
-        z.object({
-            speaker: z.enum(["SPEAKER1", "SPEAKER2"]),
-            text: z.string(),
-        })
-    )
-})
-
-// Schema for the summary and educational content 
-const PodcastEducationalContentSchema = z.object({
-    summary: z.object({
-        overview: z.string().describe("A comprehensive 3-4 paragraph summary of the entire podcast debate"),
-        keyPoints: z.array(z.string()).describe("5-7 main points discussed in the debate"),
-        conclusion: z.string().describe("The overall conclusion or takeaway from the debate")
-    }),
-    vocabulary: z.array(
-        z.object({
-            word: z.string(),
-            definition: z.string(),
-            context: z.string().describe("How the word was used in the podcast"),
-            example: z.string().describe("An example sentence using the word")
-        })
-    ).length(10),
-    exercises: z.object({
-        comprehensionQuestions: z.array(
-            z.object({
-                question: z.string(),
-                answer: z.string(),
-                type: z.enum(["multiple_choice", "short_answer", "true_false"])
-            })
-        ).length(5).describe("5 comprehension questions about the podcast content"),
-        vocabularyExercises: z.array(
-            z.object({
-                question: z.string(),
-                answer: z.string(),
-                type: z.enum(["fill_in_blank", "matching", "definition"])
-            })
-        ).length(5).describe("5 vocabulary exercises"),
-        discussionPrompts: z.array(z.string()).length(3).describe("3 thought-provoking discussion questions")
-    })
-});
-
-export type PodcastEducationalContent = z.infer<typeof PodcastEducationalContentSchema>;
-
-
-
-// Parse minutes from duration string (1, 5, 10, 20)
-const parseTargetMinutes = (duration: string) => {
-    const minutes = Number(duration);
-    // Validate and return the duration (1, 5, 10, or 20)
-    if ([1, 5, 10, 20].includes(minutes)) {
-        return minutes;
-    }
-    return 1; // default to 1 minute
-}
 
 // Two
 export async function createDebateText(
@@ -284,31 +227,9 @@ REMEMBER: The total word count across all dialogue.text fields MUST be at least 
     }
 }
 
-// Helper function to remove emojis and special characters that can't be encoded in WinAnsi
-function sanitizeForPDF(text: string): string {
-    // Remove emojis and special Unicode characters
-    return text.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '')
-        .replace(/[^\x00-\xFF]/g, '') // Remove non-Latin characters
-        .trim();
-}
 
-// Helper function to sanitize entire object recursively
-function sanitizeObject<T>(obj: T): T {
-    if (typeof obj === 'string') {
-        return sanitizeForPDF(obj) as T;
-    }
-    if (Array.isArray(obj)) {
-        return obj.map(item => sanitizeObject(item)) as T;
-    }
-    if (obj !== null && typeof obj === 'object') {
-        const sanitized: any = {};
-        for (const [key, value] of Object.entries(obj)) {
-            sanitized[key] = sanitizeObject(value);
-        }
-        return sanitized;
-    }
-    return obj;
-}
+
+
 
 export async function generateSummaryAndExercise(
     debateTitle: string,
@@ -658,13 +579,7 @@ export async function generateDebateAudio(
 }
 
 
-type optionsType = {
-    model: string,
-    n: number,
-    size?: "auto" | "1024x1024" | "1536x1024" | "1024x1536" | "256x256" | "512x512" | "1792x1024" | "1024x1792" | null,
-    prompt: string,
-    quality?: "standard" | "hd" | "low" | "medium" | "high" | "auto" | null
-}
+
 
 export async function generateImage(prompt: string, credential: string, model: string) {
     const credentialValue = await prisma.credential.findUnique({

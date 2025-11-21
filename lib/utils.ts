@@ -20,3 +20,38 @@ export const voices = [
 ]
 
 
+// Helper function to remove emojis and special characters that can't be encoded in WinAnsi
+export function sanitizeForPDF(text: string): string {
+    // Remove emojis and special Unicode characters
+    return text.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '')
+        .replace(/[^\x00-\xFF]/g, '') // Remove non-Latin characters
+        .trim();
+}
+
+// Parse minutes from duration string (1, 5, 10, 20)
+export const parseTargetMinutes = (duration: string) => {
+    const minutes = Number(duration);
+    // Validate and return the duration (1, 5, 10, or 20)
+    if ([1, 5, 10, 20].includes(minutes)) {
+        return minutes;
+    }
+    return 1; // default to 1 minute
+}
+
+// Helper function to sanitize entire object recursively
+export function sanitizeObject<T>(obj: T): T {
+    if (typeof obj === 'string') {
+        return sanitizeForPDF(obj) as T;
+    }
+    if (Array.isArray(obj)) {
+        return obj.map(item => sanitizeObject(item)) as T;
+    }
+    if (obj !== null && typeof obj === 'object') {
+        const sanitized: any = {};
+        for (const [key, value] of Object.entries(obj)) {
+            sanitized[key] = sanitizeObject(value);
+        }
+        return sanitized;
+    }
+    return obj;
+}
