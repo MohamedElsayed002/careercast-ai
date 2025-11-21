@@ -2,7 +2,12 @@ import Header from "@/components/header"
 import { PodcastList } from "@/components/podcast/podcast-list"
 import { caller } from "@/trpc/server"
 import { requireAdmin } from "@/utils/auth-utils"
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Podcastr | User Podcasts",
+  description: "All user podcasts!"
+};
 
 
 const UserPodcastsPage = async ({ params }: { params: { id: string } }) => {

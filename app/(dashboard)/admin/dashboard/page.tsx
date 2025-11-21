@@ -3,11 +3,15 @@ import { requireAdmin } from "@/utils/auth-utils"
 import { DataTableDemo } from "@/components/DataTableDemo" // adjust path
 import Header from "@/components/header"
 import { DashboardStats } from "@/components/dashboard-stats"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Podcastr | Admin Dashboard",
+  description: "Admin Dashboard Page. Statistics & All users!"
+};
 
 const DashboardPage = async () => {
     await requireAdmin()
-    // const data = await caller.allUsers()
-    // const stats = await caller.adminDashboardStats()
     const [data,stats] = await Promise.all([
         caller.allUsers(),
         caller.adminDashboardStats()
