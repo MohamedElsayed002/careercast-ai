@@ -4,11 +4,13 @@ import { UTFile } from 'uploadthing/server';
 import { v4 as uuid } from 'uuid';
 import { utapi } from '@/utils/server';
 import { createPdfBytes, createPodcastPdfBytes } from '@/utils/pdf-utils';
-import { generateImage, createDebateText, generateDebateAudio, generateSummaryAndExercise, PodcastEducationalContent } from '@/actions';
+import { generateImage, createDebateText, generateDebateAudio, generateSummaryAndExercise } from '@/actions';
 import prisma from '@/utils/db';
 import { TRPCError } from '@trpc/server';
 import { Prisma } from '@/src/generated/prisma';
+import * as Sentry from "@sentry/nextjs";
 import { encrypt, decrypt } from '@/lib/encryption';
+import { PodcastEducationalContent } from '@/types';
 
 export const appRouter = createTRPCRouter({
   getHomePodcast: baseProcedure
@@ -306,6 +308,15 @@ export const appRouter = createTRPCRouter({
           textModel
         )
       }
+
+      Sentry.logger.info('312_Text_Generated',{
+        userId: user.id,
+        email: user.email,
+        duration,
+        typeDuration: typeof(duration),
+        debateData,
+        summaryData,
+      })
 
 
       // Generate audio for the debate

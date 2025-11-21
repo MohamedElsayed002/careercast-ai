@@ -5,7 +5,7 @@
 import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
-  dsn: "https://fa84b01f60f8b91e8dd1e31a5ab19c7b@o4510058158096384.ingest.de.sentry.io/4510273648459856",
+  dsn: process.env.SENTRY_DSN,
   integrations: [
     Sentry.consoleLoggingIntegration({
       levels: ["log",'warn','error']
@@ -29,3 +29,7 @@ Sentry.init({
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
   sendDefaultPii: true,
 });
+
+// Use metrics in both server and client code
+Sentry.metrics.count('user_action', 1);
+Sentry.metrics.distribution('api_response_time', 150);
