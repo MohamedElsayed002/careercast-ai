@@ -72,6 +72,7 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                             </FormDescription>
                             <FormControl>
                                 <Input
+                                    autoFocus={true}
                                     className="focus:ring-2 focus:ring-primary"
                                     placeholder="Enter your podcast title..." {...field}
                                 />

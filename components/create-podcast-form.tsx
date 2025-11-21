@@ -67,10 +67,11 @@ export const CreatePodcastForm = () => {
     }))
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // if (!values.image) {
-        //     toast.error('Image is required')
-        //     return
-        // }
+        if (!values.image) {
+            toast.error('Image is required')
+            return
+        }
+        
         mutate.mutate({ 
             title: values.title,
             message: values.description,
