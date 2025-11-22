@@ -3,14 +3,12 @@ import { adminProcedure, baseProcedure, createTRPCRouter, premiumProcedure, prot
 import { UTFile } from 'uploadthing/server';
 import { v4 as uuid } from 'uuid';
 import { utapi } from '@/utils/server';
-import { createPdfBytes, createPodcastPdfBytes } from '@/utils/pdf-utils';
-import { generateImage, createDebateText, generateDebateAudio, generateSummaryAndExercise } from '@/actions';
+import { generateImage } from '@/actions';
 import prisma from '@/utils/db';
 import { TRPCError } from '@trpc/server';
 import { Prisma } from '@/src/generated/prisma';
-import * as Sentry from "@sentry/nextjs";
-import { encrypt, decrypt } from '@/lib/encryption';
-import { PodcastEducationalContent } from '@/types';
+import { encrypt } from '@/lib/encryption';
+import { inngest } from '@/inngest/client';
 
 export const appRouter = createTRPCRouter({
   getHomePodcast: baseProcedure
@@ -253,19 +251,8 @@ export const appRouter = createTRPCRouter({
       textModel: z.string()
     }))
     .mutation(async ({ input, ctx }) => {
-      const { title,
-        message,
-        duration,
-        voice1,
-        voice2,
-        image,
-        credential,
-        voiceSpeed,
-        textModel,
-        audioModel
-      } = input;
-      const authUser: any = (ctx as any).auth;
-      const userId: string | undefined = authUser?.user?.id ?? authUser?.id ?? authUser?.userId;
+      const authUser = ctx.auth;
+      const userId: string | undefined = authUser?.user?.id
       if (!userId) {
         throw new TRPCError({ code: 'UNAUTHORIZED', message: 'No user in session' });
       }
@@ -278,166 +265,18 @@ export const appRouter = createTRPCRouter({
         throw new TRPCError({ code: 'FORBIDDEN', message: 'Trial limit reached. Please change your subscription.' });
       }
 
-      const credentialValue = await prisma.credential.findUnique({
-        where: {
-          id: credential,
-          userId: userId
-        }
-      })
-
-      if (!credentialValue) {
-        throw new TRPCError({ code: 'BAD_GATEWAY', message: "Credential Invalid" })
-      }
-
-      // Generate debate text with two speakers
-      const debateData = await createDebateText(
-        message,
-        duration,
-        decrypt(credentialValue?.value),
-        textModel
-      );
-
-      // Generate Summary
-      let summaryData: PodcastEducationalContent | null = null
-
-      if (duration !== "1") {
-        summaryData = await generateSummaryAndExercise(
-          debateData.title,
-          debateData.dialogue,
-          decrypt(credentialValue.value),
-          textModel
-        )
-      }
-
-      Sentry.logger.info('312_Text_Generated',{
-        userId: user.id,
-        email: user.email,
-        duration,
-        typeDuration: typeof(duration),
-        debateData,
-        summaryData,
-      })
-
-
-      // Generate audio for the debate
-      const audioBytes = await generateDebateAudio(
-        debateData.dialogue,
-        voice1,
-        voice2,
-        decrypt(credentialValue.value),
-        voiceSpeed ?? 1,
-        audioModel
-      );
-
-      const audioFilename = `ai-audio-${uuid()}.mp3`;
-      const audioUtFile = new UTFile([audioBytes as any], audioFilename, { type: 'audio/mpeg' });
-      // Retry audio upload with exponential backoff
-      let audioUpload;
-      let audioUploadAttempts = 0;
-      const maxAudioUploadAttempts = 3;
-
-      while (audioUploadAttempts < maxAudioUploadAttempts) {
-        try {
-          audioUpload = await utapi.uploadFiles([audioUtFile]);
-          if (audioUpload && audioUpload.length > 0) {
-            break;
-          }
-        } catch (error) {
-          audioUploadAttempts++;
-          if (audioUploadAttempts >= maxAudioUploadAttempts) {
-            console.error('Audio upload failed after retries:', error);
-            throw new Error('UploadThing returned empty response for audio after retries');
-          }
-          // Wait before retry (exponential backoff: 1s, 2s, 4s)
-          await new Promise(resolve => setTimeout(resolve, Math.pow(2, audioUploadAttempts - 1) * 1000));
-        }
-      }
-
-      if (!audioUpload || audioUpload.length === 0) {
-        throw new Error('UploadThing returned empty response for audio');
-      }
-      const audioUrl = audioUpload[0]?.data?.url ?? '';
-      const audioId = audioUpload[0]?.data?.customId
-
-
-      // Create transcript text from dialogue for PDF
-      const transcriptText = debateData.dialogue.map(item =>
-        `${item.speaker === 'SPEAKER1' ? 'Speaker 1' : 'Speaker 2'}: ${item.text}`
-      ).join('\n\n');
-
-      const summaryForPdf = typeof summaryData?.summary === 'string'
-        ? { overview: summaryData?.summary ?? '', keyPoints: [], conclusion: '' }
-        : (summaryData?.summary ?? { overview: '', keyPoints: [], conclusion: '' });
-
-      let pdfBytes = null
-
-      if (summaryData) {
-        pdfBytes = await createPodcastPdfBytes({
-          title: debateData.title,
-          script: debateData.dialogue,
-          summary: summaryForPdf,
-          vocabulary: summaryData?.vocabulary,
-          exercises: summaryData?.exercises
-        });
-      } else {
-        pdfBytes = await createPdfBytes('Podcast Summary', transcriptText ?? "No summary generated")
-      }
-
-      const pdfBuffer = Buffer.from(pdfBytes);
-      const pdfFilename = `podcast-brief-${uuid()}.pdf`;
-      const pdfUtFile = new UTFile([pdfBuffer], pdfFilename, { type: 'application/pdf' });
-
-      // Retry PDF upload with exponential backoff
-      let pdfUpload;
-      let pdfUploadAttempts = 0;
-      const maxPdfUploadAttempts = 3;
-
-      while (pdfUploadAttempts < maxPdfUploadAttempts) {
-        try {
-          pdfUpload = await utapi.uploadFiles([pdfUtFile]);
-          if (pdfUpload && pdfUpload.length > 0) {
-            break;
-          }
-        } catch (error) {
-          pdfUploadAttempts++;
-          if (pdfUploadAttempts >= maxPdfUploadAttempts) {
-            console.error('PDF upload failed after retries:', error);
-            throw new Error('UploadThing returned empty response for PDF after retries');
-          }
-          // Wait before retry (exponential backoff: 1s, 2s, 4s)
-          await new Promise(resolve => setTimeout(resolve, Math.pow(2, pdfUploadAttempts - 1) * 1000));
-        }
-      }
-
-      if (!pdfUpload || pdfUpload.length === 0) {
-        throw new Error('UploadThing returned empty response for PDF');
-      }
-      const pdfUrl = pdfUpload[0]?.data?.ufsUrl ?? '';
-      const pdfId = pdfUpload[0]?.data?.customId
-
-      await prisma.podcast.create({
+      await inngest.send({
+        name: 'podcast/generate',
         data: {
           userId,
-          title: debateData.title || title,
-          message,
-          audioUrl,
-          audioId,
-          pdfUrl,
-          pdfId,
-          imageUrl: image,
+          ...input
         }
-      });
-
-      if (!user?.isPro) {
-        await prisma.user.update({ where: { id: userId }, data: { trialsUsed: { increment: 1 } } });
-      }
+      })
 
       return {
-        audioId,
-        pdfId,
-        audioUrl,
-        pdfUrl,
-      };
+        success: "true",
+        message: "podcast generating"
+      }
     }),
 
   changePodcastStatus: protectedProcedure
@@ -472,7 +311,7 @@ export const appRouter = createTRPCRouter({
 
   // Admin procedures can be added here
   allUsers: adminProcedure
-    .query(async ({ ctx }) => {
+    .query(async () => {
       const users = await prisma.user.findMany({
         select: {
           name: true,
@@ -497,7 +336,7 @@ export const appRouter = createTRPCRouter({
       }))
     }),
   adminDashboardStats: adminProcedure
-    .query(async ({ ctx }) => {
+    .query(async () => {
       const totalUsers = await prisma.user.count()
       const totalPodcasts = await prisma.podcast.count()
       const proUsers = await prisma.user.count({
