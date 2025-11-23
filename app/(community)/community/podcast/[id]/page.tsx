@@ -1,10 +1,9 @@
-import { PodcastSection } from "@/components/home/podcast-section";
-import { PodcastsLoader } from "@/components/loader";
+import { CustomAudioPlayer } from "@/components/custom-audio-player";
+import { ModeToggle } from "@/components/mode-toggle";
 import { ShareButtons } from "@/components/share-buttons"
 import { SummaryScript } from "@/components/summary-script"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import { caller } from "@/trpc/server"
-import { Badge, Music2, Podcast } from "lucide-react";
 import Image from "next/image"
 import Link from "next/link";
 
@@ -34,42 +33,35 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
 
     return (
-        <div className='p-10 bg-white'>
+        <div className='p-10 bg-white dark:bg-black'>
             <div className='max-w-4xl mx-auto px-4'>
                 {/* Title Section */}
-                <h1 className='text-4xl md:text-5xl font-serif font-bold text-black mb-6 italic'>
+                <h1 className='text-4xl md:text-5xl font-serif font-bold text-black dark:text-white mb-6 italic'>
                     {data.title}
                 </h1>
 
                 {/* Subtitle/Description */}
-                <p className='text-xl text-gray-600 mb-8 leading-relaxed'>
+                <p className='text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed'>
                     {data.message}
                 </p>
+                {/* Share Buttons */}
+                <div className='flex items-center justify-end gap-4'>
+                    <ModeToggle />
+                    <ShareButtons
+                        podcastId={data.id}
+                        title={data.title ?? ""}
+                        key={data.id}
+                    />
+                </div>
 
                 {/* Audio Player and Share Section */}
-                <div className='flex items-center justify-between py-6 border-y border-gray-200 mb-8'>
+                <div className='py-6 mb-8'>
                     {/* Audio Player */}
-                    <div className='flex items-center gap-4 flex-1'>
-                        {data.audioUrl && (
-                            <audio
-                                controls
-                                className='w-full max-w-md'
-                                preload='metadata'
-                            >
-                                <source src={data.audioUrl} type='audio/mpeg' />
-                                Your browser does not support the audio element.
-                            </audio>
-                        )}
-                    </div>
-
-                    {/* Share Buttons */}
-                    <div className='flex items-center gap-4 ml-4'>
-                        <ShareButtons
-                            podcastId={data.id}
-                            title={data.title ?? ""}
-                            key={data.id}
-                        />
-                    </div>
+                    {data.audioUrl && (
+                        <div className='mb-6'>
+                            <CustomAudioPlayer audioUrl={data.audioUrl} />
+                        </div>
+                    )}
                 </div>
 
                 {/* Full Width Image */}
@@ -85,12 +77,12 @@ const Page = async ({ params }: { params: { id: string } }) => {
                 </section>
 
                 {/* Additional Content Section */}
-                <section className='prose prose-lg max-w-none'>
+                <section className='prose prose-lg dark:prose-invert max-w-none'>
                     {/* Metadata */}
-                    <div className='flex items-center gap-4 text-sm text-gray-500 mb-6'>
+                    <div className='flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-6'>
                         <span>{formatDate(data.createdAt)}</span>
                         <span>•</span>
-                        <span className='px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium'>
+                        <span className='px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-xs font-medium'>
                             {data.status}
                         </span>
                     </div>
@@ -101,7 +93,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
                             href={data.pdfUrl}
                             target='_blank'
                             rel='noopener noreferrer'
-                            className='inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium mb-6'
+                            className='inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium mb-6'
                         >
                             <svg className='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                                 <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' />
@@ -119,13 +111,11 @@ const Page = async ({ params }: { params: { id: string } }) => {
                     />
                 </section>
             </div>
-            <hr className="mt-10 w-4/5 mx-auto" />
+            <hr className="mt-10 w-4/5 mx-auto border-gray-200 dark:border-gray-700" />
             <div className="max-w-4xl mx-auto">
-                <h1 className='text-4xl md:text-5xl font-serif font-bold text-black mt-10 mb-3 italic'>Latest Podcasts </h1>
-                <div className='grid grid-cols-1 md:grid-cols-3  gap-6'>
-                    {podcasts.map((p, idx) => {
-                        const created = new Date(p.createdAt);
-                        const dateLabel = created.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+                <h1 className='text-4xl md:text-5xl font-serif font-bold text-black dark:text-white mt-10 mb-3 italic'>Latest Podcasts </h1>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+                    {podcasts.map((p) => {
                         if (p.id === params.id) return
                         return (
                             <div

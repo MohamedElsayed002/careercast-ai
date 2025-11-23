@@ -26,7 +26,7 @@ const Header = () => {
     const userInitials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 
     return (
-        <header className="bg-inherit top-0 z-50 w-full">
+        <header className="w-4-5 mx-auto bg-inherit top-0 z-50 w-full">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}

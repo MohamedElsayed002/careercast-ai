@@ -42,11 +42,11 @@ export function SummaryScript({
             </div>
 
             {/* Content Area */}
-            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 w-full">
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-2 w-full">
                 {activeTab === 'script' && (
-                    <div className="space-y-6">
+                    <div className="space-y-6 p-2">
                         <h2 className="text-2xl font-bold text-slate-900 mb-6">Podcast Script</h2>
-                        {podcastScriptDialogue.length === 0 && <h1>Script not available</h1>}
+                        {podcastScriptDialogue.length === 0 && <h1 className='dark:text-black light:text-black'>Script not available</h1>}
                         {podcastScriptDialogue.length > 0 && podcastScriptDialogue.map((item, index) => (
                             <div 
                                 key={index} 
@@ -70,7 +70,7 @@ export function SummaryScript({
                 )}
 
                 {activeTab === 'summary' && (
-                    <div className="space-y-8">
+                    <div className="space-y-8 p-2">
                         <div>
                             <h2 className="text-2xl font-bold text-slate-900 mb-4">Overview</h2>
                             <p className="text-slate-700 leading-relaxed whitespace-pre-line">

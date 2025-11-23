@@ -1,10 +1,18 @@
 import { Footer } from "@/components/footer"
+import { ThemeProvider } from "@/components/theme-provider"
 
 
 const CommunityLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <main>
-            {children}
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+            >
+                {children}
+            </ThemeProvider>
             <Footer />
         </main>
     )
