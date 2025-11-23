@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import {  FileText, Download, Music2 } from "lucide-react";
+import { FileText, Download, Music2 } from "lucide-react";
+import Link from "next/link";
 
 type PodcastItem = {
     id: string;
@@ -82,25 +83,27 @@ export function PodcastList(props: { podcasts: PodcastItem[] }) {
                         <Card className={`relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden`}>
                             {/* Image Header */}
                             {p.imageUrl ? (
-                                <div className="relative w-full h-48 overflow-hidden">
-                                    <Image
-                                        src={p.imageUrl}
-                                        alt={p.message}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                                    <div className="absolute top-4 right-4">
-                                        <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
-                                            {dateLabel}
-                                        </Badge>
+                                <Link className="cursor-pointer" href={`/community/podcast/${p.id}`}>
+                                    <div className="relative w-full h-48 overflow-hidden">
+                                        <Image
+                                            src={p.imageUrl}
+                                            alt={p.message}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                                        <div className="absolute top-4 right-4">
+                                            <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
+                                                {dateLabel}
+                                            </Badge>
+                                        </div>
+                                        <div className="absolute bottom-4 left-4 right-4">
+                                            <CardTitle className="text-lg leading-6 line-clamp-2 font-bold text-white drop-shadow-lg">
+                                                {p.title}
+                                            </CardTitle>
+                                        </div>
                                     </div>
-                                    <div className="absolute bottom-4 left-4 right-4">
-                                        <CardTitle className="text-lg leading-6 line-clamp-2 font-bold text-white drop-shadow-lg">
-                                            {p.title}
-                                        </CardTitle>
-                                    </div>
-                                </div>
+                                </Link>
                             ) : (
                                 <CardHeader className={`bg-gradient-to-br ${gradient} p-6 text-white`}>
                                     <div className="flex items-start justify-between gap-3">
@@ -122,7 +125,7 @@ export function PodcastList(props: { podcasts: PodcastItem[] }) {
                                     </div>
                                     <audio controls src={p.audioUrl} className="w-full rounded-lg" />
                                 </div>
-                                
+
                                 {/* Action Buttons */}
                                 <div className="flex items-center gap-3">
                                     <Button

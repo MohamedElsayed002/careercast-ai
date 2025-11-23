@@ -395,7 +395,21 @@ export const appRouter = createTRPCRouter({
         },
       })
       return userPodcasts
-    })
+    }),
+
+    // Get Single Podcast 
+    singlePodcast: baseProcedure
+      .input(z.object({
+        id: z.string()
+      }))
+      .query(async ({input}) => {
+        const { id} = input
+        return prisma.podcast.findUniqueOrThrow({
+          where: {
+            id: id
+          }
+        })
+      })
 });
 
 export type AppRouter = typeof appRouter;

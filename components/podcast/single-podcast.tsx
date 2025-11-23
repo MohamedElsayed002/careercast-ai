@@ -9,6 +9,7 @@ import { Badge } from "../ui/badge"
 import { Download, FileText, Globe, Loader2, Lock, Music2 } from "lucide-react"
 import { Button } from "../ui/button"
 import { PodcastItem } from "./podcast-list-user"
+import Link from "next/link"
 
 
 
@@ -22,7 +23,7 @@ interface SinglePodcastProps {
 }
 
 
-export const SinglePodcast = ({p,dateLabel,gradient,delay,isPublic,mounted}: SinglePodcastProps) => {
+export const SinglePodcast = ({ p, dateLabel, gradient, delay, isPublic, mounted }: SinglePodcastProps) => {
 
     const queryClient = useQueryClient()
     const trpc = useTRPC()
@@ -59,30 +60,32 @@ export const SinglePodcast = ({p,dateLabel,gradient,delay,isPublic,mounted}: Sin
             <Card className={`relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden`}>
                 {/* Image Header */}
                 {p.imageUrl && p.imageUrl ? (
-                    <div className="relative w-full h-48 overflow-hidden">
-                        <Image
-                            src={p.imageUrl}
-                            alt={p.message ?? "Untitled Podcast"}
-                            fill
-                            className="object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                        <div className="absolute top-4 right-4">
-                            <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
-                                {dateLabel}
+                    <Link href={`/community/podcast/${p.id}`}>
+                        <div className="relative w-full h-48 overflow-hidden">
+                            <Image
+                                src={p.imageUrl}
+                                alt={p.message ?? "Untitled Podcast"}
+                                fill
+                                className="object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                            <div className="absolute top-4 right-4">
+                                <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
+                                    {dateLabel}
+                                </Badge>
+                            </div>
+                            {/* <div className="absolute inset-0 capitalize top-4 left-4 bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1 rounded-full text-sm font-medium text-white shadow-lg"> */}
+                            <Badge className="absolute top-4 left-4  bg-gradient-to-r from-purple-600 to-pink-600 text-white border-white/30 backdrop-blur-sm">
+                                {p.status && p.status.toUpperCase()}
                             </Badge>
+                            {/* </div> */}
+                            <div className="absolute bottom-4 left-4 right-4">
+                                <CardTitle className="text-lg leading-6 line-clamp-2 font-bold text-white drop-shadow-lg">
+                                    {p.title}
+                                </CardTitle>
+                            </div>
                         </div>
-                        {/* <div className="absolute inset-0 capitalize top-4 left-4 bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1 rounded-full text-sm font-medium text-white shadow-lg"> */}
-                        <Badge className="absolute top-4 left-4  bg-gradient-to-r from-purple-600 to-pink-600 text-white border-white/30 backdrop-blur-sm">
-                            {p.status && p.status.toUpperCase()}
-                        </Badge>
-                        {/* </div> */}
-                        <div className="absolute bottom-4 left-4 right-4">
-                            <CardTitle className="text-lg leading-6 line-clamp-2 font-bold text-white drop-shadow-lg">
-                                {p.title}
-                            </CardTitle>
-                        </div>
-                    </div>
+                    </Link>
                 ) : (
                     <CardHeader className={`bg-gradient-to-br ${gradient} p-6 text-white`}>
                         <div className="flex items-start justify-between gap-3">

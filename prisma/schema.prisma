@@ -113,6 +113,11 @@ model Podcast {
   imageUrl  String?
   createdAt DateTime @default(now())
 
+  podcastScriptDialogue  Json?
+  podcastSummaryConclusion String?
+  podcastSummaryKeyPoints Json?
+  podcastSummaryOverview String?
+
   @@index([userId])
   @@map("podcast")
 }

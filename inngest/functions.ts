@@ -112,7 +112,6 @@ export const generatePodcast = inngest.createFunction(
         throw new Error("Failed to upload audio");
       }
 
-      // Return *only* the small metadata (URL/IDs), not the bytes
       return result[0].data;
     });
 
@@ -159,6 +158,10 @@ export const generatePodcast = inngest.createFunction(
           pdfUrl: pdfUpload.ufsUrl,
           pdfId: pdfUpload.customId,
           imageUrl: image,
+          podcastScriptDialogue: debateData.dialogue,
+          podcastSummaryConclusion: summaryData?.summary.conclusion,
+          podcastSummaryKeyPoints: summaryData?.summary.keyPoints,
+          podcastSummaryOverview: summaryData?.summary.overview
         }
       });
     });
@@ -168,7 +171,7 @@ export const generatePodcast = inngest.createFunction(
       await step.run("update-user-trials", async () => {
         return prisma.user.update({
           where: { id: userId },
-          data: { trialsUsed: { increment: 1 } }
+          data: { trialsUsed: { increment: 1 } } 
         });
       });
     }
