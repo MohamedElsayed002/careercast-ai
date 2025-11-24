@@ -409,7 +409,12 @@ export const appRouter = createTRPCRouter({
             id: id
           }
         })
-      })
+      }),
+
+    // Get podcosts count
+    podcastsCount: baseProcedure.query(() => {
+      return prisma.podcast.count()
+    })
 });
 
 export type AppRouter = typeof appRouter;

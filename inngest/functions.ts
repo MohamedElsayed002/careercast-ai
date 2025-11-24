@@ -7,6 +7,8 @@ import { decrypt } from "@/lib/encryption";
 import prisma from "@/utils/db";
 import * as Sentry from "@sentry/nextjs";
 import { utapi } from "@/utils/server";
+import { getPodcastGeneratedEmail } from "@/lib/emails";
+import { sendEmail } from "@/utils/nodemailer";
 
 interface GeneratePodcastEvent {
   name: "podcast/generate";
@@ -44,21 +46,25 @@ export const generatePodcast = inngest.createFunction(
     } = event.data;
 
 
-    const [user, credentialValue] = await step.run("get-user-and-credential", async () => {
-      const [user, credential] = await Promise.all([
-        prisma.user.findUnique({ where: { id: userId } }),
-        prisma.credential.findUnique({
-          where: {
-            id: credentialSend,
-            userId
-          },
-          select: {
-            value: true,
-          }
-        })
-      ])
-      return [user, credential]
+    const user = await step.run("get-user",async () => {
+      const user = await prisma.user.findUniqueOrThrow({
+        where: {
+          id: userId
+        }
+      })
+      return user
     })
+
+    const credentialValue = await step.run("get-credential", async () => {
+      const credential = await prisma.credential.findUniqueOrThrow({
+        where: {
+          id: credentialSend,
+          userId
+        }
+      })
+      return credential
+    })
+
 
 
     if (!user) {
@@ -116,6 +122,7 @@ export const generatePodcast = inngest.createFunction(
     });
 
 
+    // 5) UPLOAD the PDF
     const pdfUpload = await step.run("generate-and-upload-pdf", async () => {
       const transcriptText = debateData.dialogue.map(item =>
         `${item.speaker === 'SPEAKER1' ? 'Speaker 1' : 'Speaker 2'}: ${item.text}`
@@ -146,7 +153,7 @@ export const generatePodcast = inngest.createFunction(
       return result[0].data;
     });
 
-    // 7. Create podcast record
+    // 6. Create podcast record
     const podcast = await step.run("create-podcast", async () => {
       return prisma.podcast.create({
         data: {
@@ -166,7 +173,8 @@ export const generatePodcast = inngest.createFunction(
       });
     });
 
-    // 8. Update user trial count if needed
+
+    // 7. Update user trial count if needed
     if (!user.isPro) {
       await step.run("update-user-trials", async () => {
         return prisma.user.update({
@@ -176,10 +184,31 @@ export const generatePodcast = inngest.createFunction(
       });
     }
 
+    // 8. Send email
+    await step.run("send-email-notification", async () => {
+      const podcastUrl = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/community/podcast/${podcast.id}`
+      const { subject,text,html} = getPodcastGeneratedEmail(
+        user.name || user.email || 'User',
+        podcast?.title || 'Untitled',
+        podcastUrl
+      )
+
+      await sendEmail(
+        user.email || '',
+        subject,
+        text,
+        html
+      )
+
+      return {emailSent: true}
+    })
+
     Sentry.logger.info('Inngest_result', {
       userId,
       debateData,
       summaryData,
+      user: user.email,
+      duration,
       audioUrl: podcast.audioUrl,
       pdfUrl: podcast.pdfUrl,
     });

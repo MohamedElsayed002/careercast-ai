@@ -19,7 +19,7 @@ export function SummaryScript({
     podcastSummaryKeyPoints,
     podcastSummaryOverview
 }: SummaryScriptProps) {
-    const [activeTab, setActiveTab] = useState<'summary' | 'script'>('summary')
+    const [activeTab, setActiveTab] = useState<'summary' | 'script'>('script')
 
     return (
         <div className="">

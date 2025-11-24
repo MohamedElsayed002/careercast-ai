@@ -4,10 +4,11 @@ import { ArrowRight, FileText, ImageIcon, Mic, Music2, Sparkles } from "lucide-r
 import { Card, CardContent } from "../ui/card"
 import prisma from "@/utils/db"
 import Header from "../header"
+import { caller } from "@/trpc/server"
 
 export const HeroSection = async () => {
 
-  const totalPodcasts = await prisma.podcast.count()
+  const totalPodcasts = await caller.podcastsCount()
 
     return (
         <section className="bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 text-white">

@@ -1,3 +1,4 @@
+import { getSubscriptionActiveEmail, getSubscriptionCancelledEmail } from "@/lib/emails";
 import prisma from "@/utils/db";
 import { sendEmail } from "@/utils/nodemailer";
 import { NextResponse } from "next/server";
@@ -49,11 +50,14 @@ export async function POST(req: Request) {
                     }, { status: 404 });
                 }
 
+                const { subject, text, html } = getSubscriptionActiveEmail(user.name || user.email || 'User');
+
+
                 await sendEmail(
                     user?.email || '',
-                    'Your Podcast Generator Pro Subscription is Active!',
-                    `Hello ${user.name || 'User'},\n\n`,
-                    `<p>Hello ${user.name || 'User'},</p>`
+                    subject,
+                    text,
+                    html
                 )
 
                 return NextResponse.json({
@@ -95,12 +99,12 @@ export async function POST(req: Request) {
                 where: { id: userId }
             })
 
-            await sendEmail(
-                user?.email || '',
-                'Deactivated subscription',
-                'can you tell me why unsubscribe',
-                '<p>See you soon</p>'
-            )
+            if (!user) {
+                throw new Error('Error user not found webhook')
+            }
+
+            const { subject, text, html } = getSubscriptionCancelledEmail(user.name || user.email || 'User');
+            await sendEmail(user?.email || '', subject, text, html);
 
             return NextResponse.json({
                 ok: true,
@@ -134,12 +138,8 @@ export async function POST(req: Request) {
                 where: { id: userId }
             })
 
-            await sendEmail(
-                user?.email || '',
-                'Deactivated subscription',
-                'can you tell me why unsubscribe',
-                '<p>See you soon</p>'
-            )
+            const { subject, text, html } = getSubscriptionCancelledEmail(user?.name || user?.email || 'User');
+            await sendEmail(user?.email || '', subject, text, html);
 
             return NextResponse.json({
                 ok: true,
@@ -160,8 +160,6 @@ export async function POST(req: Request) {
                     }, { status: 400 });
                 }
 
-                console.log('Payment confirmed for user:', userId);
-
                 await prisma.user.update({
                     where: { id: userId },
                     data: {
@@ -170,6 +168,20 @@ export async function POST(req: Request) {
                         lastPaymentAt: new Date(),
                     }
                 });
+
+                const user = await prisma.user.findUniqueOrThrow({
+                    where: {id: userId}
+                })
+
+                const { subject, text, html } = getSubscriptionActiveEmail(user.name || user.email || 'User');
+
+
+                await sendEmail(
+                    user?.email || '',
+                    subject,
+                    text,
+                    html
+                )
 
                 return NextResponse.json({
                     ok: true,

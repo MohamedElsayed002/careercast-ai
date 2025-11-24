@@ -94,7 +94,7 @@ export function CustomAudioPlayer({ audioUrl }: CustomAudioPlayerProps) {
     return (
         <div className='bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-gray-700'>
             <audio ref={audioRef} src={audioUrl} preload='metadata' />
-            
+
             {/* Progress Bar */}
             <div className='mb-4'>
                 <input
@@ -125,10 +125,10 @@ export function CustomAudioPlayer({ audioUrl }: CustomAudioPlayerProps) {
                     >
                         <SkipBack className='w-5 h-5 text-gray-700 dark:text-gray-300' />
                     </button>
-                    
+
                     <button
                         onClick={togglePlay}
-                        className='p-4 rounded-full bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 transition-colors shadow-lg'
+                        className='p-4 rounded-full bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 transition-colors shadow-lg'
                         aria-label={isPlaying ? 'Pause' : 'Play'}
                     >
                         {isPlaying ? (
@@ -137,7 +137,7 @@ export function CustomAudioPlayer({ audioUrl }: CustomAudioPlayerProps) {
                             <Play className='w-6 h-6 text-white fill-white' />
                         )}
                     </button>
-                    
+
                     <button
                         onClick={() => skip(10)}
                         className='p-2 rounded-full hover:bg-purple-100 dark:hover:bg-gray-700 transition-colors'
@@ -167,28 +167,29 @@ export function CustomAudioPlayer({ audioUrl }: CustomAudioPlayerProps) {
                         step='0.01'
                         value={isMuted ? 0 : volume}
                         onChange={handleVolumeChange}
-                        className='w-24 h-2 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer'
+                        className='w-24 h-2 bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 rounded-lg appearance-none cursor-pointer'
                     />
                 </div>
             </div>
 
             <style jsx>{`
-                input[type='range']::-webkit-slider-thumb {
-                    appearance: none;
-                    width: 16px;
-                    height: 16px;
-                    border-radius: 50%;
-                    background: rgb(147, 51, 234);
-                    cursor: pointer;
-                    border: 2px solid white;
-                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-                }
+input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(to bottom right, #111827, #4c1d95, #db2777);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
                 
                 input[type='range']::-moz-range-thumb {
                     width: 16px;
                     height: 16px;
                     border-radius: 50%;
-                    background: rgb(147, 51, 234);
+                    background: linear-gradient(to bottom right, #111827, #4c1d95, #db2777);
                     cursor: pointer;
                     border: 2px solid white;
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);

@@ -6,6 +6,14 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { caller } from "@/trpc/server"
 import Image from "next/image"
 import Link from "next/link";
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 type Params = { params: { id: string } };
 
@@ -35,6 +43,23 @@ const Page = async ({ params }: { params: { id: string } }) => {
     return (
         <div className='p-10 bg-white dark:bg-black'>
             <div className='max-w-4xl mx-auto px-4'>
+                <div className="my-10">
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href="/all-podcasts">All Podcasts</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage className="dark:text-white text-black">{data.title}</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                </div>
                 {/* Title Section */}
                 <h1 className='text-4xl md:text-5xl font-serif font-bold text-black dark:text-white mb-6 italic'>
                     {data.title}
