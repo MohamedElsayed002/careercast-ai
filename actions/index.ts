@@ -188,8 +188,6 @@ REMEMBER: The total word count across all dialogue.text fields MUST be at least 
             dialogue: finalDialogue
         }
     } catch (error) {
-        console.error('Error generating debate text:', error);
-
         Sentry.captureException(error, {
             extra: {
                 message,
@@ -197,9 +195,7 @@ REMEMBER: The total word count across all dialogue.text fields MUST be at least 
                 targetMinutes,
             }
         });
-
-        // Fallback: create a debate structure with enough content for the target duration
-        // Generate more dialogue for longer podcasts
+        
         const baseDialogue = [
             { speaker: "SPEAKER1" as const, text: `I think ${message} is an important topic that deserves thorough discussion. There are many aspects we need to explore.` },
             { speaker: "SPEAKER2" as const, text: `I agree it's important, but I see it from a different perspective. Let me explain my viewpoint in detail.` },

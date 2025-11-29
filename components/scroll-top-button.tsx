@@ -36,7 +36,7 @@ const ScrollToTopButton = () => {
                     exit={{ opacity: 0, y: 50 }}
                     transition={{ duration: 0.3 }}
                     onClick={scrollToTop}
-                    className="fixed bottom-20 right-5 z-50 rounded-full  p-3 text-white shadow-lg bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900"
+                    className="fixed bottom-20 right-5 z-50 rounded-full cursor-pointer  p-3 text-white shadow-lg bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900"
                 >
                     <ArrowUp className="h-5 w-5" />
                 </motion.button>

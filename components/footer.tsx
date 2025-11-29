@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mic } from "lucide-react"
+import { Github, Instagram, Linkedin, Mic } from "lucide-react"
 import Link from "next/link"
 
 
@@ -60,6 +60,9 @@ export const Footer = () => {
                 </a>
                 <a href="https://www.linkedin.com/in/mohamedelsayed2002" className="text-gray-300 hover:text-white transition-colors">
                   <Linkedin className="w-5 h-5" />
+                </a>
+                <a href="https://www.instagram.com/mosayed002" className="text-gray-300 hover:text-white transition-colors">
+                  <Instagram className="w-5 h-5" />
                 </a>
               </div>
             </div>

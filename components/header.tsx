@@ -16,9 +16,12 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useTRPC } from "@/trpc/client"
 import { useQuery } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 const Header = () => {
     const trpc = useTRPC()
+    const router = useRouter()
     const { data: user } = useQuery(trpc.getUser.queryOptions())
     const { data } = authClient.useSession()
     const { hasActiveSubscription, isLoading } = useHasActiveSubscription()
@@ -106,7 +109,14 @@ const Header = () => {
                                         <DropdownMenuItem>
                                             <div className="flex items-center gap-2">
                                                 <Button
-                                                    onClick={() => authClient.signOut()}
+                                                    onClick={() => authClient.signOut({
+                                                        fetchOptions: {
+                                                            onSuccess: () => {
+                                                                router.push('/')
+                                                                toast.success("User logged out")
+                                                            }
+                                                        }
+                                                    })}
                                                     variant="outline"
                                                     className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
                                                 >
