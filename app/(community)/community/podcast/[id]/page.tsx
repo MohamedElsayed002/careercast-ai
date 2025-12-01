@@ -47,11 +47,11 @@ const Page = async ({ params }: { params: { id: string } }) => {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                                <BreadcrumbLink href="/podcast">Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/all-podcasts">All Podcasts</BreadcrumbLink>
+                                <BreadcrumbLink href="/podcast/all-podcasts">All Podcasts</BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator />
                             <BreadcrumbItem>

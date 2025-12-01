@@ -42,10 +42,10 @@ export function RegisterForm() {
             name: values.email,
             email: values.email,
             password: values.password,
-            callbackURL: "/"
+            callbackURL: "/podcast"
         }, {
             onSuccess: () => {
-                router.push('/')
+                router.push('/podcast')
             },
             onError: (ctx) => {
                 toast.error(ctx.error.message)

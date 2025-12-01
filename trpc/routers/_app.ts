@@ -9,6 +9,7 @@ import { TRPCError } from '@trpc/server';
 import { Prisma } from '@/src/generated/prisma';
 import { encrypt } from '@/lib/encryption';
 import { inngest } from '@/inngest/client';
+import { analyzeCVMatch } from '@/actions/cv-reviewer';
 
 export const appRouter = createTRPCRouter({
   getHomePodcast: baseProcedure
@@ -397,23 +398,58 @@ export const appRouter = createTRPCRouter({
       return userPodcasts
     }),
 
-    // Get Single Podcast 
-    singlePodcast: baseProcedure
-      .input(z.object({
-        id: z.string()
-      }))
-      .query(async ({input}) => {
-        const { id} = input
-        return prisma.podcast.findUniqueOrThrow({
-          where: {
-            id: id
+  // Get Single Podcast 
+  singlePodcast: baseProcedure
+    .input(z.object({
+      id: z.string()
+    }))
+    .query(async ({ input }) => {
+      const { id } = input
+      return prisma.podcast.findUniqueOrThrow({
+        where: {
+          id: id
+        }
+      })
+    }),
+
+  // Get podcosts count
+  podcastsCount: baseProcedure.query(() => {
+    return prisma.podcast.count()
+  }),
+
+  // Generate CV Review 
+  generateCVReview: premiumProcedure
+    .input(z.object({
+      cvText: z.string(),
+      jobDescription: z.string()
+    }))
+    .mutation(async ({ input,ctx }) => {
+      const { cvText, jobDescription } = input
+
+      if (!cvText || !jobDescription) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: "CV Text and Job Description are required"
+        })
+      }
+
+      try {
+        const response = await analyzeCVMatch(cvText, jobDescription)
+
+        await prisma.cVReviewer.create({
+          data: {
+            review: response.analysis!,
+            user: {
+              connect: { id: ctx.auth.user.id}
+            }
           }
         })
-      }),
 
-    // Get podcosts count
-    podcastsCount: baseProcedure.query(() => {
-      return prisma.podcast.count()
+        return response.analysis
+
+      } catch (error) {
+        return error
+      }
     })
 });
 

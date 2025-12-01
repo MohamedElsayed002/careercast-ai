@@ -34,11 +34,11 @@ export function LoginForm() {
         await authClient.signIn.email({
             email: values.email,
             password: values.password,
-            callbackURL: '/',
+            callbackURL: '/podcast',
             rememberMe: true
         },{
             onSuccess: () => {
-                router.push('/')
+                router.push('/podcast')
             },
             onError:(ctx) => {
                 toast.error(ctx.error.message)

@@ -48,7 +48,7 @@ const Header = () => {
                     {/* Navigation & Auth */}
                     <div className="flex items-center gap-3">
                         <Button asChild variant="outline">
-                            <Link href='/all-podcasts' className="cursor-pointer">
+                            <Link href='/podcast/all-podcasts' className="cursor-pointer">
                                 All Podcasts
                             </Link>
                         </Button>
@@ -76,11 +76,11 @@ const Header = () => {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
                                         <DropdownMenuLabel>
-                                            <Link href='/user'>My account</Link>
+                                            <Link href='/podcast/user'>My account</Link>
                                         </DropdownMenuLabel>
                                         {user?.role === 'ADMIN' && (
                                             <DropdownMenuItem>
-                                                <Link href='/admin/dashboard'>Admin Dashboard</Link>
+                                                <Link href='/podcast/admin/dashboard'>Admin Dashboard</Link>
                                             </DropdownMenuItem>
                                         )}
                                         {!user?.isPro && !isLoading && (

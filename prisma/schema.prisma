@@ -5,8 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
@@ -15,31 +15,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 enum Role {
   USER
   ADMIN
 }
+
 model User {
-  id                 String    @id
-  name               String
-  email              String
-  emailVerified      Boolean   @default(false)
-  image              String?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @default(now()) @updatedAt
-  sessions           Session[]
-  accounts           Account[]
-  podcasts           Podcast[]
-  credentials       Credential[]
-  trialsUsed         Int       @default(0)
-  
+  id            String       @id
+  name          String
+  email         String
+  emailVerified Boolean      @default(false)
+  image         String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now()) @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  podcasts      Podcast[]
+  credentials   Credential[]
+  cvReview      CVReviewer[]
+  trialsUsed    Int          @default(0)
+
   // Subscription fields
   isPro              Boolean   @default(false)
-  subscriptionId     String?   // Polar subscription ID
-  subscriptionStatus String?   // active, trialing, canceled, past_due, etc.
+  subscriptionId     String? // Polar subscription ID
+  subscriptionStatus String? // active, trialing, canceled, past_due, etc.
   subscriptionEndsAt DateTime? // When subscription/trial ends
-  customerId         String?   // Polar customer ID
+  customerId         String? // Polar customer ID
   lastPaymentAt      DateTime? // Track last successful payment
 
   role Role @default(USER)
@@ -93,16 +94,15 @@ model Verification {
   @@map("verification")
 }
 
-
-enum StatusType  {
-  PRIVATE 
+enum StatusType {
+  PRIVATE
   PUBLIC
 }
 
 model Podcast {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   message   String
   title     String?
   audioUrl  String
@@ -111,26 +111,35 @@ model Podcast {
   status    StatusType @default(PRIVATE)
   pdfId     String?
   imageUrl  String?
-  createdAt DateTime @default(now())
+  createdAt DateTime   @default(now())
 
-  podcastScriptDialogue  Json?
+  podcastScriptDialogue    Json?
   podcastSummaryConclusion String?
-  podcastSummaryKeyPoints Json?
-  podcastSummaryOverview String?
+  podcastSummaryKeyPoints  Json?
+  podcastSummaryOverview   String?
 
   @@index([userId])
   @@map("podcast")
 }
 
-
 model Credential {
   id        String   @id @default(cuid())
   userId    String
-  name     String
-  value    String
+  name      String
+  value     String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@index([userId])
   @@map("credential")
+}
+
+model CVReviewer {
+  id String @id @default(cuid())
+  userId String
+  review Json
+
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+
+  @@index([userId])
 }

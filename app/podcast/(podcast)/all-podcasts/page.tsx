@@ -1,17 +1,17 @@
 import { Suspense } from "react"
 import { caller } from "@/trpc/server"
 import { PodcastList } from "@/components/podcast/podcast-list"
-import { PodcastSearch } from "../../../components/all-podcasts/podcast-search"
-import { PodcastPagination } from "../../../components/all-podcasts/podcast-pagination"
 import { Music2 } from "lucide-react"
 import { PodcastsLoader } from "@/components/loader"
 import type { Metadata } from "next";
 import Header from "@/components/header"
+import { PodcastSearch } from "@/components/all-podcasts/podcast-search"
+import { PodcastPagination } from "@/components/all-podcasts/podcast-pagination"
 
 export const metadata: Metadata = {
     title: "Podcastr | All Podcasts Page",
     description: "All podcasts"
-  };
+};
 
 
 interface AllPodcastPageProps {

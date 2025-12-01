@@ -18,6 +18,7 @@ prisma/migrations/*
 # next.js
 /.next/
 /out/
+/public/pdfjs
 
 # production
 /build
