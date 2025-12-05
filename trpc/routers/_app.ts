@@ -422,26 +422,42 @@ export const appRouter = createTRPCRouter({
   generateCVReview: premiumProcedure
     .input(z.object({
       cvText: z.string(),
-      jobDescription: z.string()
+      jobDescription: z.string(),
+      credential: z.string()
     }))
-    .mutation(async ({ input,ctx }) => {
-      const { cvText, jobDescription } = input
+    .mutation(async ({ input, ctx }) => {
+      const { cvText, jobDescription, credential } = input
 
-      if (!cvText || !jobDescription) {
+      if (!cvText || !jobDescription || !credential) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
-          message: "CV Text and Job Description are required"
+          message: "CV Text, Job Description, and Credential are required"
+        })
+      }
+
+      // Validate credential belongs to user
+      const credentialValue = await prisma.credential.findUnique({
+        where: {
+          id: credential,
+          userId: ctx.auth.user.id
+        }
+      })
+
+      if (!credentialValue) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: "Invalid credential or credential does not belong to user"
         })
       }
 
       try {
-        const response = await analyzeCVMatch(cvText, jobDescription)
+        const response = await analyzeCVMatch(cvText, jobDescription, credential)
 
         await prisma.cVReviewer.create({
           data: {
             review: response.analysis!,
             user: {
-              connect: { id: ctx.auth.user.id}
+              connect: { id: ctx.auth.user.id }
             }
           }
         })

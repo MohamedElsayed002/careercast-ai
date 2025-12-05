@@ -1,10 +1,8 @@
 import { generateObject} from "ai"
 import { z } from "zod"
 import { createOpenAI } from "@ai-sdk/openai"
-
-const openai =  createOpenAI({
-    apiKey: 'hhh'
-})
+import prisma from "@/utils/db"
+import { decrypt } from "@/lib/encryption"
 
 const CVReviewSchema = z.object({
     matchPercentage: z.number().min(0).max(100).describe("Overall match percentage between CV and job description"),
@@ -59,7 +57,20 @@ const SYSTEM_PROMPT = `
         - Advise on structure, formatting, or presentation improvements
 `
 
-export async function analyzeCVMatch(cvText: string, jobDescription: string) {
+export async function analyzeCVMatch(cvText: string, jobDescription: string, credentialId: string) {
+    // Get and decrypt credential
+    const credentialValue = await prisma.credential.findUnique({
+        where: { id: credentialId }
+    })
+
+    if (!credentialValue) {
+        throw new Error('Invalid credential')
+    }
+
+    const openai = createOpenAI({
+        apiKey: decrypt(credentialValue.value)
+    })
+
     const prompt = `
         ${SYSTEM_PROMPT}
 

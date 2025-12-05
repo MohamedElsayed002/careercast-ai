@@ -18,9 +18,6 @@ export function UserLayout() {
     return (
         <div className="min-h-screen relative overflow-hidden">
             {/* Animated gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 opacity-20" />
-            <div className="absolute top-0 right-0 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" />
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000" />
 
             <div className="relative z-10">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 space-y-8">
@@ -55,7 +52,7 @@ export function UserLayout() {
                             </div>
                             {/* Navigate to credentials page */}
                             <div className="bg-white/80 hover:bg-white/90 text-purple-600 font-semibold px-4 py-3 rounded-lg shadow-md border border-purple-200/50 hover:border-purple-300/50">
-                                <Link className="flex items-center gap-1" href="/podcast    /user/credentials">
+                                <Link className="flex items-center gap-1" href="/community/credentials">
                                     <PlusIcon className="size-4" />
                                     Add Credentials
                                 </Link>

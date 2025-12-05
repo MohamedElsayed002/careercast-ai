@@ -17,10 +17,10 @@ export const UploadCV = ({ fileName,cvText, setStep, useDummyCV, handleFileUploa
         <div className='space-y-6'>
             <div className='text-center'>
                 <FileText className='w-12 h-12 text-teal-600 mx-auto mb-4' />
-                <h2 className='text-2xl font-bold text-gray-800 mb-2'>
+                <h2 className='text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2'>
                     Step 1: Upload your CV
                 </h2>
-                <p className='text-gray-600'>
+                <p className='text-gray-600 dark:text-gray-400'>
                     Upload your CV/Resume in PDF format
                 </p>
             </div>
@@ -42,7 +42,7 @@ export const UploadCV = ({ fileName,cvText, setStep, useDummyCV, handleFileUploa
             </Label>
 
             <div className="text-center">
-                <p className="text-sm text-gray-600 mb-3">Or try with sample data</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Or try with sample data</p>
                 <button
                     onClick={useDummyCV}
                     className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
@@ -61,8 +61,8 @@ export const UploadCV = ({ fileName,cvText, setStep, useDummyCV, handleFileUploa
                         </div>
                     </div>
 
-                    <div className="bg-gray-50 rounded-xl p-4 max-h-48 overflow-y-auto border border-gray-200">
-                        <pre className="whitespace-pre-wrap text-xs text-gray-700 font-mono">
+                    <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 max-h-48 overflow-y-auto border border-gray-200 dark:border-gray-700">
+                        <pre className="whitespace-pre-wrap text-xs text-gray-700 dark:text-gray-300 font-mono">
                             {cvText}
                         </pre>
                     </div>
@@ -71,7 +71,7 @@ export const UploadCV = ({ fileName,cvText, setStep, useDummyCV, handleFileUploa
                         onClick={() => setStep(2)}
                         className="w-full py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-semibold flex items-center justify-center gap-2 mb-10"
                     >
-                        Next: Add Job Description
+                        Next: Select Credential
                         <ArrowRight className="w-5 h-5" />
                     </button>
                 </div>

@@ -22,7 +22,7 @@ export const Credentials = () => {
                 </Button>
             </div>
             <div className="bg-white/10 p-6 rounded-lg shadow-lg border border-white/20">
-                <h2 className="text-2xl font-bold mb-4 text-white">Your API Credentials</h2>
+                <h2 className="text-2xl font-bold mb-4">Your API Credentials</h2>
                 <DialogCred />
             </div>
 
@@ -44,7 +44,7 @@ export const Credentials = () => {
                     ))
                 )}
                 {!isLoading && !error && credentials && credentials.length === 0 && (
-                    <p className="text-white mt-4">No credentials found. Add your first credential above.</p>
+                    <p className="mt-4">No credentials found. Add your first credential above.</p>
                 )}
             </div>
         </div>

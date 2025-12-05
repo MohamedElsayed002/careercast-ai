@@ -114,7 +114,7 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                                 <p>Select the API credential to be used for generating the podcast</p>
                                 <p>
                                     Don&apos;t have any credentials?{' '}
-                                    <Link href="/user" className="text-primary underline">
+                                    <Link href="/community/credentials" className="text-primary underline">
                                         Add your credentials here.
                                     </Link>
                                 </p>

@@ -9,11 +9,13 @@ import { JobDescription } from "./job-description";
 import { CVReviewType } from "@/actions/cv-reviewer";
 import { CVAnalysis } from "./cv-analysis";
 import { ReviewerHeader } from "../reviewer/header";
+import { CredentialSelection } from "./credential-selection";
 
 export const CVReviewer = () => {
     const [step, setStep] = useState(1);
     const [cvText, setCvText] = useState('');
     const [fileName, setFileName] = useState('');
+    const [credential, setCredential] = useState('');
     const [jobDescription, setJobDescription] = useState('');
     const [analysis, setAnalysis] = useState<CVReviewType | null>(null);
 
@@ -79,6 +81,7 @@ export const CVReviewer = () => {
         setStep(1)
         setCvText('')
         setFileName('')
+        setCredential('')
         setJobDescription('')
         setAnalysis(null)
     }
@@ -92,36 +95,43 @@ export const CVReviewer = () => {
                     <div className='inline-flex items-center justify-center w-20 h-20 bg-teal-600 rounded-2xl mb-4 shadow-lg'>
                         <Sparkles className="w-10 h-10 text-white" />
                     </div>
-                    <h1 className="text-4xl font-bold text-gray-800 mb-2">
+                    <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-2">
                         AI CV Reviewer
                     </h1>
-                    <p className="text-gray-600">
-                        Upload your CV, paste the job description, and get instant AI-powered feedback
+                    <p className="text-gray-600 dark:text-gray-400">
+                        Upload your CV, select credential, paste the job description, and get instant AI-powered feedback
                     </p>
                 </div>
 
                 {/* Progress steps */}
                 <div className="mb-8">
-                    <div className="flex items-center justify-center gap-4">
+                    <div className="flex items-center justify-center gap-2 flex-wrap">
                         <div className={`flex items-center gap-2 ${step >= 1 ? 'text-teal-600' : 'text-gray-400'}`}>
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 1 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
                                 1
                             </div>
-                            <span className="font-medium">Upload CV</span>
+                            <span className="font-medium hidden sm:inline">Upload CV</span>
                         </div>
-                        <ArrowRight className={step >= 2 ? 'text-teal-600' : 'text-gray-400'} />
+                        <ArrowRight className={`${step >= 2 ? 'text-teal-600' : 'text-gray-400'} hidden sm:block`} />
                         <div className={`flex items-center gap-2 ${step >= 2 ? 'text-teal-600' : 'text-gray-400'}`}>
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 2 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
                                 2
                             </div>
-                            <span className="font-medium">Job Description</span>
+                            <span className="font-medium hidden sm:inline">Credential</span>
                         </div>
-                        <ArrowRight className={step >= 3 ? 'text-teal-600' : 'text-gray-400'} />
+                        <ArrowRight className={`${step >= 3 ? 'text-teal-600' : 'text-gray-400'} hidden sm:block`} />
                         <div className={`flex items-center gap-2 ${step >= 3 ? 'text-teal-600' : 'text-gray-400'}`}>
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 3 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
                                 3
                             </div>
-                            <span className="font-medium">AI Analysis</span>
+                            <span className="font-medium hidden sm:inline">Job Description</span>
+                        </div>
+                        <ArrowRight className={`${step >= 4 ? 'text-teal-600' : 'text-gray-400'} hidden sm:block`} />
+                        <div className={`flex items-center gap-2 ${step >= 4 ? 'text-teal-600' : 'text-gray-400'}`}>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 4 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                                4
+                            </div>
+                            <span className="font-medium hidden sm:inline">AI Analysis</span>
                         </div>
                     </div>
                 </div>
@@ -141,6 +151,15 @@ export const CVReviewer = () => {
 
                 {/* Step 2 */}
                 {step === 2 && (
+                    <CredentialSelection
+                        credential={credential}
+                        setCredential={setCredential}
+                        setStep={setStep}
+                    />
+                )}
+
+                {/* Step 3 */}
+                {step === 3 && (
                     <JobDescription
                         cvText={cvText}
                         jobDescription={jobDescription}
@@ -148,12 +167,13 @@ export const CVReviewer = () => {
                         setStep={setStep}
                         useDummyJob={useDummyJobDescription}
                         setAnalysis={setAnalysis}
+                        credential={credential}
                         key={step}
                     />
                 )}
 
-                {/* Step 3 */}
-                {step === 3 && (
+                {/* Step 4 */}
+                {step === 4 && (
                     <CVAnalysis
                         analysis={analysis}
                         reset={reset}

@@ -17,7 +17,7 @@ export const BreadcrumbsCred = () => {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                    <BreadcrumbLink href="/user">User</BreadcrumbLink>
+                    <BreadcrumbLink href="/community/user">User</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>

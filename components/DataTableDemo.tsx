@@ -172,10 +172,10 @@ export const columns: ColumnDef<UserData>[] = [
               Copy email
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href={`/admin/user/${user.id}`}>View profile</Link>
+              <Link href={`/community/admin/user/${user.id}`}>View profile</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href={`/admin/user/${user.id}/podcasts`}>All Podcasts</Link>
+              <Link href={`/community/admin/user/${user.id}/podcasts`}>All Podcasts</Link>
             </DropdownMenuItem>
                         <DropdownMenuSeparator />
             <DropdownMenuItem>
@@ -218,7 +218,7 @@ export function DataTableDemo({ data }: { data: any }) {
   })
 
   return (
-    <div className="w-full bg-gradient from-gray-900 via-purple-900 to-pink-900 text-white">
+    <div className="w-full bg-gradient from-gray-900 via-purple-900 to-pink-900">
       <div className="flex items-center py-4 gap-2">
         <Input
           placeholder="Filter by name or email..."

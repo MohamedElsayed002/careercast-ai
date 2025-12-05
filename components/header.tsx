@@ -91,11 +91,11 @@ const Header = () => {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
                                         <DropdownMenuLabel>
-                                            <Link href='/podcast/user'>My account</Link>
+                                            <Link href='/community/user'>My account</Link>
                                         </DropdownMenuLabel>
                                         {user?.role === 'ADMIN' && (
                                             <DropdownMenuItem>
-                                                <Link href='/podcast/admin/dashboard'>Admin Dashboard</Link>
+                                                <Link href='/community/admin/dashboard'>Admin Dashboard</Link>
                                             </DropdownMenuItem>
                                         )}
                                         {!user?.isProPodcast && !isLoading && (

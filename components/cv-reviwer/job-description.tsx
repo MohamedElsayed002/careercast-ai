@@ -12,13 +12,14 @@ import { CVReviewType } from "@/actions/cv-reviewer"
 interface JobDescriptionProps {
     jobDescription: string
     cvText: string
+    credential: string
     setJobDescription: (value: SetStateAction<string>) => void
     useDummyJob: () => void
     setStep: Dispatch<SetStateAction<number>>
     setAnalysis: Dispatch<SetStateAction<CVReviewType | null>>
 }
 
-export const JobDescription = ({ setAnalysis,cvText,useDummyJob,setStep, jobDescription, setJobDescription }: JobDescriptionProps) => {
+export const JobDescription = ({ setAnalysis, cvText, useDummyJob, setStep, jobDescription, setJobDescription, credential }: JobDescriptionProps) => {
 
     const trpc = useTRPC()
     const generateReview = useMutation(trpc.generateCVReview.mutationOptions({
@@ -31,25 +32,30 @@ export const JobDescription = ({ setAnalysis,cvText,useDummyJob,setStep, jobDesc
     }))
 
     const analyzeMatch = () => {
-        if(!cvText.trim() || !jobDescription.trim()) {
-            toast.error('CV, Job description text are required')
+        if (!cvText.trim() || !jobDescription.trim()) {
+            toast.error('CV and Job description text are required')
+            return
+        }
+        if (!credential.trim()) {
+            toast.error('Credential is required')
             return
         }
         generateReview.mutate({
             cvText,
-            jobDescription
+            jobDescription,
+            credential
         })
-        setStep(3)
+        setStep(4)
 
     }
     return (
         <div className="space-y-6">
             <div className='text-center'>
                 <Briefcase className='w-12 h-12 text-teal-600 mx-auto mb-4' />
-                <h2 className='text-2xl font-bold text-gray-800 mb-2'>
-                    Step 2: Job Description
+                <h2 className='text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2'>
+                    Step 3: Job Description
                 </h2>
-                <p className='text-gray-600'>
+                <p className='text-gray-600 dark:text-gray-400'>
                     Paste job description you&apos;re applying for
                 </p>
             </div>
@@ -86,7 +92,7 @@ export const JobDescription = ({ setAnalysis,cvText,useDummyJob,setStep, jobDesc
                 </button>
                 <button
                     onClick={analyzeMatch}
-                    disabled={!jobDescription.trim()}
+                    disabled={!jobDescription.trim() || !credential.trim()}
                     className="flex-1 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-semibold flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
                     Analyze Match

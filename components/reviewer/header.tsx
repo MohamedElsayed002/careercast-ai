@@ -69,10 +69,10 @@ export const ReviewerHeader = () => {
 
                 {/* Desktop Nav */}
                 <ul className="hidden md:flex flex-row gap-6 items-center">
-                    <li><Link href="#how-it-works">How it works</Link></li>
-                    <li><Link href="#pricing">Pricing</Link></li>
-                    <li><Link href="#features">Features</Link></li>
-                    <li><Link href="#testimonials">Testimonials</Link></li>
+                    <li><Link href="/reviewer#how-it-works">How it works</Link></li>
+                    <li><Link href="/reviewer#pricing">Pricing</Link></li>
+                    <li><Link href="/reviewer#features">Features</Link></li>
+                    <li><Link href="/reviewer#testimonials">Testimonials</Link></li>
                     <li>
                         {data ? (
                             <>
@@ -98,11 +98,11 @@ export const ReviewerHeader = () => {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
                                         <DropdownMenuLabel>
-                                            <Link href='/podcast/user'>My account</Link>
+                                            <Link href='/community/user'>My account</Link>
                                         </DropdownMenuLabel>
                                         {user?.role === 'ADMIN' && (
                                             <DropdownMenuItem>
-                                                <Link href='/podcast/admin/dashboard'>Admin Dashboard</Link>
+                                                <Link href='/community/admin/dashboard'>Admin Dashboard</Link>
                                             </DropdownMenuItem>
                                         )}
                                         {!user?.isProCVReviewer && !isLoading && (
@@ -173,23 +173,19 @@ export const ReviewerHeader = () => {
 
                     <DropdownMenuContent className="w-52 mr-4">
                         <DropdownMenuItem>
-                            <Link href="#how-it-works" className="w-full">How it works</Link>
+                            <Link href="/reviewer#how-it-works" className="w-full">How it works</Link>
                         </DropdownMenuItem>
 
                         <DropdownMenuItem>
-                            <Link href="#pricing" className="w-full">Pricing</Link>
+                            <Link href="/reviewer#pricing" className="w-full">Pricing</Link>
                         </DropdownMenuItem>
 
                         <DropdownMenuItem>
-                            <Link href="#features" className="w-full">Features</Link>
+                            <Link href="/reviewer#features" className="w-full">Features</Link>
                         </DropdownMenuItem>
 
                         <DropdownMenuItem>
-                            <Link href="#testimonials" className="w-full">Testimonials</Link>
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem>
-                            <Button className="w-full mt-2 bg-teal-600 hover:bg-teal-400">Get Started</Button>
+                            <Link href="/reviewer#testimonials" className="w-full">Testimonials</Link>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

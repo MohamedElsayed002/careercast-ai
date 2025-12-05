@@ -15,7 +15,6 @@ export const HeroReviewer = () => {
                         Review my CV
                     </Link>
                 </Button>
-                <Button variant='link'>See demo</Button>
             </div>
             <p className='text-gray-400 text-md'>Trusted by 10,000+ professionals worldwide (hwa klam bflos)</p>
         </div>
