@@ -1,39 +1,66 @@
 import { CVReviewType } from "@/actions/cv-reviewer"
-import { AlertCircle, CheckCircle, Sparkles, XCircle } from "lucide-react"
+import { AlertCircle, CheckCircle, Sparkles, XCircle, RefreshCw } from "lucide-react"
+import { Button } from "../ui/button"
 
 interface CVAnalysisProps {
     analysis: CVReviewType | null
+    error: string | null
+    isLoading: boolean
     reset: () => void
+    onRetry: () => void
 }
 
-export const CVAnalysis = ({ reset, analysis }: CVAnalysisProps) => {
+export const CVAnalysis = ({ reset, analysis, error, isLoading, onRetry }: CVAnalysisProps) => {
     return (
         <div className='space-y-6'>
-            {!analysis ? (
+            {isLoading && !error && !analysis ? (
                 <div className='text-center py-12'>
                     <div className='inline-block animate-spin rounded-full h-16 w-16 border-4 border-teal-500 border-t-transparent mb-4' />
-                    <p className='text-xl text-gray-700 font-semibold'>AI is analyzing your CV..</p>
-                    <p className='text-gray-600 mt-2'>This may take a few seconds</p>
+                    <p className='text-xl text-gray-700 dark:text-gray-300 font-semibold'>AI is analyzing your CV..</p>
+                    <p className='text-gray-600 dark:text-gray-400 mt-2'>This may take a few seconds</p>
                 </div>
-            ) : analysis && (
+            ) : error ? (
+                <div className='text-center py-12'>
+                    <div className='inline-flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full mb-4'>
+                        <XCircle className='w-8 h-8 text-red-600 dark:text-red-400' />
+                    </div>
+                    <h3 className='text-2xl font-bold text-red-900 dark:text-red-200 mb-2'>Analysis Failed</h3>
+                    <p className='text-red-700 dark:text-red-300 mb-6 max-w-md mx-auto'>{error}</p>
+                    <div className='flex gap-3 justify-center'>
+                        <Button
+                            onClick={onRetry}
+                            className='bg-teal-600 hover:bg-teal-700 text-white'
+                        >
+                            <RefreshCw className='w-4 h-4 mr-2' />
+                            Try Again
+                        </Button>
+                        <Button
+                            onClick={reset}
+                            variant='outline'
+                        >
+                            Start Over
+                        </Button>
+                    </div>
+                </div>
+            ) : analysis ? (
                 <div className='space-y-6'>
-                    <div className={`p-6 rounded-xl border-2 ${analysis.isGoodMatch ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`}>
+                    <div className={`p-6 rounded-xl border-2 ${analysis.isGoodMatch ? 'bg-green-50 dark:bg-green-900/20 border-green-500 dark:border-green-400' : 'bg-red-50 dark:bg-red-900/20 border-red-500 dark:border-red-400'}`}>
                         <div className='flex items-center gap-4 mb-4'>
                             {analysis.isGoodMatch ? (
-                                <CheckCircle className='w-12 h-12 text-green-600' />
+                                <CheckCircle className='w-12 h-12 text-green-600 dark:text-green-400' />
                             ) : (
-                                <XCircle className='w-12 h-12 text-red-600' />
+                                <XCircle className='w-12 h-12 text-red-600 dark:text-red-400' />
                             )}
                             <div>
-                                <h3 className={`text-2xl font-bold ${analysis.isGoodMatch ? 'text-green-900' : 'text-red-900'}`}>
-                                    {analysis.isGoodMatch ? 'Good Match!' : 'Needs Improvment'}
+                                <h3 className={`text-2xl font-bold ${analysis.isGoodMatch ? 'text-green-900 dark:text-green-200' : 'text-red-900 dark:text-red-200'}`}>
+                                    {analysis.isGoodMatch ? 'Good Match!' : 'Needs Improvement'}
                                 </h3>
-                                <p className={`text-lg ${analysis.isGoodMatch ? 'text-green-700' : 'text-red-700'}`}>
+                                <p className={`text-lg ${analysis.isGoodMatch ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'}`}>
                                     Match Score: {analysis.matchPercentage}%
                                 </p>
                             </div>
                         </div>
-                        <p className={`${analysis.isGoodMatch ? 'text-green-800' : 'text-red-800'}`}>
+                        <p className={`${analysis.isGoodMatch ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'}`}>
                             {analysis.verdict}
                         </p>
                     </div>
@@ -162,26 +189,27 @@ export const CVAnalysis = ({ reset, analysis }: CVAnalysisProps) => {
 
                     {/* Action Buttons */}
                     <div className="flex gap-3 pt-4">
-                        <button
+                        <Button
                             onClick={reset}
-                            className="flex-1 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-semibold"
+                            className="flex-1 bg-teal-600 hover:bg-teal-700 text-white"
                         >
                             Analyze Another CV
-                        </button>
+                        </Button>
                     </div>
 
-                    <div className="mt-6 p-4 bg-white rounded-xl shadow-md">
-                        <h3 className="text-sm font-semibold text-gray-900 mb-2">
+                    <div className="mt-6 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-md">
+                        <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                             💡 How it works
                         </h3>
-                        <ul className="text-sm text-gray-700 space-y-1">
+                        <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
                             <li>• <strong>Step 1:</strong> Upload your CV or use dummy data to test</li>
-                            <li>• <strong>Step 2:</strong> Paste the job description you&apos;re applying for</li>
-                            <li>• <strong>Step 3:</strong> Get AI-powered analysis with match score and recommendations</li>
+                            <li>• <strong>Step 2:</strong> Select your OpenAI API credential</li>
+                            <li>• <strong>Step 3:</strong> Paste the job description you&apos;re applying for</li>
+                            <li>• <strong>Step 4:</strong> Get AI-powered analysis with match score and recommendations</li>
                         </ul>
                     </div>
                 </div>
-            )}
+            ) : null}
         </div>
     )
 }

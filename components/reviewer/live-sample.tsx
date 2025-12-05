@@ -1,6 +1,7 @@
 import { Check } from "lucide-react"
 import { Button } from "../ui/button"
 import Image from "next/image"
+import Link from "next/link"
 
 
 export const LiveSample = () => {
@@ -20,28 +21,41 @@ export const LiveSample = () => {
                     actionable insights to help your CV for each application,
                     increasing your chances of landing an interview
                 </p>
-                <div className='flex flex-col gap-3'>
-                    {/* First */}
-                    <div className='flex items-center gap-5'>
-                        <div className='bg-teal-600 rounded-full w-12 h-12 flex justify-center text-center items-center'>
-                            <Check className='text-white size-8' />
+                <div className="space-y-6">
+
+                    {/* Item 1 */}
+                    <div className="flex items-center gap-5">
+                        <div className="bg-teal-600 rounded-full p-3 flex justify-center items-center">
+                            <Check className="text-white w-6 h-6" />
                         </div>
-                        <p>Identify critical skills gaps instantly.</p>
+                        <p className="text-gray-800">
+                            Identify critical skills gaps instantly.
+                        </p>
                     </div>
-                    <div className='flex items-center gap-5'>
-                        <div className='bg-teal-600 rounded-full w-12 h-12 flex justify-center text-center items-center'>
-                            <Check className='text-white size-8' />
+
+                    {/* Item 2 */}
+                    <div className="flex items-center gap-5">
+                        <div className="bg-teal-600 rounded-full p-3 flex justify-center items-center">
+                            <Check className="text-white w-6 h-6" />
                         </div>
-                        <p>Optimize keywords for Applicant Tracking System (ATS).</p>
+                        <p className="text-gray-800">
+                            Optimize keywords for Applicant Tracking System (ATS).
+                        </p>
                     </div>
-                    <div className='flex items-center gap-5'>
-                        <div className='bg-teal-600 rounded-full w-12 h-12 flex justify-center text-center items-center'>
-                            <Check className='text-white size-8' />
+
+                    {/* Item 3 */}
+                    <div className="flex items-center gap-5">
+                        <div className="bg-teal-600 rounded-full p-3 flex justify-center items-center">
+                            <Check className="text-white w-6 h-6" />
                         </div>
-                        <p>Get AI-Powered suggestions to stregthen your CV.</p>
+                        <p className="text-gray-800">
+                            Get AI-Powered suggestions to strengthen your CV.
+                        </p>
                     </div>
                 </div>
-                <Button size='sm' className='bg-teal-200 text-teal-600'>Try Sample</Button>
+                <Button size='sm' className='bg-teal-200 text-teal-600' asChild>
+                    <Link href="/reviewer/cv-reviewer">Try Sample</Link>
+                </Button>
             </div>
         </div>
     )

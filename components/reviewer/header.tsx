@@ -105,6 +105,11 @@ export const ReviewerHeader = () => {
                                                 <Link href='/community/admin/dashboard'>Admin Dashboard</Link>
                                             </DropdownMenuItem>
                                         )}
+                                        {user && (
+                                            <DropdownMenuItem>
+                                                <Link href="/community/edit-user">Edit User</Link>
+                                            </DropdownMenuItem>
+                                        )}
                                         {!user?.isProCVReviewer && !isLoading && (
                                             <DropdownMenuItem>
                                                 <h1

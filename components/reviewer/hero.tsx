@@ -16,7 +16,7 @@ export const HeroReviewer = () => {
                     </Link>
                 </Button>
             </div>
-            <p className='text-gray-400 text-md'>Trusted by 10,000+ professionals worldwide (hwa klam bflos)</p>
+            <p className='text-gray-400 text-md px-6'>Trusted by 10,000+ professionals worldwide (hwa klam bflos)</p>
         </div>
     )
 }

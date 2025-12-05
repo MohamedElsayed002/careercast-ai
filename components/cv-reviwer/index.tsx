@@ -18,6 +18,8 @@ export const CVReviewer = () => {
     const [credential, setCredential] = useState('');
     const [jobDescription, setJobDescription] = useState('');
     const [analysis, setAnalysis] = useState<CVReviewType | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -84,6 +86,8 @@ export const CVReviewer = () => {
         setCredential('')
         setJobDescription('')
         setAnalysis(null)
+        setError(null)
+        setIsLoading(false)
     }
 
     return (
@@ -168,6 +172,8 @@ export const CVReviewer = () => {
                         useDummyJob={useDummyJobDescription}
                         setAnalysis={setAnalysis}
                         credential={credential}
+                        setError={setError}
+                        setIsLoading={setIsLoading}
                         key={step}
                     />
                 )}
@@ -176,7 +182,10 @@ export const CVReviewer = () => {
                 {step === 4 && (
                     <CVAnalysis
                         analysis={analysis}
+                        error={error}
+                        isLoading={isLoading}
                         reset={reset}
+                        onRetry={() => setStep(3)}
                     />
                 )}
             </div>

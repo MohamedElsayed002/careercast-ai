@@ -123,7 +123,7 @@ export function PricingSection() {
                                                         <Check className="w-5 h-5 text-green-500 shrink-0" />
                                                     )}
                                                 </div>
-                                                <span className="text-sm text-black leading-relaxed">
+                                                <span className="text-sm light:text-black dark:text-white leading-relaxed">
                                                     {feature.text}
                                                 </span>
                                             </li>
@@ -135,7 +135,7 @@ export function PricingSection() {
                                         onClick={tier.ctaAction}
                                         className={`w-full h-12 text-base font-semibold ${tier.popular
                                             ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white'
-                                            : 'text-white'
+                                            : 'light:text-black dark:text-white'
                                             }`}
                                         variant={tier.popular ? 'default' : 'outline'}
                                         size="lg"
@@ -153,7 +153,7 @@ export function PricingSection() {
                             All plans include access to our AI-powered podcast creation tools.
                             <br />
                             <Link
-                                href="/create-podcast"
+                                href="/podcast/create-podcast"
                                 className="text-purple-600 dark:text-purple-400 hover:underline font-medium"
                             >
                                 Start creating your first podcast →

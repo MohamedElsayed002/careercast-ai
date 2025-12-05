@@ -65,7 +65,7 @@ export const HeroSection = async () => {
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-xl text-lg px-8 py-6 h-auto"
+                className="border-2 hover:bg-white/10 backdrop-blur-xl text-lg px-8 py-6 h-auto bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
               >
                 <Link href="#podcasts" className="flex items-center gap-2">
                   Explore Podcasts

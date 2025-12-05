@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, Briefcase, Sparkles } from "lucide-react"
+import { ArrowLeft, Briefcase, Sparkles, Loader2 } from "lucide-react"
 import { Label } from "../ui/label"
 import { Dispatch, SetStateAction } from "react"
 import { Textarea } from "../ui/textarea"
@@ -17,17 +17,26 @@ interface JobDescriptionProps {
     useDummyJob: () => void
     setStep: Dispatch<SetStateAction<number>>
     setAnalysis: Dispatch<SetStateAction<CVReviewType | null>>
+    setError: Dispatch<SetStateAction<string | null>>
+    setIsLoading: Dispatch<SetStateAction<boolean>>
 }
 
-export const JobDescription = ({ setAnalysis, cvText, useDummyJob, setStep, jobDescription, setJobDescription, credential }: JobDescriptionProps) => {
+export const JobDescription = ({ setAnalysis, cvText, useDummyJob, setStep, jobDescription, setJobDescription, credential, setError, setIsLoading }: JobDescriptionProps) => {
 
     const trpc = useTRPC()
     const generateReview = useMutation(trpc.generateCVReview.mutationOptions({
         onSuccess: (data) => {
             setAnalysis(data)
+            setError(null)
+            setIsLoading(false)
+            setStep(4)
         },
-        onError: () => {
-            toast.error("Error Reviewing CV")
+        onError: (error: unknown) => {
+            setIsLoading(false)
+            const errorMessage = error instanceof Error ? error.message : 'Failed to analyze CV. Please try again.'
+            setError(errorMessage)
+            toast.error(errorMessage)
+            setStep(4) // Move to step 4 to show error
         }
     }))
 
@@ -40,13 +49,21 @@ export const JobDescription = ({ setAnalysis, cvText, useDummyJob, setStep, jobD
             toast.error('Credential is required')
             return
         }
+        
+        // Reset previous error and set loading state
+        setError(null)
+        setIsLoading(true)
+        setAnalysis(null)
+        
+        // Move to step 4 to show loading state
+        setStep(4)
+        
+        // Start the mutation
         generateReview.mutate({
             cvText,
             jobDescription,
             credential
         })
-        setStep(4)
-
     }
     return (
         <div className="space-y-6">
@@ -92,11 +109,20 @@ export const JobDescription = ({ setAnalysis, cvText, useDummyJob, setStep, jobD
                 </button>
                 <button
                     onClick={analyzeMatch}
-                    disabled={!jobDescription.trim() || !credential.trim()}
+                    disabled={!jobDescription.trim() || !credential.trim() || generateReview.isPending}
                     className="flex-1 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-semibold flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
-                    Analyze Match
-                    <Sparkles className="w-5 h-5" />
+                    {generateReview.isPending ? (
+                        <>
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            Analyzing...
+                        </>
+                    ) : (
+                        <>
+                            Analyze Match
+                            <Sparkles className="w-5 h-5" />
+                        </>
+                    )}
                 </button>
             </div>
         </div>

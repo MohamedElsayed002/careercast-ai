@@ -2,6 +2,7 @@ import { polarClient } from '@/utils/auth';
 import prisma from '@/utils/db';
 import { getSession } from '@/utils/server';
 import { initTRPC, TRPCError } from '@trpc/server';
+import next from 'next';
 import { cache } from 'react';
 export const createTRPCContext = cache(async () => {
   /**
@@ -39,7 +40,7 @@ export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
     }
   })
 
-  return next({ ctx: { ...ctx, auth: user, role: userRole?.role } })
+  return next({ ctx: { ...ctx, auth: user, role: userRole?.role, user: userRole} })
 })
 export const premiumProcedure = protectedProcedure.use(
   async ({ ctx, next }) => {
@@ -68,5 +69,18 @@ export const adminProcedure = protectedProcedure.use(
     }
 
     return next({ ctx })
+  }
+)
+
+export const cvReviewerProcedure = protectedProcedure.use(
+  async ({ctx,next}) => {
+
+    if(!ctx.user?.isProCVReviewer) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'Only for premium users'
+      })
+    }
+    return next({ctx})
   }
 )

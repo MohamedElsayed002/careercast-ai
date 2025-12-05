@@ -94,7 +94,7 @@ export const CreatePodcastForm = () => {
                 <div className="text-center mb-8">
                     <div className="flex items-center justify-center gap-2 mb-3 pt-10">
                         <Mic className="w-10 h-10 text-white" />
-                        <h1 className="text-4xl font-bold text-foreground">Create Your Podcast</h1>
+                        <h1 className="text-4xl font-bold text-white">Create Your Podcast</h1>
                     </div>
                     <p className="text-muted-foreground text-lg">
                         Create realistic debate podcasts between two AI voices discussing your topic

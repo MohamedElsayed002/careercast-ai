@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { Button } from "../ui/button";
 import { authClient } from "@/utils/auth-client";
 import { useRouter } from "next/navigation"
+import Link from "next/link";
 
 export const Pricing = () => {
 
@@ -67,8 +68,9 @@ export const Pricing = () => {
             <Button
               className="w-full bg-teal-50 text-teal-700 hover:bg-teal-100 border border-transparent font-semibold py-3 rounded-full"
               aria-label="Get Started - Free"
+              asChild
             >
-              Get Started
+              <Link href="/reviewer/cv-reviewer">Get Started</Link>
             </Button>
           </div>
         </div>

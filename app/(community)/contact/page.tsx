@@ -12,7 +12,7 @@ const Page = () => {
                 <h1 className='text-3xl md:text-6xl font-bold'>
                     Contact Us
                 </h1>
-                <p className='text-gray-400 text-xl'>
+                <p className='text-gray-400 text-xl px-6'>
                     We&apos;re here to help and answer any question you might have. We look forward
                     to hearing from you.
                 </p>

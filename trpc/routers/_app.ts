@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { adminProcedure, baseProcedure, createTRPCRouter, premiumProcedure, protectedProcedure } from '../init';
+import { adminProcedure, baseProcedure, createTRPCRouter, cvReviewerProcedure, premiumProcedure, protectedProcedure } from '../init';
 import { UTFile } from 'uploadthing/server';
 import { v4 as uuid } from 'uuid';
 import { utapi } from '@/utils/server';
@@ -82,10 +82,22 @@ export const appRouter = createTRPCRouter({
           id: ctx.auth.user.id
         },
         select: {
+          id: true,
           name: true,
+          email: true,
+          image: true,
+          emailVerified: true,
           role: true,
           isProPodcast: true,
           isProCVReviewer: true,
+          trialsUsed: true,
+          subscriptionId: true,
+          subscriptionStatus: true,
+          subscriptionEndsAt: true,
+          customerId: true,
+          lastPaymentAt: true,
+          createdAt: true,
+          updatedAt: true,
           podcasts: {
             orderBy: { createdAt: 'desc' },
             select: {
@@ -112,6 +124,56 @@ export const appRouter = createTRPCRouter({
       })
 
       return user
+    }),
+  updateUser: protectedProcedure
+    .input(z.object({
+      name: z.string().min(1).optional(),
+      image: z.string().url().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const updateData: { name?: string; image?: string } = {}
+      
+      if (input.name !== undefined) {
+        updateData.name = input.name
+      }
+      
+      if (input.image !== undefined) {
+        updateData.image = input.image
+      }
+
+      if (Object.keys(updateData).length === 0) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'At least one field (name or image) must be provided'
+        })
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: ctx.auth.user.id
+        },
+        data: updateData,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+          emailVerified: true,
+          role: true,
+          isProPodcast: true,
+          isProCVReviewer: true,
+          trialsUsed: true,
+          subscriptionId: true,
+          subscriptionStatus: true,
+          subscriptionEndsAt: true,
+          customerId: true,
+          lastPaymentAt: true,
+          createdAt: true,
+          updatedAt: true,
+        }
+      })
+
+      return updatedUser
     }),
   getUserCredentials: protectedProcedure
     .query(async ({ ctx }) => {
@@ -419,7 +481,7 @@ export const appRouter = createTRPCRouter({
   }),
 
   // Generate CV Review 
-  generateCVReview: premiumProcedure
+  generateCVReview: cvReviewerProcedure
     .input(z.object({
       cvText: z.string(),
       jobDescription: z.string(),

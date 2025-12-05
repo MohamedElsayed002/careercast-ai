@@ -62,7 +62,7 @@ const Header = () => {
 
                     {/* Navigation & Auth */}
                     <div className="flex items-center gap-3">
-                        <Button asChild variant="outline">
+                        <Button asChild variant="outline" className='bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white'>
                             <Link href='/podcast/all-podcasts' className="cursor-pointer">
                                 All Podcasts
                             </Link>
@@ -96,6 +96,11 @@ const Header = () => {
                                         {user?.role === 'ADMIN' && (
                                             <DropdownMenuItem>
                                                 <Link href='/community/admin/dashboard'>Admin Dashboard</Link>
+                                            </DropdownMenuItem>
+                                        )}
+                                        {user && (
+                                            <DropdownMenuItem>
+                                                <Link href="/community/edit-user">Edit User</Link>
                                             </DropdownMenuItem>
                                         )}
                                         {!user?.isProPodcast && !isLoading && (
