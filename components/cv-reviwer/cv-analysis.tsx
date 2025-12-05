@@ -11,7 +11,7 @@ export const CVAnalysis = ({ reset, analysis }: CVAnalysisProps) => {
         <div className='space-y-6'>
             {!analysis ? (
                 <div className='text-center py-12'>
-                    <div className='inline-block animate-spin rounded-full h-16 w-16 border-4 border-indigo-500 border-t-transparent mb-4' />
+                    <div className='inline-block animate-spin rounded-full h-16 w-16 border-4 border-teal-500 border-t-transparent mb-4' />
                     <p className='text-xl text-gray-700 font-semibold'>AI is analyzing your CV..</p>
                     <p className='text-gray-600 mt-2'>This may take a few seconds</p>
                 </div>
@@ -40,11 +40,11 @@ export const CVAnalysis = ({ reset, analysis }: CVAnalysisProps) => {
 
                     {/* Experience Match */}
                     {analysis.experienceMatch && (
-                        <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-6">
-                            <h4 className="text-lg font-bold text-indigo-900 mb-3 flex items-center gap-2">
+                        <div className="bg-teal-50 border border-teal-200 rounded-xl p-6">
+                            <h4 className="text-lg font-bold text-teal-900 mb-3 flex items-center gap-2">
                                 📅 Experience Match
                             </h4>
-                            <div className="space-y-2 text-indigo-800">
+                            <div className="space-y-2 text-teal-800">
                                 <p><strong>Required:</strong> {analysis.experienceMatch.yearsRequired}</p>
                                 <p><strong>Your Experience:</strong> {analysis.experienceMatch.yearsInCV}</p>
                                 <p className="text-sm mt-3 italic">{analysis.experienceMatch.assessment}</p>
@@ -164,7 +164,7 @@ export const CVAnalysis = ({ reset, analysis }: CVAnalysisProps) => {
                     <div className="flex gap-3 pt-4">
                         <button
                             onClick={reset}
-                            className="flex-1 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold"
+                            className="flex-1 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-semibold"
                         >
                             Analyze Another CV
                         </button>

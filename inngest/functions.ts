@@ -175,7 +175,7 @@ export const generatePodcast = inngest.createFunction(
 
 
     // 7. Update user trial count if needed
-    if (!user.isPro) {
+    if (!user.isProPodcast) {
       await step.run("update-user-trials", async () => {
         return prisma.user.update({
           where: { id: userId },

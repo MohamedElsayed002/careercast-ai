@@ -1,7 +1,23 @@
+"use client"
+
 import { Check } from "lucide-react";
 import { Button } from "../ui/button";
+import { authClient } from "@/utils/auth-client";
+import { useRouter } from "next/navigation"
 
 export const Pricing = () => {
+
+  const router = useRouter()
+  const { data } = authClient.useSession()
+
+  const handleUpgradeToPro = () => {
+    if(!data?.user) {
+      router.push('/sign-in')
+      return 
+    }
+    authClient.checkout({slug: 'cv-reviewer'})
+  }
+  
   return (
     <section
       id="pricing"
@@ -73,7 +89,7 @@ export const Pricing = () => {
 
                 <div className="mt-4 flex items-baseline gap-2">
                   <span className="text-4xl md:text-5xl font-extrabold text-black">
-                    $15
+                    $30
                   </span>
                   <span className="text-sm text-gray-500">/month</span>
                 </div>
@@ -109,8 +125,9 @@ export const Pricing = () => {
 
             <div className="mt-8">
               <Button
-                className="w-full bg-teal-600 text-white hover:bg-teal-700 font-semibold py-3 rounded-full"
+                className="w-full bg-teal-600 text-white hover:bg-teal-700 font-semibold py-3 rounded-full cursor-pointer"
                 aria-label="Go Pro"
+                onClick={handleUpgradeToPro}
               >
                 Go Pro
               </Button>

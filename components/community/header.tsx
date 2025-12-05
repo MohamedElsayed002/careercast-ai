@@ -40,7 +40,6 @@ export const Header = () => {
                     <li><Link href="/features">Features</Link></li>
                     <li><Link href="/how-it-works">How it works</Link></li>
                     <li><Link href="/contact">Contact</Link></li>
-                    <li><Button>Get Started</Button></li>
                 </ul>
 
                 {/* Mobile Dropdown Menu */}
@@ -60,10 +59,6 @@ export const Header = () => {
 
                         <DropdownMenuItem>
                             <Link href="/contact" className="w-full">Contact</Link>
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem>
-                            <Button className="w-full mt-2">Get Started</Button>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

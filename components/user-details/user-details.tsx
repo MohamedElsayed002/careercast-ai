@@ -55,7 +55,7 @@ export const UserDetails = ({ user }: { user: Partial<User> }) => {
 
                             {/* Status Badges */}
                             <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
-                                {user.isPro && (
+                                {user.isProPodcast && (
                                     <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full text-sm font-semibold shadow-md">
                                         <Crown className="w-4 h-4" />
                                         Pro Member

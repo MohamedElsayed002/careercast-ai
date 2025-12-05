@@ -25,6 +25,10 @@ export const auth = betterAuth({
                         {
                             productId: '9bf8a324-a628-4d49-ae9e-7d1328df261e',
                             slug: 'pro'
+                        },
+                        {
+                            productId: '7d6434c7-6eae-4640-994a-3299cd0d4487',
+                            slug: 'cv-reviewer'
                         }
                     ],
                     successUrl: process.env.POLAR_SUCCESS_URL,

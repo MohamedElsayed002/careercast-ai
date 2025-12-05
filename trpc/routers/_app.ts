@@ -84,7 +84,8 @@ export const appRouter = createTRPCRouter({
         select: {
           name: true,
           role: true,
-          isPro: true,
+          isProPodcast: true,
+          isProCVReviewer: true,
           podcasts: {
             orderBy: { createdAt: 'desc' },
             select: {
@@ -184,7 +185,7 @@ export const appRouter = createTRPCRouter({
         where: { id: ctx.auth.user.id }
       })
 
-      if (!user.isPro) {
+      if (!user.isProPodcast) {
         throw new TRPCError({ code: 'FORBIDDEN', message: 'subscribe to generate image' })
       }
 
@@ -262,7 +263,7 @@ export const appRouter = createTRPCRouter({
       if (!user) {
         throw new TRPCError({ code: 'UNAUTHORIZED', message: 'User not found' });
       }
-      if (!user?.isPro && (user?.trialsUsed ?? 0) >= 3) {
+      if (!user?.isProPodcast && (user?.trialsUsed ?? 0) >= 3) {
         throw new TRPCError({ code: 'FORBIDDEN', message: 'Trial limit reached. Please change your subscription.' });
       }
 
@@ -319,7 +320,7 @@ export const appRouter = createTRPCRouter({
           email: true,
           id: true,
           role: true,
-          isPro: true,
+          isProPodcast: true,
           _count: {
             select: {
               podcasts: true
@@ -332,7 +333,7 @@ export const appRouter = createTRPCRouter({
         name: user.name,
         email: user.email,
         role: user.role,
-        isPro: user.isPro,
+        isPro: user.isProPodcast,
         podcasts: user._count.podcasts
       }))
     }),
@@ -342,7 +343,7 @@ export const appRouter = createTRPCRouter({
       const totalPodcasts = await prisma.podcast.count()
       const proUsers = await prisma.user.count({
         where: {
-          isPro: true
+          isProPodcast: true
         }
       })
       const freeUsers = totalUsers - proUsers

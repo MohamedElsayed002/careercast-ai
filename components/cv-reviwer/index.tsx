@@ -8,6 +8,7 @@ import { UploadCV } from "./upload-cv";
 import { JobDescription } from "./job-description";
 import { CVReviewType } from "@/actions/cv-reviewer";
 import { CVAnalysis } from "./cv-analysis";
+import { ReviewerHeader } from "../reviewer/header";
 
 export const CVReviewer = () => {
     const [step, setStep] = useState(1);
@@ -83,12 +84,12 @@ export const CVReviewer = () => {
     }
 
     return (
-        <div className='min-h-screen p-6 bg-gradient-to-br from-black via-purple-950 to-black'>
+        <div className='min-h-screen grid place-items-center'>
             <div className='max-w-5xl mx-auto'>
 
                 {/* Header */}
                 <div className='text-center mb-8'>
-                    <div className='inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl mb-4 shadow-lg'>
+                    <div className='inline-flex items-center justify-center w-20 h-20 bg-teal-600 rounded-2xl mb-4 shadow-lg'>
                         <Sparkles className="w-10 h-10 text-white" />
                     </div>
                     <h1 className="text-4xl font-bold text-gray-800 mb-2">
@@ -102,22 +103,22 @@ export const CVReviewer = () => {
                 {/* Progress steps */}
                 <div className="mb-8">
                     <div className="flex items-center justify-center gap-4">
-                        <div className={`flex items-center gap-2 ${step >= 1 ? 'text-indigo-600' : 'text-gray-400'}`}>
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 1 ? 'bg-indigo-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <div className={`flex items-center gap-2 ${step >= 1 ? 'text-teal-600' : 'text-gray-400'}`}>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 1 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
                                 1
                             </div>
                             <span className="font-medium">Upload CV</span>
                         </div>
-                        <ArrowRight className={step >= 2 ? 'text-indigo-600' : 'text-gray-400'} />
-                        <div className={`flex items-center gap-2 ${step >= 2 ? 'text-indigo-600' : 'text-gray-400'}`}>
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 2 ? 'bg-indigo-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <ArrowRight className={step >= 2 ? 'text-teal-600' : 'text-gray-400'} />
+                        <div className={`flex items-center gap-2 ${step >= 2 ? 'text-teal-600' : 'text-gray-400'}`}>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 2 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
                                 2
                             </div>
                             <span className="font-medium">Job Description</span>
                         </div>
-                        <ArrowRight className={step >= 3 ? 'text-indigo-600' : 'text-gray-400'} />
-                        <div className={`flex items-center gap-2 ${step >= 3 ? 'text-indigo-600' : 'text-gray-400'}`}>
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 3 ? 'bg-indigo-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <ArrowRight className={step >= 3 ? 'text-teal-600' : 'text-gray-400'} />
+                        <div className={`flex items-center gap-2 ${step >= 3 ? 'text-teal-600' : 'text-gray-400'}`}>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 3 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
                                 3
                             </div>
                             <span className="font-medium">AI Analysis</span>

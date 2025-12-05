@@ -45,7 +45,7 @@ export const JobDescription = ({ setAnalysis,cvText,useDummyJob,setStep, jobDesc
     return (
         <div className="space-y-6">
             <div className='text-center'>
-                <Briefcase className='w-12 h-12 text-indigo-600 mx-auto mb-4' />
+                <Briefcase className='w-12 h-12 text-teal-600 mx-auto mb-4' />
                 <h2 className='text-2xl font-bold text-gray-800 mb-2'>
                     Step 2: Job Description
                 </h2>
@@ -62,7 +62,7 @@ export const JobDescription = ({ setAnalysis,cvText,useDummyJob,setStep, jobDesc
                     value={jobDescription}
                     onChange={(e) => setJobDescription(e.target.value)}
                     placeholder="Paste the complete job description here including requirements, responsibilities, and qualifications.."
-                    className="w-full h-64 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                    className="w-full h-64 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
                 />
             </div>
 
@@ -87,7 +87,7 @@ export const JobDescription = ({ setAnalysis,cvText,useDummyJob,setStep, jobDesc
                 <button
                     onClick={analyzeMatch}
                     disabled={!jobDescription.trim()}
-                    className="flex-1 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    className="flex-1 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-semibold flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
                     Analyze Match
                     <Sparkles className="w-5 h-5" />

@@ -36,7 +36,8 @@ model User {
   trialsUsed    Int          @default(0)
 
   // Subscription fields
-  isPro              Boolean   @default(false)
+  isProPodcast              Boolean   @default(false)
+  isProCVReviewer           Boolean   @default(false)
   subscriptionId     String? // Polar subscription ID
   subscriptionStatus String? // active, trialing, canceled, past_due, etc.
   subscriptionEndsAt DateTime? // When subscription/trial ends
