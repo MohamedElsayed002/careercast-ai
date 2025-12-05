@@ -1,5 +1,7 @@
 "use client"
+
 import { authClient } from "@/utils/auth-client"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Button } from "./ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
@@ -22,11 +24,24 @@ import { toast } from "sonner"
 const Header = () => {
     const trpc = useTRPC()
     const router = useRouter()
+    const [open,setOpen] = useState(false)
     const { data: user } = useQuery(trpc.getUser.queryOptions())
     const { data } = authClient.useSession()
     const { hasActiveSubscription, isLoading } = useHasActiveSubscription()
     const userName = data?.user?.name || data?.user?.email?.split('@')[0] || 'User'
     const userInitials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+
+    
+    useEffect(() => {
+        const handleResize = () => {
+            if(window.innerWidth >= 768) {
+                setOpen(false)
+            }
+        }
+
+        window.addEventListener("resize",handleResize)
+        return () => window.removeEventListener("resize",handleResize)
+    },[])
 
     return (
         <header className="w-full md:w-4/5 mx-auto bg-inherit top-0 z-50">
@@ -54,7 +69,7 @@ const Header = () => {
                         </Button>
                         {data ? (
                             <>
-                                <DropdownMenu>
+                                <DropdownMenu open={open} onOpenChange={setOpen} >
                                     <DropdownMenuTrigger>
                                         <div className="sm:flex items-center gap-3 px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20">
                                             <Avatar className="h-8 w-8 border-2 border-white/30">

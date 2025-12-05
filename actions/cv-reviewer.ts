@@ -3,7 +3,7 @@ import { z } from "zod"
 import { createOpenAI } from "@ai-sdk/openai"
 
 const openai =  createOpenAI({
-    apiKey: ''
+    apiKey: process.env.OPENAI_API_KEY
 })
 
 const CVReviewSchema = z.object({

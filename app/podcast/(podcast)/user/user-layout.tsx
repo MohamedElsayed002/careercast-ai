@@ -55,7 +55,7 @@ export function UserLayout() {
                             </div>
                             {/* Navigate to credentials page */}
                             <div className="bg-white/80 hover:bg-white/90 text-purple-600 font-semibold px-4 py-3 rounded-lg shadow-md border border-purple-200/50 hover:border-purple-300/50">
-                                <Link className="flex items-center gap-1" href="/user/credentials">
+                                <Link className="flex items-center gap-1" href="/podcast    /user/credentials">
                                     <PlusIcon className="size-4" />
                                     Add Credentials
                                 </Link>

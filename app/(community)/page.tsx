@@ -1,10 +1,17 @@
+import { ActionSection } from "@/components/community/action"
+import { HeroCommunity } from "@/components/community/hero-section"
+import { HowItWorksSection } from "@/components/community/how-it-works"
+import { InfoCommunity } from "@/components/community/info"
 
 
 const CommunityPage = () => {
     return (
-        <div className='min-h-screen bg-amber-800 grid place-items-center'>
-            <h1 className='text-7xl text-white'>Mohamed</h1>
-        </div>
+        <main>
+            <HeroCommunity/>
+            <InfoCommunity/>
+            <HowItWorksSection/>
+            <ActionSection/>
+        </main>
     )
 }
 
