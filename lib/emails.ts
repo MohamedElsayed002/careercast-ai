@@ -235,3 +235,88 @@ export const getPodcastGeneratedEmail = (userName: string, podcastTitle: string,
 
     return { subject, text, html };
 };
+
+// Email Verification Email
+export const getEmailVerificationEmail = (userName: string, verificationUrl: string) => {
+    const subject = 'Verify your CareerCast AI email address';
+    const text = `Hello ${userName},\n\nWelcome to CareerCast AI! Please verify your email address by clicking the link below:\n\n${verificationUrl}\n\nThis link will expire in 24 hours for security reasons.\n\nIf you didn't create an account with us, please ignore this email.\n\nBest regards,\nThe CareerCast AI Team`;
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
+    <table role="presentation" style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <td align="center" style="padding: 40px 20px;">
+                <table role="presentation" style="width: 600px; max-width: 100%; border-collapse: collapse; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600;">✉️ Verify Your Email</h1>
+                            <p style="margin: 10px 0 0; color: #ffffff; font-size: 16px; opacity: 0.9;">Welcome to CareerCast AI!</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <p style="margin: 0 0 20px; color: #333333; font-size: 16px; line-height: 1.6;">
+                                Hello <strong>${userName}</strong>,
+                            </p>
+                            
+                            <p style="margin: 0 0 20px; color: #333333; font-size: 16px; line-height: 1.6;">
+                                Thank you for signing up for <strong>CareerCast AI</strong>! To complete your registration and start using our platform, please verify your email address by clicking the button below.
+                            </p>
+                            
+                            <div style="text-align: center; margin: 30px 0;">
+                                <a href="${verificationUrl}" style="display: inline-block; background-color: #667eea; color: #ffffff; text-decoration: none; padding: 14px 40px; border-radius: 6px; font-weight: 600; font-size: 16px; box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3); transition: background-color 0.3s;">
+                                    Verify Email Address
+                                </a>
+                            </div>
+                            
+                            <div style="background-color: #e7f3ff; border-left: 4px solid #667eea; padding: 20px; margin: 30px 0; border-radius: 4px;">
+                                <p style="margin: 0 0 10px; color: #0056b3; font-size: 14px; font-weight: 600;">🔒 Security Note</p>
+                                <p style="margin: 0; color: #0056b3; font-size: 14px; line-height: 1.6;">
+                                    This verification link will expire in 24 hours for your security. If you didn't create an account with us, please ignore this email.
+                                </p>
+                            </div>
+                            
+                            <div style="background-color: #f8f9fa; padding: 20px; margin: 30px 0; border-radius: 4px;">
+                                <p style="margin: 0 0 10px; color: #667eea; font-size: 16px; font-weight: 600;">Button not working?</p>
+                                <p style="margin: 0 0 10px; color: #666666; font-size: 14px; line-height: 1.6;">
+                                    Copy and paste this link into your browser:
+                                </p>
+                                <p style="margin: 0; word-break: break-all; color: #667eea; font-size: 12px; line-height: 1.6;">
+                                    ${verificationUrl}
+                                </p>
+                            </div>
+                            
+                            <p style="margin: 30px 0 0; color: #666666; font-size: 14px; line-height: 1.6;">
+                                Best regards,<br>
+                                <strong>The CareerCast AI Team</strong>
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f8f9fa; padding: 20px 30px; text-align: center; border-top: 1px solid #e9ecef;">
+                            <p style="margin: 0; color: #999999; font-size: 12px; line-height: 1.5;">
+                                You're receiving this email because you signed up for CareerCast AI.<br>
+                                © ${new Date().getFullYear()} CareerCast AI. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`;
+
+    return { subject, text, html };
+};

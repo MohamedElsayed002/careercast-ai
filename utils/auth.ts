@@ -1,8 +1,10 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@/src/generated/prisma/client"
-import { polar, checkout, portal, usage, webhooks } from "@polar-sh/better-auth";
+import { polar, checkout, portal } from "@polar-sh/better-auth";
 import { Polar } from "@polar-sh/sdk";
+import { sendEmail } from "./nodemailer";
+import { getEmailVerificationEmail } from "@/lib/emails";
 
 const prisma = new PrismaClient()
 
@@ -12,7 +14,7 @@ export const polarClient = new Polar({
 })
 export const auth = betterAuth({
     baseURL: process.env.BETTER_AUTH_URL,
-    database: prismaAdapter(prisma,{
+    database: prismaAdapter(prisma, {
         provider: 'postgresql'
     }),
     plugins: [
@@ -32,14 +34,28 @@ export const auth = betterAuth({
                         }
                     ],
                     successUrl: process.env.POLAR_SUCCESS_URL,
-                    authenticatedUsersOnly:true
+                    authenticatedUsersOnly: true
                 }),
                 portal()
             ]
         })
-    ],  
+    ],
     emailAndPassword: {
-        enabled:true,
+        requireEmailVerification: true,
+        enabled: true,
+    },
+    emailVerification: {
+        sendVerificationEmail: async ({ user, url, token }, request) => {
+            const userName = user.name || 'there';
+            const { subject, text, html } = getEmailVerificationEmail(userName, url);
+
+            void sendEmail(
+                user.email,
+                subject,
+                text,
+                html
+            )
+        }
     },
     socialProviders: {
         github: {

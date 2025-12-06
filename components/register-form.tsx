@@ -37,15 +37,14 @@ export function RegisterForm() {
     // console.time
 
     const onSubmit = async (values: RegisterFormValues) => {
-        // console.log(values)
         await authClient.signUp.email({
             name: values.email,
             email: values.email,
             password: values.password,
-            callbackURL: "/podcast"
+            callbackURL: "/sign-in"
         }, {
             onSuccess: () => {
-                router.push('/podcast')
+                router.push('/sign-in')
             },
             onError: (ctx) => {
                 toast.error(ctx.error.message)
