@@ -7,12 +7,17 @@ import { useTRPC } from "@/trpc/client"
 import { useQuery } from "@tanstack/react-query"
 import { Loader, PlusIcon } from "lucide-react"
 import Link from "next/link"
+import { notFound } from "next/navigation"
 
 
 export function UserLayout() {
 
     const trpc = useTRPC()
     const { data: user, isPending } = useQuery(trpc.getUser.queryOptions())
+
+    if(!user) {
+        notFound()
+    }
 
 
     return (

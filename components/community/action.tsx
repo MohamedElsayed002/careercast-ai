@@ -9,12 +9,12 @@ export const ActionSection = () => {
                 Ready to Level Up Your English and Career?
             </h1>
             <div className='flex gap-5'>
-                <Button asChild>
+                <Button className="bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900" asChild>
                     <Link href="/podcast">
                         Generate Podcast
                     </Link>
                 </Button>
-                <Button className='bg-indigo-600 text-white cursor-pointer' asChild>
+                <Button className='bg-teal-600 text-white cursor-pointer' asChild>
                     <Link href="/reviewer">Review My CV</Link>
                 </Button>
             </div>

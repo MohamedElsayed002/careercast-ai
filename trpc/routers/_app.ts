@@ -9,7 +9,7 @@ import { TRPCError } from '@trpc/server';
 import { Prisma } from '@/src/generated/prisma';
 import { encrypt } from '@/lib/encryption';
 import { inngest } from '@/inngest/client';
-import { analyzeCVMatch } from '@/actions/cv-reviewer';
+import { analyzeCVMatchFree, analyzeCVMatchPro, CVReviewFreeTier, CVReviewProTier } from '@/actions/cv-reviewer';
 
 export const appRouter = createTRPCRouter({
   getHomePodcast: baseProcedure
@@ -132,11 +132,11 @@ export const appRouter = createTRPCRouter({
     }))
     .mutation(async ({ input, ctx }) => {
       const updateData: { name?: string; image?: string } = {}
-      
+
       if (input.name !== undefined) {
         updateData.name = input.name
       }
-      
+
       if (input.image !== undefined) {
         updateData.image = input.image
       }
@@ -513,7 +513,37 @@ export const appRouter = createTRPCRouter({
       }
 
       try {
-        const response = await analyzeCVMatch(cvText, jobDescription, credential)
+        let response
+
+        if (ctx.user?.isProCVReviewer) {
+          // PRO USER → always use premium analyze
+          response = await analyzeCVMatchPro(cvText, jobDescription, credential)
+
+        } else {
+          // NOT PRO USER → check free trials
+          if (ctx.user && ctx.user.trialsUsed < 3) {
+
+            // still have free trials
+            response = await analyzeCVMatchFree(cvText, jobDescription, credential)
+
+            await prisma.user.update({
+              where: { id: ctx.auth.user.id },
+              data: {
+                trialsUsed: {
+                  increment: 1,
+                },
+              },
+            })
+
+          } else {
+            // no free trials left
+            throw new TRPCError({
+              code: "BAD_GATEWAY",
+              message: "You exceeded the number of free trials",
+            })
+          }
+        }
+
 
         await prisma.cVReviewer.create({
           data: {
@@ -529,6 +559,35 @@ export const appRouter = createTRPCRouter({
       } catch (error) {
         return error
       }
+    }),
+
+  getUserCVReview: protectedProcedure
+    .query(async ({ ctx }) => {
+      const reviews = await prisma.cVReviewer.findMany({
+        where: {
+          userId: ctx.auth.user.id
+        },
+        orderBy: {
+          id: 'desc'
+        }
+      })
+
+      return reviews
+    }),
+  getUserSingleReview: protectedProcedure
+    .input(z.object({
+      reviewId: z.string()
+    }))
+    .query(async ({ ctx, input }) => {
+      const { reviewId } = input
+
+      const review = await prisma.cVReviewer.findFirstOrThrow({
+        where: {
+          id: reviewId,
+          userId: ctx.auth.user.id
+        }
+      })
+      return review
     })
 });
 

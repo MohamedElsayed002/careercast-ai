@@ -6,7 +6,7 @@ import { DashboardStats } from "@/components/dashboard-stats"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Podcastr | Admin Dashboard",
+  title: "CareerCast AI | Admin Dashboard",
   description: "Admin Dashboard Page. Statistics & All users!"
 };
 

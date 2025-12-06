@@ -25,7 +25,7 @@ export const UploadCV = ({ fileName,cvText, setStep, useDummyCV, handleFileUploa
                 </p>
             </div>
 
-            <Label className='flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-teal-300 rounded-xl cursor-pointer bg-teal-50 hover:bg-teal-100 transition-colors'>
+            <Label className='flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-teal-300 rounded-xl cursor-pointer bg-teal-50 hover:bg-teal-100 transition-colors px-6 '>
                 <div className='flex flex-col items-center justify-center pt-5 pb-6'>
                     <Upload className='w-12 h-12 text-teal-500 mb-3' />
                     <p className='mb-2 text-sm text-gray-700'>

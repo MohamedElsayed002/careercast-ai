@@ -1,9 +1,11 @@
-import { CVReviewType } from "@/actions/cv-reviewer"
+import { CVReviewProTier } from "@/actions/cv-reviewer"
 import { AlertCircle, CheckCircle, Sparkles, XCircle, RefreshCw } from "lucide-react"
 import { Button } from "../ui/button"
+import animationData from '@/public/loading.json'
+import Lottie from 'lottie-react'
 
 interface CVAnalysisProps {
-    analysis: CVReviewType | null
+    analysis:  Partial<CVReviewProTier> | null
     error: string | null
     isLoading: boolean
     reset: () => void
@@ -15,9 +17,7 @@ export const CVAnalysis = ({ reset, analysis, error, isLoading, onRetry }: CVAna
         <div className='space-y-6'>
             {isLoading && !error && !analysis ? (
                 <div className='text-center py-12'>
-                    <div className='inline-block animate-spin rounded-full h-16 w-16 border-4 border-teal-500 border-t-transparent mb-4' />
-                    <p className='text-xl text-gray-700 dark:text-gray-300 font-semibold'>AI is analyzing your CV..</p>
-                    <p className='text-gray-600 dark:text-gray-400 mt-2'>This may take a few seconds</p>
+                    <Lottie animationData={animationData} loop={true} />
                 </div>
             ) : error ? (
                 <div className='text-center py-12'>

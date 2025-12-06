@@ -1,6 +1,13 @@
 import { ActionSection } from "@/components/community/action"
 import { CheckCircle, Mic } from "lucide-react"
+import { Metadata } from "next";
 import Image from "next/image"
+
+export const metadata: Metadata = {
+  title: "CareerCast AI | Features",
+  description: "CareerCast AI Website features!"
+};
+
 
 
 

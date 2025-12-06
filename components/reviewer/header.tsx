@@ -8,7 +8,6 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -78,7 +77,7 @@ export const ReviewerHeader = () => {
                             <>
                                 <DropdownMenu open={open} onOpenChange={setOpen} >
                                     <DropdownMenuTrigger>
-                                        <div className="sm:flex items-center gap-3 px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20">
+                                        <div className="sm:flex items-center gap-3 px-4 py-2 rounded-lg bg-teal-600 backdrop-blur-md border border-white/20">
                                             <Avatar className="h-8 w-8 border-2 border-white/30">
                                                 <AvatarImage src={data.user?.image || undefined} alt={userName} />
                                                 <AvatarFallback className=" bg-gradient-to-br from-purple-400 to-pink-400 text-white text-sm font-semibold">
@@ -97,18 +96,25 @@ export const ReviewerHeader = () => {
                                         </div>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
-                                        <DropdownMenuLabel>
-                                            <Link href='/community/user'>My account</Link>
-                                        </DropdownMenuLabel>
                                         {user?.role === 'ADMIN' && (
                                             <DropdownMenuItem>
                                                 <Link href='/community/admin/dashboard'>Admin Dashboard</Link>
                                             </DropdownMenuItem>
                                         )}
                                         {user && (
-                                            <DropdownMenuItem>
-                                                <Link href="/community/edit-user">Edit User</Link>
-                                            </DropdownMenuItem>
+                                            <>
+                                                <DropdownMenuItem>
+                                                    <Link href='/community/user'>My account</Link>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem>
+                                                    <Link href="/community/edit-user">Edit User</Link>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem>
+                                                    <Link href="/community/user/cv-reviews">
+                                                        CV Reviews
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                            </>
                                         )}
                                         {!user?.isProCVReviewer && !isLoading && (
                                             <DropdownMenuItem>
@@ -177,6 +183,29 @@ export const ReviewerHeader = () => {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent className="w-52 mr-4">
+                        {user?.role === 'ADMIN' && (
+                            <DropdownMenuItem>
+                                <Link href='/community/admin/dashboard'>Admin Dashboard</Link>
+                            </DropdownMenuItem>
+                        )}
+                        {
+                            user && (
+                                <>
+                                    <DropdownMenuItem>
+                                        <Link href='/community/user'>My account</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <Link href="/community/edit-user">Edit User</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <Link href="/community/user/cv-reviews">
+                                            CV Reviews
+                                        </Link>
+                                    </DropdownMenuItem>
+                                </>
+                            )
+                        }
+
                         <DropdownMenuItem>
                             <Link href="/reviewer#how-it-works" className="w-full">How it works</Link>
                         </DropdownMenuItem>
@@ -184,6 +213,7 @@ export const ReviewerHeader = () => {
                         <DropdownMenuItem>
                             <Link href="/reviewer#pricing" className="w-full">Pricing</Link>
                         </DropdownMenuItem>
+
 
                         <DropdownMenuItem>
                             <Link href="/reviewer#features" className="w-full">Features</Link>

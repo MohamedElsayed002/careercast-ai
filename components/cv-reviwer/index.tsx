@@ -6,9 +6,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { UploadCV } from "./upload-cv";
 import { JobDescription } from "./job-description";
-import { CVReviewType } from "@/actions/cv-reviewer";
+import { CVReviewProTier } from "@/actions/cv-reviewer";
 import { CVAnalysis } from "./cv-analysis";
-import { ReviewerHeader } from "../reviewer/header";
 import { CredentialSelection } from "./credential-selection";
 
 export const CVReviewer = () => {
@@ -17,7 +16,7 @@ export const CVReviewer = () => {
     const [fileName, setFileName] = useState('');
     const [credential, setCredential] = useState('');
     const [jobDescription, setJobDescription] = useState('');
-    const [analysis, setAnalysis] = useState<CVReviewType | null>(null);
+    const [analysis, setAnalysis] = useState<Partial<CVReviewProTier> | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 

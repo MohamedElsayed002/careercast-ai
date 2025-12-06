@@ -75,12 +75,13 @@ export const adminProcedure = protectedProcedure.use(
 export const cvReviewerProcedure = protectedProcedure.use(
   async ({ctx,next}) => {
 
-    if(!ctx.user?.isProCVReviewer) {
+    if(!ctx.user) {
       throw new TRPCError({
         code: 'FORBIDDEN',
-        message: 'Only for premium users'
+        message: "User needed"
       })
     }
+
     return next({ctx})
   }
 )

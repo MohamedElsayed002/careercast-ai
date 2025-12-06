@@ -14,6 +14,8 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { notFound } from "next/navigation";
+import { Metadata } from "next";
 
 type Params = { params: { id: string } };
 
@@ -27,6 +29,12 @@ export async function generateMetadata({ params }: Params) {
 
 const Page = async ({ params }: { params: { id: string } }) => {
     const data = await caller.singlePodcast({ id: params.id })
+
+    if(!data) {
+        notFound()
+    }
+
+    
     const podcasts = await caller.getHomePodcast()
     const formatDate = (dateInput: string | Date) => {
         if (!dateInput) return ''

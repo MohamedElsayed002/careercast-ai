@@ -5,7 +5,7 @@ import { requireAdmin } from "@/utils/auth-utils"
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Podcastr | User Podcasts",
+  title: "CareerCast AI | User Podcasts",
   description: "All user podcasts!"
 };
 

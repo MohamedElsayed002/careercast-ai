@@ -8,8 +8,7 @@ const CommunityLayout = ({ children }: { children: React.ReactNode }) => {
         <main>
             <ThemeProvider
                 attribute="class"
-                defaultTheme="system"
-                enableSystem
+                defaultTheme="light"
                 disableTransitionOnChange
             >
                 <Header />

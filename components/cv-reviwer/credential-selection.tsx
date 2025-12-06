@@ -35,7 +35,7 @@ export const CredentialSelection = ({ credential, setCredential, setStep }: Cred
     }
 
     const handleAddCredential = () => {
-        router.push('/user')
+        router.push('/community/credentials')
     }
 
     return (
@@ -78,7 +78,7 @@ export const CredentialSelection = ({ credential, setCredential, setStep }: Cred
                 </Select>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                     Don&apos;t have any credentials?{' '}
-                    <Link href="/user" className="text-primary underline font-medium">
+                    <Link href="/community/credentials" className="text-primary underline font-medium">
                         Add your credentials here.
                     </Link>
                 </p>

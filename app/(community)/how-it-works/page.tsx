@@ -1,6 +1,13 @@
 import { ActionSection } from "@/components/community/action"
-import { BrainCircuit, CheckCircle, Mic } from "lucide-react"
+import { BrainCircuit, CheckCircle } from "lucide-react"
+import { Metadata } from "next";
 import Image from "next/image"
+
+export const metadata: Metadata = {
+  title: "CustomCareer AI | How it works",
+  description: "How the website works!"
+};
+
 
 
 const Page = () => {

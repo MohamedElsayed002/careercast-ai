@@ -4,6 +4,12 @@ import { HowItWorks } from "@/components/reviewer/how-it-works"
 import { LiveSample } from "@/components/reviewer/live-sample"
 import { Pricing } from "@/components/reviewer/pricing"
 import { Testimonials } from "@/components/reviewer/testimonials"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "CV Reviewer | Home",
+  description: "Review your CV in seconds!"
+};
 
 
 const Page = () => {

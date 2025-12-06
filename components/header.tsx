@@ -38,7 +38,6 @@ const Header = () => {
                 setOpen(false)
             }
         }
-
         window.addEventListener("resize",handleResize)
         return () => window.removeEventListener("resize",handleResize)
     },[])
@@ -141,7 +140,7 @@ const Header = () => {
                                                     className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm"
                                                 >
                                                     <LogOut className="w-4 h-4 sm:mr-2" />
-                                                    <span className="hidden sm:inline">Logout</span>
+                                                    <span className="hidden sm:inline text-gray-400">Logout</span>
                                                 </Button>
                                             </div>
                                         </DropdownMenuItem>
