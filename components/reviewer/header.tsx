@@ -184,9 +184,14 @@ export const ReviewerHeader = () => {
 
                     <DropdownMenuContent className="w-52 mr-4">
                         {user?.role === 'ADMIN' && (
-                            <DropdownMenuItem>
-                                <Link href='/community/admin/dashboard'>Admin Dashboard</Link>
-                            </DropdownMenuItem>
+                            <>
+                                <DropdownMenuItem>
+                                    <Link href='/community/admin/dashboard'>Admin Dashboard</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <Link href="/community/admin/messages">Messages</Link>
+                                </DropdownMenuItem>
+                            </>
                         )}
                         {
                             user && (

@@ -24,23 +24,23 @@ import { toast } from "sonner"
 const Header = () => {
     const trpc = useTRPC()
     const router = useRouter()
-    const [open,setOpen] = useState(false)
+    const [open, setOpen] = useState(false)
     const { data: user } = useQuery(trpc.getUser.queryOptions())
     const { data } = authClient.useSession()
     const { hasActiveSubscription, isLoading } = useHasActiveSubscription()
     const userName = data?.user?.name || data?.user?.email?.split('@')[0] || 'User'
     const userInitials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 
-    
+
     useEffect(() => {
         const handleResize = () => {
-            if(window.innerWidth >= 768) {
+            if (window.innerWidth >= 768) {
                 setOpen(false)
             }
         }
-        window.addEventListener("resize",handleResize)
-        return () => window.removeEventListener("resize",handleResize)
-    },[])
+        window.addEventListener("resize", handleResize)
+        return () => window.removeEventListener("resize", handleResize)
+    }, [])
 
     return (
         <header className="w-full md:w-4/5 mx-auto bg-inherit top-0 z-50">
@@ -93,9 +93,14 @@ const Header = () => {
                                             <Link href='/community/user'>My account</Link>
                                         </DropdownMenuLabel>
                                         {user?.role === 'ADMIN' && (
-                                            <DropdownMenuItem>
-                                                <Link href='/community/admin/dashboard'>Admin Dashboard</Link>
-                                            </DropdownMenuItem>
+                                            <>
+                                                <DropdownMenuItem>
+                                                    <Link href='/community/admin/dashboard'>Admin Dashboard</Link>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem>
+                                                    <Link href="/community/admin/messages">Messages</Link>
+                                                </DropdownMenuItem>
+                                            </>
                                         )}
                                         {user && (
                                             <DropdownMenuItem>

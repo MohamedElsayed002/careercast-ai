@@ -588,7 +588,32 @@ export const appRouter = createTRPCRouter({
         }
       })
       return review
-    })
+    }),
+
+  sendMessages: baseProcedure
+    .input(z.object({
+      name: z.string(),
+      email: z.string(),
+      subject: z.string(),
+      message: z.string()
+    }))
+    .mutation(async ({input}) => {
+      const {name,email,subject,message} = input
+
+      await prisma.messages.create({
+        data: {
+          name,email,subject,message
+        }
+      })
+
+      return {
+        response: "success"
+      }
+    }),
+    getMessages: adminProcedure
+      .query(async () => {
+        return prisma.messages.findMany()
+      })
 });
 
 export type AppRouter = typeof appRouter;

@@ -1,3 +1,4 @@
+import { ContactForm } from "@/components/contact-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -26,26 +27,7 @@ const Page = () => {
             </div>
 
             <div className='container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-20 mt-20'>
-                <div className='space-y-6'>
-                    <h1 className='text-2xl md:text-4xl font-bold'>Get in Touch</h1>
-                    <div className='w-full'>
-                        <Label className='mb-2'>Name</Label>
-                        <Input className='w-full' placeholder='Your Name' required type='text' />
-                    </div>
-                    <div className='w-full'>
-                        <Label className='mb-2'>Email</Label>
-                        <Input className='w-full' placeholder='you@gmail.com' required type='email' />
-                    </div>
-                    <div className='w-full'>
-                        <Label className='mb-2'>Subject</Label>
-                        <Input className='w-full' placeholder='How can we help?' required />
-                    </div>
-                    <div className='w-full'>
-                        <Label className='mb-2'>Message</Label>
-                        <Textarea className='w-full resize-none' placeholder='Your message..' required />
-                    </div>
-                    <Button className='bg-indigo-600 text-white w-full'>Send Message</Button>
-                </div>
+                <ContactForm/>
                 <div>
                     <div className='space-y-6'>
                         <h1 className='text-2xl md:text-4xl font-bold'>Contact Information</h1>

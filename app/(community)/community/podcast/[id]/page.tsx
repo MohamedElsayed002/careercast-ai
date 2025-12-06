@@ -15,7 +15,6 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { notFound } from "next/navigation";
-import { Metadata } from "next";
 
 type Params = { params: { id: string } };
 

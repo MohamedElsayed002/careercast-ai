@@ -96,9 +96,14 @@ export const Header = () => {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
                                         {user?.role === 'ADMIN' && (
-                                            <DropdownMenuItem>
-                                                <Link href='/community/admin/dashboard'>Admin Dashboard</Link>
-                                            </DropdownMenuItem>
+                                            <>
+                                                <DropdownMenuItem>
+                                                    <Link href='/community/admin/dashboard'>Admin Dashboard</Link>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem>
+                                                    <Link href="/community/admin/messages">Messages</Link>
+                                                </DropdownMenuItem>
+                                            </>
                                         )}
                                         {user && (
                                             <>
