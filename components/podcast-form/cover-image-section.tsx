@@ -148,6 +148,7 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
                                             <Image
                                                 src={item}
                                                 fill
+                                                priority
                                                 alt='Generated Image'
                                                 className="object-cover"
                                             />
@@ -173,6 +174,7 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
                                         <div key={item || idx} className="relative w-full aspect-video rounded-lg overflow-hidden border">
                                             <Image
                                                 src={item}
+                                                priority
                                                 fill
                                                 alt='Uploaded Image'
                                                 className="object-cover"

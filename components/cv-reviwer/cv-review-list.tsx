@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { FileText, ArrowRight, CheckCircle, XCircle, Calendar } from "lucide-react"
+import { ArrowRight, CheckCircle, XCircle, Calendar } from "lucide-react"
 import { CVReviewFreeTier, CVReviewProTier } from "@/actions/cv-reviewer"
 import { Prisma } from "@/src/generated/prisma"
 
@@ -15,7 +15,7 @@ type CVReviewItem = {
     createdAt: Date
 }
 
-interface CVReviewListProps {
+export interface CVReviewListProps {
     reviews: CVReviewItem[]
 }
 

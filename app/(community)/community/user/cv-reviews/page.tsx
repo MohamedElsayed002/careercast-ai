@@ -1,6 +1,6 @@
 import { caller } from "@/trpc/server"
 import { requireAuth } from "@/utils/auth-utils"
-import { CVReviewList } from "@/components/cv-reviwer/cv-review-list"
+import { CVReviewList, CVReviewListProps } from "@/components/cv-reviwer/cv-review-list"
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ const Page = async () => {
                         View all your CV analysis results and track your job application progress
                     </p>
                 </div>
-                <CVReviewList reviews={data as any} />
+                <CVReviewList reviews={data as CVReviewListProps} />
             </div>
         </div>
     )

@@ -1,7 +1,6 @@
 import { caller } from "@/trpc/server"
 import { requireAdmin } from "@/utils/auth-utils"
 import { DataTableDemo } from "@/components/DataTableDemo" // adjust path
-import Header from "@/components/header"
 import { DashboardStats } from "@/components/dashboard-stats"
 import { Metadata } from "next"
 

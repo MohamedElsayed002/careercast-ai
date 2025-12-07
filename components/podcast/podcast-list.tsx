@@ -87,6 +87,7 @@ export function PodcastList(props: { podcasts: PodcastItem[] }) {
                                     <div className="relative w-full h-48 overflow-hidden">
                                         <Image
                                             src={p.imageUrl}
+                                            priority
                                             alt={p.message}
                                             fill
                                             className="object-cover"

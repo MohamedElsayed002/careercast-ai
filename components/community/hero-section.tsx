@@ -30,6 +30,7 @@ export const HeroCommunity = () => {
                 src="/community-image.png"
                 width={600}
                 height={600}
+                priority
                 alt='Hero Image'
                 className='rounded-xl'
              />

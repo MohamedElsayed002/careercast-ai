@@ -11,6 +11,7 @@ export const LiveSample = () => {
                 src="/sample-1.png"
                 width={500}
                 height={500}
+                priority
                 className='object-cover rounded-md -mt-20 mx-auto'
                 alt='sample-1'
             />

@@ -2,7 +2,6 @@ import Link from "next/link"
 import { Button } from "../ui/button"
 import { ArrowRight, FileText, ImageIcon, Mic, Music2, Sparkles } from "lucide-react"
 import { Card, CardContent } from "../ui/card"
-import prisma from "@/utils/db"
 import Header from "../header"
 import { caller } from "@/trpc/server"
 

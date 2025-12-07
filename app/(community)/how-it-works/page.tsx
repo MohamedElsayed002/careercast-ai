@@ -65,6 +65,7 @@ const Page = () => {
                     <Image
                         src="/first-image.png"
                         alt="Feature 1"
+                        priority
                         width={500}
                         height={500}
                         className='rounded-md'
@@ -110,6 +111,7 @@ const Page = () => {
                     <Image
                         src="/second-image.png"
                         alt="Feature 2"
+                        priority
                         width={500}
                         height={500}
                         className='rounded-md'
@@ -156,6 +158,7 @@ const Page = () => {
                     <Image
                         src="/third-image.png"
                         alt="Feature 3"
+                        priority
                         width={500}
                         height={500}
                         className='rounded-md'

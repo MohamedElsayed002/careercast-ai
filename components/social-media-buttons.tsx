@@ -30,6 +30,7 @@ export const SocialMediaButtons = () => {
             >
                 <Image
                     src="/logo/github.svg"
+                    priority
                     width={20}
                     height={20}
                     alt="Github"
@@ -45,6 +46,7 @@ export const SocialMediaButtons = () => {
                 <Image
                     src="/logo/google.svg"
                     width={20}
+                    priority
                     height={20}
                     alt="Google"
                 />

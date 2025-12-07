@@ -19,7 +19,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, User, Mail, Crown, CreditCard, Calendar, Shield, ImageIcon, Save } from "lucide-react"
-import Header from "../header"
 
 export const EditUser = () => {
     const trpc = useTRPC()
@@ -191,6 +190,7 @@ export const EditUser = () => {
                                                 src={imageUrl}
                                                 alt={name || "Profile"}
                                                 fill
+                                                priority
                                                 className="object-cover"
                                             />
                                         ) : (

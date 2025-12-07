@@ -25,6 +25,7 @@ export const Testimonials = () => {
             <Image
               src="/ana.jpg"
               alt="person-1"
+              priority
               width={40}
               height={40}
               className="rounded-full object-cover"
@@ -48,6 +49,7 @@ export const Testimonials = () => {
             <Image
               src="/ana.jpg"
               alt="person-2"
+              priority
               width={40}
               height={40}
               className="rounded-full object-cover"
@@ -71,6 +73,7 @@ export const Testimonials = () => {
             <Image
               src="/ana.jpg"
               alt="person-3"
+              priority
               width={40}
               height={40}
               className="rounded-full object-cover"

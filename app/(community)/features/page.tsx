@@ -60,6 +60,7 @@ const FeaturesPage = () => {
                         <Image
                             src="/cover.png"
                             alt="Feature 1"
+                            priority
                             width={500}
                             height={500}
                             className='rounded-md'
@@ -91,7 +92,8 @@ const FeaturesPage = () => {
                     <div className='grid grid-cols-1 md:grid-cols-2 gap-20 md:gap-48 my-20'>
                         <Image
                             src="/cover.png"
-                            alt="Feature 1"
+                            alt="Feature 2"
+                            priority
                             width={500}
                             height={500}
                             className='rounded-md'

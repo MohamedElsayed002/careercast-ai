@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, ArrowRight, Key, Sparkles } from "lucide-react"
+import { ArrowLeft, ArrowRight, Key } from "lucide-react"
 import { Dispatch, SetStateAction } from "react"
 import { Label } from "../ui/label"
 import {

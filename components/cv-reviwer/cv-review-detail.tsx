@@ -9,25 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 
 interface CVReviewDetailProps {
     review: CVReviewFreeTier | CVReviewProTier
-    reviewId: string
     isProTier: boolean
 }
 
-export const CVReviewDetail = ({ review, reviewId, isProTier }: CVReviewDetailProps) => {
-    const formatDate = (dateString: string | Date | null | undefined) => {
-        if (!dateString) return 'Unknown date'
-        try {
-            return new Date(dateString).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            })
-        } catch {
-            return 'Unknown date'
-        }
-    }
+export const CVReviewDetail = ({ review, isProTier }: CVReviewDetailProps) => {
 
     return (
         <div className='space-y-6'>

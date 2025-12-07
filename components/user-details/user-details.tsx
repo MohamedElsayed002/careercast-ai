@@ -1,6 +1,5 @@
 import { User } from "@/src/generated/prisma"
 import { User as UserIcon, Mail, Crown, CreditCard } from 'lucide-react';
-import Header from "../header";
 
 
 

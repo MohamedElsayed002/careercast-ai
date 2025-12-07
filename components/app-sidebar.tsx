@@ -57,6 +57,7 @@ const AppSidebar = () => {
                         <Image
                             src='/cover.png'
                             alt='Podcastr'
+                            priority
                             width={30}
                             height={30}
                         />

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Podcastr | Login/Register Pages",
-    description: "Login or Register in Podcastr website"
+    title: "CustomCareer AI | Login/Register Pages",
+    description: "Login or Register in CareerCastAI website"
   };
 
 

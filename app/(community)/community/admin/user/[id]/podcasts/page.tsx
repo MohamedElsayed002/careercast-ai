@@ -1,4 +1,3 @@
-import Header from "@/components/header"
 import { PodcastList } from "@/components/podcast/podcast-list"
 import { caller } from "@/trpc/server"
 import { requireAdmin } from "@/utils/auth-utils"

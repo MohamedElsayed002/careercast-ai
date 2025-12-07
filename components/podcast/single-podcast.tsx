@@ -65,6 +65,7 @@ export const SinglePodcast = ({ p, dateLabel, gradient, delay, isPublic, mounted
                             <Image
                                 src={p.imageUrl}
                                 alt={p.message ?? "Untitled Podcast"}
+                                priority
                                 fill
                                 className="object-cover"
                             />

@@ -42,7 +42,7 @@ const Page = async ({ params }: Props) => {
                 </div>
             </div>
         )
-    } catch (error) {
+    } catch {
         notFound()
     }
 }
