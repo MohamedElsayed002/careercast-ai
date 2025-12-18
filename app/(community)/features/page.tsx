@@ -91,7 +91,7 @@ const FeaturesPage = () => {
                 <div>
                     <div className='grid grid-cols-1 md:grid-cols-2 gap-20 md:gap-48 my-20'>
                         <Image
-                            src="/cover.png"
+                            src="/cv-reviewer.webp"
                             alt="Feature 2"
                             priority
                             width={500}

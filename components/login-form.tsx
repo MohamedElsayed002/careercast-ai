@@ -34,11 +34,11 @@ export function LoginForm() {
         await authClient.signIn.email({
             email: values.email,
             password: values.password,
-            callbackURL: '/podcast',
+            callbackURL: '/',
             rememberMe: false
         },{
             onSuccess: () => {
-                router.push('/podcast')
+                router.push('/')
             },
             onError:(ctx) => {
                 if(ctx.error.status === 403) {
@@ -68,7 +68,7 @@ export function LoginForm() {
                         <form onSubmit={form.handleSubmit(onSubmit)}>
                             <div className="grid gap-6">
                                 <SocialMediaButtons/>
-                                <div className="grid gap-6">
+                                {/* <div className="grid gap-6">
 
                                     <FormField
                                         control={form.control}
@@ -104,7 +104,7 @@ export function LoginForm() {
                                                 <FormMessage />
                                             </FormItem>
                                         )}
-                                    />
+                                    /> 
                                     <Button type='submit' className="w-full" disabled={isPending}>
                                         Login
                                     </Button>
@@ -114,7 +114,7 @@ export function LoginForm() {
                                     <Link href='/sign-up' className="underline underline-offset-4">
                                         Sign up
                                     </Link>
-                                </div>
+                                </div> */}
                             </div>
                         </form>
                     </Form>

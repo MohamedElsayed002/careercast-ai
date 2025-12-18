@@ -10,11 +10,14 @@ import { CVReviewProTier } from "@/actions/cv-reviewer";
 import { CVAnalysis } from "./cv-analysis";
 import { CredentialSelection } from "./credential-selection";
 
+export type AIProvider = 'openai' | 'gemini';
+
 export const CVReviewer = () => {
     const [step, setStep] = useState(1);
     const [cvText, setCvText] = useState('');
     const [fileName, setFileName] = useState('');
     const [credential, setCredential] = useState('');
+    const [provider, setProvider] = useState<AIProvider>('openai');
     const [jobDescription, setJobDescription] = useState('');
     const [analysis, setAnalysis] = useState<Partial<CVReviewProTier> | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -83,6 +86,7 @@ export const CVReviewer = () => {
         setCvText('')
         setFileName('')
         setCredential('')
+        setProvider('openai')
         setJobDescription('')
         setAnalysis(null)
         setError(null)
@@ -157,6 +161,8 @@ export const CVReviewer = () => {
                     <CredentialSelection
                         credential={credential}
                         setCredential={setCredential}
+                        provider={provider}
+                        setProvider={setProvider}
                         setStep={setStep}
                     />
                 )}
@@ -171,6 +177,7 @@ export const CVReviewer = () => {
                         useDummyJob={useDummyJobDescription}
                         setAnalysis={setAnalysis}
                         credential={credential}
+                        provider={provider}
                         setError={setError}
                         setIsLoading={setIsLoading}
                         key={step}

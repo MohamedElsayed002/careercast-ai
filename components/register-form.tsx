@@ -44,6 +44,7 @@ export function RegisterForm() {
             callbackURL: "/sign-in"
         }, {
             onSuccess: () => {
+                toast.success("check your email to verify")
                 router.push('/sign-in')
             },
             onError: (ctx) => {

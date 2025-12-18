@@ -485,10 +485,11 @@ export const appRouter = createTRPCRouter({
     .input(z.object({
       cvText: z.string(),
       jobDescription: z.string(),
-      credential: z.string()
+      credential: z.string(),
+      provider: z.enum(['openai', 'gemini']).default('openai')
     }))
     .mutation(async ({ input, ctx }) => {
-      const { cvText, jobDescription, credential } = input
+      const { cvText, jobDescription, credential, provider } = input
 
       if (!cvText || !jobDescription || !credential) {
         throw new TRPCError({
@@ -517,14 +518,14 @@ export const appRouter = createTRPCRouter({
 
         if (ctx.user?.isProCVReviewer) {
           // PRO USER → always use premium analyze
-          response = await analyzeCVMatchPro(cvText, jobDescription, credential)
+          response = await analyzeCVMatchPro(cvText, jobDescription, credential, provider)
 
         } else {
           // NOT PRO USER → check free trials
           if (ctx.user && ctx.user.trialsUsed < 3) {
 
             // still have free trials
-            response = await analyzeCVMatchFree(cvText, jobDescription, credential)
+            response = await analyzeCVMatchFree(cvText, jobDescription, credential, provider)
 
             await prisma.user.update({
               where: { id: ctx.auth.user.id },
@@ -544,10 +545,17 @@ export const appRouter = createTRPCRouter({
           }
         }
 
+        // Check if the AI analysis was successful
+        if (!response.success || !response.analysis) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "AI service is temporarily unavailable. Please try again in a few moments or try a different AI provider.",
+          })
+        }
 
         await prisma.cVReviewer.create({
           data: {
-            review: response.analysis!,
+            review: response.analysis,
             user: {
               connect: { id: ctx.auth.user.id }
             }
@@ -557,7 +565,17 @@ export const appRouter = createTRPCRouter({
         return response.analysis
 
       } catch (error) {
-        return error
+        // Re-throw TRPCError as-is
+        if (error instanceof TRPCError) {
+          throw error
+        }
+
+        // Handle other errors with a user-friendly message
+        console.error("CV Review Error:", error)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to analyze CV. The AI service may be temporarily unavailable. Please try again later or try a different AI provider.",
+        })
       }
     }),
 
@@ -597,12 +615,12 @@ export const appRouter = createTRPCRouter({
       subject: z.string(),
       message: z.string()
     }))
-    .mutation(async ({input}) => {
-      const {name,email,subject,message} = input
+    .mutation(async ({ input }) => {
+      const { name, email, subject, message } = input
 
       await prisma.messages.create({
         data: {
-          name,email,subject,message
+          name, email, subject, message
         }
       })
 
@@ -610,10 +628,10 @@ export const appRouter = createTRPCRouter({
         response: "success"
       }
     }),
-    getMessages: adminProcedure
-      .query(async () => {
-        return prisma.messages.findMany()
-      })
+  getMessages: adminProcedure
+    .query(async () => {
+      return prisma.messages.findMany()
+    })
 });
 
 export type AppRouter = typeof appRouter;

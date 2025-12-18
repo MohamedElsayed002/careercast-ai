@@ -7,21 +7,23 @@ import { Textarea } from "../ui/textarea"
 import { toast } from "sonner"
 import { useTRPC } from "@/trpc/client"
 import { useMutation } from "@tanstack/react-query"
-import { CVReviewType } from "@/actions/cv-reviewer"
+import { CVReviewFreeTier, CVReviewProTier } from "@/actions/cv-reviewer"
+import { AIProvider } from "./index"
 
 interface JobDescriptionProps {
     jobDescription: string
     cvText: string
     credential: string
+    provider: AIProvider
     setJobDescription: (value: SetStateAction<string>) => void
     useDummyJob: () => void
     setStep: Dispatch<SetStateAction<number>>
-    setAnalysis: Dispatch<SetStateAction<CVReviewType | null>>
+    setAnalysis: Dispatch<SetStateAction<Partial<CVReviewProTier> | null>>
     setError: Dispatch<SetStateAction<string | null>>
     setIsLoading: Dispatch<SetStateAction<boolean>>
 }
 
-export const JobDescription = ({ setAnalysis, cvText, useDummyJob, setStep, jobDescription, setJobDescription, credential, setError, setIsLoading }: JobDescriptionProps) => {
+export const JobDescription = ({ setAnalysis, cvText, useDummyJob, setStep, jobDescription, setJobDescription, credential, provider, setError, setIsLoading }: JobDescriptionProps) => {
 
     const trpc = useTRPC()
     const generateReview = useMutation(trpc.generateCVReview.mutationOptions({
@@ -57,12 +59,21 @@ export const JobDescription = ({ setAnalysis, cvText, useDummyJob, setStep, jobD
         
         // Move to step 4 to show loading state
         setStep(4)
-        
+
+        console.log({
+            from: "62: Line",
+            cvText,
+            jobDescription,
+            credential,
+            provider
+        })
+
         // Start the mutation
         generateReview.mutate({
             cvText,
             jobDescription,
-            credential
+            credential,
+            provider
         })
     }
     return (

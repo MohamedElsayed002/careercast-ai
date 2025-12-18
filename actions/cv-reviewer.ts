@@ -1,8 +1,14 @@
 import { generateObject } from "ai"
 import { z } from "zod"
 import { createOpenAI } from "@ai-sdk/openai"
+import { createGoogleGenerativeAI } from "@ai-sdk/google"
 import prisma from "@/utils/db"
 import { decrypt } from "@/lib/encryption"
+
+// ============================================================================
+// PROVIDER TYPE
+// ============================================================================
+export type AIProvider = 'openai' | 'gemini'
 
 // ============================================================================
 // FREE TIER SCHEMA (Limited Analysis)
@@ -100,9 +106,10 @@ const SYSTEM_PROMPT_PRO = `
 // FREE TIER FUNCTION
 // ============================================================================
 export async function analyzeCVMatchFree(
-    cvText: string, 
-    jobDescription: string, 
-    credentialId: string
+    cvText: string,
+    jobDescription: string,
+    credentialId: string,
+    provider: AIProvider = 'openai'
 ) {
     // Get and decrypt credential
     const credentialValue = await prisma.credential.findUnique({
@@ -113,9 +120,22 @@ export async function analyzeCVMatchFree(
         throw new Error('Invalid credential')
     }
 
-    const openai = createOpenAI({
-        apiKey: decrypt(credentialValue.value)
-    })
+    const decryptedApiKey = decrypt(credentialValue.value)
+
+    // Create the appropriate AI provider based on selection
+    const getModel = () => {
+        if (provider === 'gemini') {
+            const google = createGoogleGenerativeAI({
+                apiKey: decryptedApiKey
+            })
+            return google('gemini-2.5-flash')
+        } else {
+            const openai = createOpenAI({
+                apiKey: decryptedApiKey
+            })
+            return openai('gpt-5')
+        }
+    }
 
     const prompt = `
         ${SYSTEM_PROMPT_FREE}
@@ -144,7 +164,7 @@ export async function analyzeCVMatchFree(
 
     try {
         const { object } = await generateObject({
-            model: openai('gpt-4o'),
+            model: getModel(),
             schema: CVReviewSchemaFree,
             prompt
         })
@@ -168,9 +188,10 @@ export async function analyzeCVMatchFree(
 // PRO TIER FUNCTION
 // ============================================================================
 export async function analyzeCVMatchPro(
-    cvText: string, 
-    jobDescription: string, 
-    credentialId: string
+    cvText: string,
+    jobDescription: string,
+    credentialId: string,
+    provider: AIProvider = 'openai'
 ) {
     // Get and decrypt credential
     const credentialValue = await prisma.credential.findUnique({
@@ -181,9 +202,22 @@ export async function analyzeCVMatchPro(
         throw new Error('Invalid credential')
     }
 
-    const openai = createOpenAI({
-        apiKey: decrypt(credentialValue.value)
-    })
+    const decryptedApiKey = decrypt(credentialValue.value)
+
+    // Create the appropriate AI provider based on selection
+    const getModel = () => {
+        if (provider === 'gemini') {
+            const google = createGoogleGenerativeAI({
+                apiKey: decryptedApiKey
+            })
+            return google('gemini-2.5-flash')
+        } else {
+            const openai = createOpenAI({
+                apiKey: decryptedApiKey
+            })
+            return openai('gpt-5')
+        }
+    }
 
     const prompt = `
         ${SYSTEM_PROMPT_PRO}
@@ -215,7 +249,7 @@ export async function analyzeCVMatchPro(
 
     try {
         const { object } = await generateObject({
-            model: openai('gpt-4o'),
+            model: getModel(),
             schema: CVReviewSchemaPro,
             prompt
         })
