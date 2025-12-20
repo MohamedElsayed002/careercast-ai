@@ -12,6 +12,10 @@ const PRODUCT_CONFIG = {
     'CV Reviewer': {
         field: 'isProCVReviewer',
         name: 'CV Reviewer'
+    },
+    'AI Job Application Tailor': {
+        field: 'isProJobApplicationTailor',
+        name: 'AI Job Application Tailor'
     }
 } as const;
 

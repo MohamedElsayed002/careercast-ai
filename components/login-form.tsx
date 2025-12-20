@@ -68,7 +68,7 @@ export function LoginForm() {
                         <form onSubmit={form.handleSubmit(onSubmit)}>
                             <div className="grid gap-6">
                                 <SocialMediaButtons/>
-                                {/* <div className="grid gap-6">
+                                <div className="grid gap-6">
 
                                     <FormField
                                         control={form.control}
@@ -114,7 +114,7 @@ export function LoginForm() {
                                     <Link href='/sign-up' className="underline underline-offset-4">
                                         Sign up
                                     </Link>
-                                </div> */}
+                                </div>
                             </div>
                         </form>
                     </Form>

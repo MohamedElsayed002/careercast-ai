@@ -10,6 +10,7 @@ import { Prisma } from '@/src/generated/prisma';
 import { encrypt } from '@/lib/encryption';
 import { inngest } from '@/inngest/client';
 import { analyzeCVMatchFree, analyzeCVMatchPro, CVReviewFreeTier, CVReviewProTier } from '@/actions/cv-reviewer';
+import { tailorCVPro } from '@/actions/ai-job-application-tailor';
 
 export const appRouter = createTRPCRouter({
   getHomePodcast: baseProcedure
@@ -631,6 +632,80 @@ export const appRouter = createTRPCRouter({
   getMessages: adminProcedure
     .query(async () => {
       return prisma.messages.findMany()
+    }),
+  tailorCV: protectedProcedure
+    .input(z.object({
+      cvText: z.string(),
+      jobDescription: z.string(),
+      credential: z.string(),
+      provider: z.enum(['openai', 'gemini']).default('openai'),
+      options: z.object({
+        generateTailoredCv: z.boolean(),
+        generateCoverLetter: z.boolean(),
+        optimizeForATS: z.boolean(),
+        rewriteSummary: z.boolean(),
+        rewriteExperience: z.boolean(),
+        reorderSkills: z.boolean(),
+        emphasizeAchievements: z.boolean(),
+      })
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const { cvText, jobDescription, credential, provider, options } = input
+
+      if (!cvText || !jobDescription || !credential) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: "CV Text, Job Description, and Credential are required"
+        })
+      }
+
+      if (!options) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: "Options are required"
+        })
+      }
+
+      if (!provider) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: "Provider is required"
+        })
+      }
+
+      if (!ctx.user?.isProCVReviewer) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: "You are not authorized to tailor CV"
+        })
+      }
+
+      try {
+        const response = await tailorCVPro(cvText, jobDescription, options, credential, provider)
+
+        // Check if the AI tailoring was successful
+        if (!response.success || !response.tailoredCV) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "AI service is temporarily unavailable. Please try again in a few moments or try a different AI provider.",
+          })
+        }
+
+        return response.tailoredCV
+
+      } catch (error) {
+        // Re-throw TRPCError as-is
+        if (error instanceof TRPCError) {
+          throw error
+        }
+
+        // Handle other errors with a user-friendly message
+        console.error("CV Tailoring Error:", error)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to tailor CV. The AI service may be temporarily unavailable. Please try again later or try a different AI provider.",
+        })
+      }
     })
 });
 
