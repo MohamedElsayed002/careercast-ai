@@ -1,3 +1,5 @@
+"use client"
+
 import { TailoredCVFreeTier, TailoredCVProTier } from "@/actions/ai-job-application-tailor"
 import { CheckCircle, TrendingUp, FileText, Sparkles, Copy, Download, ArrowLeft, AlertCircle, Target, BarChart3, Lightbulb } from "lucide-react"
 import { Button } from "../ui/button"
@@ -6,11 +8,12 @@ import { toast } from "sonner"
 
 interface TailoredResultProps {
     data: TailoredCVFreeTier | TailoredCVProTier
-    isPro: boolean
-    onReset: () => void
+    isPro?: boolean
+    onReset?: () => void
+    show?: boolean
 }
 
-export const TailoredResult = ({ data, isPro, onReset }: TailoredResultProps) => {
+export const TailoredResult = ({ data, isPro, onReset, show = true }: TailoredResultProps) => {
     const [copiedSection, setCopiedSection] = useState<string | null>(null)
 
     const copyToClipboard = (text: string, section: string) => {
@@ -34,7 +37,9 @@ export const TailoredResult = ({ data, isPro, onReset }: TailoredResultProps) =>
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-teal-100 dark:bg-teal-900/20 rounded-full mb-4">
                     <CheckCircle className="w-8 h-8 text-teal-600 dark:text-teal-400" />
                 </div>
-                <h1 className="text-4xl font-bold mb-2">CV Tailored Successfully!</h1>
+                <h1 className="text-4xl font-bold mb-2">
+                    {show ? 'CV Tailored Successfully!' : 'CV Tailored'}
+                </h1>
                 <p className="text-gray-600 dark:text-gray-400">
                     Your CV has been optimized for the job description
                 </p>
@@ -188,7 +193,7 @@ export const TailoredResult = ({ data, isPro, onReset }: TailoredResultProps) =>
                                         <p className="text-sm text-gray-600 dark:text-gray-400">{exp.duration}</p>
                                     )}
                                 </div>
-                                
+
                                 <div>
                                     <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                         Tailored Bullets:
@@ -238,7 +243,7 @@ export const TailoredResult = ({ data, isPro, onReset }: TailoredResultProps) =>
                                         {exp.originalTitle} at {exp.company}
                                     </h3>
                                 </div>
-                                
+
                                 <div>
                                     <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                         Tailored Bullets:
@@ -530,17 +535,20 @@ export const TailoredResult = ({ data, isPro, onReset }: TailoredResultProps) =>
             )}
 
             {/* Action Buttons */}
-            <div className="flex gap-3 pt-4">
-                <Button
-                    onClick={onReset}
-                    variant="outline"
-                    className="flex-1"
-                >
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Tailor Another CV
-                </Button>
-            </div>
+            {show && (
+                <div className="flex gap-3 pt-4">
+                    <Button
+                        onClick={onReset}
+                        variant="outline"
+                        className="flex-1"
+                    >
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Tailor Another CV
+                    </Button>
+                </div>
+            )}
         </div>
     )
 }
+
 

@@ -11,7 +11,7 @@ export const InfoCommunity = () => {
                 Our platform offers two core features designed to give you competitive edge in your
                 professional and educational journey.
             </p>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-10 mt-10'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-10 mt-10'>
                 <div className='p-10 mx-10 rounded-md md:mx-0 border border-indigo-600 flex flex-col space-y-4'>
                     <Mic className='size-10 text-indigo-600 cursor-pointer' />
                     <h1>AI Podcast Generator</h1>

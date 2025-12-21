@@ -116,7 +116,7 @@ export const ApplicationTailorHeader = () => {
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem>
                                                     <Link href="/community/user/application-tailored">
-                                                        CV Reviews
+                                                        Applications Tailored
                                                     </Link>
                                                 </DropdownMenuItem>
                                             </>
@@ -210,6 +210,11 @@ export const ApplicationTailorHeader = () => {
                                     <DropdownMenuItem>
                                         <Link href="/community/user/cv-reviews">
                                             CV Reviews
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <Link href="/community/user/application-tailored">
+                                            Applications Tailored
                                         </Link>
                                     </DropdownMenuItem>
                                 </>

@@ -10,7 +10,7 @@ import { Prisma } from '@/src/generated/prisma';
 import { encrypt } from '@/lib/encryption';
 import { inngest } from '@/inngest/client';
 import { analyzeCVMatchFree, analyzeCVMatchPro, CVReviewFreeTier, CVReviewProTier } from '@/actions/cv-reviewer';
-import { tailorCVPro } from '@/actions/ai-job-application-tailor';
+import { tailorCVFree, tailorCVPro } from '@/actions/ai-job-application-tailor';
 
 export const appRouter = createTRPCRouter({
   getHomePodcast: baseProcedure
@@ -674,15 +674,33 @@ export const appRouter = createTRPCRouter({
         })
       }
 
-      if (!ctx.user?.isProCVReviewer) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: "You are not authorized to tailor CV"
-        })
-      }
 
       try {
-        const response = await tailorCVPro(cvText, jobDescription, options, credential, provider)
+
+        let response
+
+        if (ctx.user?.isProJobApplicationTailor) {
+          response = await tailorCVPro(cvText, jobDescription, options, credential, provider)
+        } else {
+          if (ctx.user && ctx.user.trialsUsed < 3) {
+            response = await tailorCVFree(cvText, jobDescription, options, credential, provider)
+
+            await prisma.user.update({
+              where: { id: ctx.auth.user.id },
+              data: {
+                trialsUsed: {
+                  increment: 1
+                }
+              }
+            })
+          } else {
+            throw new TRPCError({
+              code: "BAD_GATEWAY",
+              message: "You exceed the number of free trials"
+            })
+          }
+        }
+        // const response = 
 
         // Check if the AI tailoring was successful
         if (!response.success || !response.tailoredCV) {
@@ -714,6 +732,44 @@ export const appRouter = createTRPCRouter({
           message: "Failed to tailor CV. The AI service may be temporarily unavailable. Please try again later or try a different AI provider.",
         })
       }
+    }),
+  allUserTailoredCV: protectedProcedure
+    .query(async ({ ctx }) => {
+      if (!ctx.user) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'User not found in context'
+        })
+      }
+      return prisma.jobApplicationTailor.findMany({
+        where: {
+          userId: ctx.user.id
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      })
+    }),
+  singleUserTailoredCV: protectedProcedure
+    .input(z.object({
+      id: z.string()
+    }))
+    .query(async ({ ctx, input }) => {
+      const { id } = input
+
+      if (!ctx.user) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'User not found in context'
+        })
+      }
+      
+      return prisma.jobApplicationTailor.findUniqueOrThrow({
+        where: {
+          id: id,
+          userId: ctx.user.id
+        }
+      })
     })
 });
 
