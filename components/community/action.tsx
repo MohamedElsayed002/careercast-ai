@@ -10,12 +10,17 @@ export const ActionSection = () => {
             </h1>
             <div className='flex gap-5'>
                 <Button className="bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900" asChild>
-                    <Link href="/podcast">
+                    <Link href="/services/podcast">
                         Generate Podcast
                     </Link>
                 </Button>
                 <Button className='bg-teal-600 text-white cursor-pointer' asChild>
-                    <Link href="/reviewer">Review My CV</Link>
+                    <Link href="/services/reviewer">Review My CV</Link>
+                </Button>
+                <Button className="bg-orange-600 text-white cursor-pointer" asChild>
+                    <Link href="/services/job-application-tailor">
+                        Tailor My Application
+                    </Link>
                 </Button>
             </div>
             <div className='flex gap-5 text-gray-400'>

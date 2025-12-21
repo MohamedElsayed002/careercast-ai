@@ -1,4 +1,4 @@
-import { CheckCircle, Mic } from "lucide-react"
+import { CheckCircle, Mic, Wand2  } from "lucide-react"
 
 
 export const InfoCommunity = () => {
@@ -13,21 +13,30 @@ export const InfoCommunity = () => {
             </p>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-10 mt-10'>
                 <div className='p-10 mx-10 rounded-md md:mx-0 border border-indigo-600 flex flex-col space-y-4'>
-                    <Mic className='size-10 text-indigo-600 cursor-pointer'/>
+                    <Mic className='size-10 text-indigo-600 cursor-pointer' />
                     <h1>AI Podcast Generator</h1>
                     <p>
-                        Simply provide a topic and our AI generates a complete 
+                        Simply provide a topic and our AI generates a complete
                         educational podcast with natural dialogue between two speakers,
                         plus a custom thumbnail, Perfect for English learners at any level
                     </p>
                 </div>
                 <div className='p-10 mx-10 rounded-md md:mx-0 border border-indigo-600 flex flex-col space-y-4'>
-                    <CheckCircle className='size-10 text-indigo-600 cursor-pointer'/>
+                    <CheckCircle className='size-10 text-indigo-600 cursor-pointer' />
                     <h1>AI CV Reviewer</h1>
                     <p>
-                        Upload your CV and job description. Get detailed AI-powered 
+                        Upload your CV and job description. Get detailed AI-powered
                         feedback comparing your qualifications and actionable recommendations,
                         Helps candidates know if they&apos;re ready to apply
+                    </p>
+                </div>
+                <div className='p-10 mx-10 rounded-md md:mx-0 border border-indigo-600 flex flex-col space-y-4'>
+                    <Wand2  className='size-10 text-indigo-600 cursor-pointer' />
+                    <h1>AI Job Application Tailor</h1>
+                    <p>
+                        Upload your CV and job description. Instantly tailor your CV and cover letter
+                        to match the role, optimize for ATS, and highlight your most relevant experience
+                        before applying.
                     </p>
                 </div>
             </div>

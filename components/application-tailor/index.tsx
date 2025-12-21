@@ -46,7 +46,7 @@ export const ApplicationTailor = () => {
             toast.error(errorMessage)
         }
     }))
-    const isPro = user?.isProCVReviewer ?? false
+    const isPro = user?.isProJobApplicationTailor ?? false
     const [step, setStep] = useState(1)
     const [cvText, setCvText] = useState('')
     const [fileName, setFileName] = useState('')
@@ -126,8 +126,8 @@ export const ApplicationTailor = () => {
     }
 
     return (
-        <div className='container mx-auto p-20'>
-            <div className='flex justify-between items-center mb-10'>
+        <div className='min-h-screen w-4/5 mx-auto my-10'>
+            <div className='flex justify-between gap-5 flex-col md:flex-row items-center mb-10'>
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
@@ -271,7 +271,7 @@ export const ApplicationTailor = () => {
             )}
 
             {step === 7 && (
-                <div className="max-w-6xl mx-auto px-6 py-10">
+                <div>
                     {isLoading && !error && !allMyData ? (
                         <div className="text-center py-12">
                             <Lottie animationData={animationData} loop={true} style={{ width: 300, height: 300, margin: '0 auto' }} />

@@ -91,6 +91,7 @@ export const appRouter = createTRPCRouter({
           role: true,
           isProPodcast: true,
           isProCVReviewer: true,
+          isProJobApplicationTailor: true,
           trialsUsed: true,
           subscriptionId: true,
           subscriptionStatus: true,
@@ -690,6 +691,13 @@ export const appRouter = createTRPCRouter({
             message: "AI service is temporarily unavailable. Please try again in a few moments or try a different AI provider.",
           })
         }
+
+        await prisma.jobApplicationTailor.create({
+          data: {
+            userId: ctx.auth.user.id,
+            applicationTailored: response.tailoredCV,
+          }
+        })
 
         return response.tailoredCV
 

@@ -28,7 +28,7 @@ export const TailoredResult = ({ data, isPro, onReset }: TailoredResultProps) =>
     const freeData = !isProTier(data) ? data : null
 
     return (
-        <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
+        <div className="space-y-6">
             {/* Header */}
             <div className="text-center mb-8">
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-teal-100 dark:bg-teal-900/20 rounded-full mb-4">

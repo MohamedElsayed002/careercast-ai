@@ -12,13 +12,13 @@ interface UploadCVProps {
 
 const UploadCV = ({ fileName, cvText, setStep, handleFileUpload }: UploadCVProps) => {
     return (
-        <div className="space-y-4 border bg-gray-100 p-5">
+        <div className="space-y-4 border bg-gray-100 p-5 rounded-md">
             <div className="space-y-3">
                 <h1 className="text-4xl font-bold">Let&apos;s start with your Resume</h1>
                 <h2 className='text-xl font-medium text-gray-400'>Upload your existing CV so our AI can analyze your experience</h2>
                 <div className='inline-block p-2 rounded-2xl bg-green-400 text-green-700'>
-                    <Lock className="w-5 h-5 text-green-700 inline-block mr-1" />
-                    <span className="text-sm font-medium">Your CV is securely processed and never stored.</span>
+                    <Lock className="w-5 h-5 text-white inline-block mr-1" />
+                    <span className="text-sm font-medium text-white">Your CV is securely processed and never stored.</span>
                 </div>
             </div>
 

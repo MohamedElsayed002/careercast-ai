@@ -1,11 +1,11 @@
 import { ActionSection } from "@/components/community/action"
-import { CheckCircle, Mic } from "lucide-react"
+import { CheckCircle, Mic, Wand2 } from "lucide-react"
 import { Metadata } from "next";
 import Image from "next/image"
 
 export const metadata: Metadata = {
-  title: "CareerCast AI | Features",
-  description: "CareerCast AI Website features!"
+    title: "CareerCast AI | Features",
+    description: "CareerCast AI Website features!"
 };
 
 
@@ -138,7 +138,7 @@ const FeaturesPage = () => {
                             {/* Quote Text */}
                             <div>
                                 <p className="text-gray-400 italic">
-                                    “I was struggling to get interviews. The CV Reviewer showed me exactly where my resume 
+                                    “I was struggling to get interviews. The CV Reviewer showed me exactly where my resume
                                     was falling short for the jobs I wanted. After making suggested changes, I got three interview
                                     invitations in one week. It&apos;s essential tool for any job seeker”
 
@@ -150,8 +150,78 @@ const FeaturesPage = () => {
                         </div>
                     </div>
                 </div>
+                <div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-20 md:gap-48 my-20">
+                        <Image
+                            src="/application-tailor.webp"
+                            alt="Job Application Tailor feature"
+                            priority
+                            width={500}
+                            height={500}
+                            className="rounded-md"
+                        />
+                        <div className="flex flex-col space-y-6">
+                            <div className="flex gap-5 items-center">
+                                <div className="bg-blue-100 w-14 h-14 flex items-center rounded-full justify-center">
+                                    <Wand2 className="text-indigo-600 size-8" />
+                                </div>
+                                <span className="text-2xl md:text-4xl font-bold">AI Job Application Tailor</span>
+                            </div>
+
+                            <p className="text-xl text-gray-400">
+                                Stop applying with the same generic CV. Upload your CV and a job description, and get a
+                                job-specific CV (and optional cover letter) that&apos;s optimized for ATS, mirrors the role&apos;s
+                                language, and highlights your most relevant experience so you apply with confidence.
+                            </p>
+
+                            <div className="flex gap-3 mb-5 items-start">
+                                <CheckCircle className="size-10 text-green-500 mt-1" />
+                                <p className="text-xl">
+                                    <span className="font-bold">Tailored Documents:</span>{" "}
+                                    Generate a CV and cover letter that directly reflect the job requirements and your real experience.
+                                </p>
+                            </div>
+
+                            <div className="flex gap-3">
+                                <CheckCircle className="size-10 text-green-500 mt-1" />
+                                <p className="text-xl">
+                                    <span className="font-bold">ATS Optimization:</span>{" "}
+                                    Integrate key skills naturally and apply formatting guidance so your application passes applicant tracking systems.
+                                </p>
+                            </div>
+
+                            <div className="flex gap-3 mt-4">
+                                <CheckCircle className="size-10 text-green-500 mt-1" />
+                                <p className="text-xl">
+                                    <span className="font-bold">Before vs After Insights:</span>{" "}
+                                    See the match score improvement, added keywords, and a clear list of edits you can accept or revert.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="rounded-xl shadow p-6 border">
+                        <h1 className="text-lg font-semibold">User Story</h1>
+
+                        <div className="mt-4 flex gap-4">
+                            {/* Left Blue Line */}
+                            <div className="w-1 bg-blue-500 rounded" />
+
+                            {/* Quote Text */}
+                            <div>
+                                <p className="text-gray-400 italic">
+                                    “I used to send the same resume to every job and rarely heard back. The Job Application
+                                    Tailor rewrote the most relevant bullets and generated a short cover letter that matched the
+                                    posting language. I started getting interviews within days — it made my applications feel
+                                    deliberate, not random.”
+                                </p>
+                                <p className="mt-3 font-medium">— Lina, Product Manager</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <ActionSection/>
+            <ActionSection />
         </div>
     )
 }

@@ -194,6 +194,7 @@ TAILORING STRATEGIES:
 - Remove or de-emphasize less relevant details
 - Use action verbs that match the job posting
 - Mirror the language and terminology used in the job description
+- Try to focus on measurable outcomes already present in the CV. like if he focused on performance or increased it by 90% rather than saying improved performance
 
 ATS OPTIMIZATION BEST PRACTICES:
 - Match exact keywords from job requirements
@@ -211,6 +212,7 @@ WHAT YOU CAN DO:
 ✅ Add industry-standard keywords naturally
 ✅ Quantify existing achievements differently
 ✅ Reorder sections for impact
+
 
 WHAT YOU CANNOT DO:
 ❌ Add new companies or positions

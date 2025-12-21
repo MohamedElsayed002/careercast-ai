@@ -28,11 +28,14 @@ model User {
   image         String?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @default(now()) @updatedAt
+  
   sessions      Session[]
   accounts      Account[]
   podcasts      Podcast[]
   credentials   Credential[]
   cvReview      CVReviewer[]
+  jobApplications JobApplicationTailor[]
+
   trialsUsed    Int          @default(0)
 
   // Subscription fields
@@ -148,6 +151,15 @@ model CVReviewer {
   @@index([userId])
 }
 
+model JobApplicationTailor {
+  id String @id @default(cuid())
+  userId String
+  applicationTailored Json
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  @@index([userId])
+}
 
 model Messages {
     id String @id @default(cuid())
