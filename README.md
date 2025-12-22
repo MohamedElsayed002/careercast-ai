@@ -1,6 +1,6 @@
 # 🚀 CareerCastAI
 
-> A Next.js 15 platform offering two powerful AI-powered services: Podcast Generator and CV Reviewer. Create professional podcasts or get AI-powered CV analysis to match with job descriptions.
+> A Next.js 15 platform offering two powerful AI-powered services: Podcast Generator,  CV Reviewer and Job Application Tailor. Create professional podcasts, get AI-powered CV analysis to match with job descriptions or Tailor your CV with the Job Description with a Cover letter.
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-blue)](https://react.dev/)
@@ -9,13 +9,17 @@
 
 ## 📋 Overview
 
-CareerCastAI is a comprehensive web platform that provides two distinct AI-powered services:
+CareerCastAI is a comprehensive web platform that provides three distinct AI-powered services:
 
 ### 🎙️ Service 1: Podcast Generator
 Transform simple prompts into professional podcast episodes. The platform generates realistic debate-style podcasts between two AI voices, creates accompanying PDF briefs, and manages the entire workflow from prompt to publication.
 
 ### 📄 Service 2: CV Reviewer
 Upload your CV and job description to get AI-powered analysis. The system evaluates your CV against job requirements, provides match percentage, identifies strengths and weaknesses, and offers actionable recommendations to improve your job application.
+
+### 🪄 Service 3: Job Application Tailor
+Upload your CV and job description to generate a job-specific application. The system tailors your CV and optional cover letter by rephrasing, reorganizing, and optimizing existing content for ATS systems — without fabricating experience. Get role-aligned documents, match score improvements, and detailed explanations of every change.
+
 
 ## ✨ Key Features
 
@@ -35,6 +39,19 @@ Upload your CV and job description to get AI-powered analysis. The system evalua
 - 📝 **Actionable Recommendations**: Suggests specific improvements
 - 🔍 **Missing Skills Detection**: Identifies critical skills gaps
 - 📈 **Experience Assessment**: Compares required vs. actual experience
+
+### Job Application Tailor Feature 
+- 🎯 Job-Specific CV Tailoring: Customize your CV for each job description without rewriting from scratch
+- ✍️ Smart Content Rewriting: Rephrases summaries and experience using role-relevant language.
+- 🔄 Skills Reordering & Emphasis: Highlights the most relevant skills for the target role
+- 🤖 ATS Optimization: Integrates job keywords naturally to improve ATS compatiblity
+- 📝 Cover Letter Generation: Create tailored cover letters with customizable tone and length
+- 📊 Before & After Match Scores: See measurable improvement in job alignment
+- 🔍 Keyword Gap Analysis: Identifies missing or underutilized job-critical keywords
+- 🧾 Change Tracking & Transperency: Shows exactly what was changed and why
+- 🔒 Authenticity Guaranteed: No fabricated skills or experience - strictly CV-based
+- ⚙️ Custom Tailoring Controls: Lock sections, adjust focus, and control optimization depth
+
 
 ### Platform Features
 - 🔐 **Secure Authentication**: Better Auth with role-based access control
@@ -255,6 +272,49 @@ npm start
    - **Experience Match**: Comparison of required vs. actual experience
    - **Key Highlights**: Standout achievements from CV
 5. **Review Results**: User receives comprehensive analysis report
+
+### 🪄 Job Application Tailor 
+
+1. **Upload CV**: User uploads their CV in PDF format. The system extracts and structures the text for safe, non-fabricated tailoring 
+2. **Paste Job Description** User pastes the full job description they want to apply for.
+3. **Select AI Provider & Credential** User chooses an AI Provider (OpenAI or Gemini) and selects or adds their API credential 
+4. **Choose Tailoring Options**
+   User customizes how the application should be tailored:
+      - Enable/Disable CV tailoring
+      - Enable optional cover letter generation
+      - Select cover letter tone and length (Pro) 
+      - Optimize for ATS
+      - Lock specific CV sections (education, certifications, etc.)
+      - Specify target role, company type, and seniority level
+5. **Submit Tailoring Request**
+   From submission triggers:
+   - `tailorCVFree` (Free tier - limited tailoring)
+   - or `tailorCVPro` (Pro tier - full tailoring)
+6. **AI Tailoring Process** 
+   The system performs 
+   - Job-specific CV rewriting and reordering 
+   - Natural keyword integration for ATS system
+   - Skills prioritization by relevance
+   - Optional cover letter generation
+   - Match score calculation (before vs after)
+   - Detailed change tracking and explanations (All changes strictly based on original CV content - no fabrication)
+7. **Validation & Safety Checks** 
+   - Content is validated against the original CV
+   - Fabrication patterns are detected and flagged
+   - Locked sections remain unchanged
+8. **Results Delivery** 
+   User receives:
+   - Tailored CV sections
+   - Optional cover letter
+   - Match score improvement analysis 
+   - ATS optimization report
+   - Keyword usage and gap analysis 
+   - Clear summary of all changes made
+9. Upgrade Prompt (Free Tier)
+   Free users see:
+   - Applied limitations
+   - Unlocked Pro features
+   - Upgrade recommendation based on detected gaps
 
 ## 📡 API Reference
 
