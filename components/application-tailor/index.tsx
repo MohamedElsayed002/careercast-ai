@@ -53,6 +53,8 @@ export const ApplicationTailor = () => {
     const [credential, setCredential] = useState('')
     const [provider, setProvider] = useState<AIProvider>('openai')
     const [jobDescription, setJobDescription] = useState('')
+    const [openMoreInfo,setOpenMoreInfo] = useState(false)
+    const [moreInfo,setMoreInfo] = useState('')
     const [options, setOptions] = useState<Partial<TailoringOptions>>({
         generateTailoredCv: true,
         generateCoverLetter: false,
@@ -71,7 +73,8 @@ export const ApplicationTailor = () => {
             jobDescription,
             credential,
             options: options as TailoringOptions,
-            provider
+            provider,
+            moreInfo
         })
     }
 
@@ -218,6 +221,10 @@ export const ApplicationTailor = () => {
                     setStep={setStep}
                     options={options}
                     setOptions={setOptions}
+                    moreInfo={moreInfo}
+                    setMoreInfo={setMoreInfo}
+                    openMoreInfo={openMoreInfo}
+                    setOpenMoreInfo={setOpenMoreInfo}
                 />
             )}
 

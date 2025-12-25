@@ -11,7 +11,7 @@ export const HeroReviewer = () => {
             </p>
             <div className='flex gap-5'>
                 <Button className='bg-teal-600 hover:bg-teal-400' asChild>
-                    <Link href="/reviewer/cv-reviewer">
+                    <Link href="/services/reviewer/cv-reviewer">
                         Review my CV
                     </Link>
                 </Button>

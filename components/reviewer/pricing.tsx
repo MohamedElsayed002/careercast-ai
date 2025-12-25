@@ -70,7 +70,7 @@ export const Pricing = () => {
               aria-label="Get Started - Free"
               asChild
             >
-              <Link href="/reviewer/cv-reviewer">Get Started</Link>
+              <Link href="/services/reviewer/cv-reviewer">Get Started</Link>
             </Button>
           </div>
         </div>

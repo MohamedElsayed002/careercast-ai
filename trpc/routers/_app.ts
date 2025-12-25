@@ -639,6 +639,7 @@ export const appRouter = createTRPCRouter({
       cvText: z.string(),
       jobDescription: z.string(),
       credential: z.string(),
+      moreInfo: z.string(),
       provider: z.enum(['openai', 'gemini']).default('openai'),
       options: z.object({
         generateTailoredCv: z.boolean(),
@@ -651,7 +652,7 @@ export const appRouter = createTRPCRouter({
       })
     }))
     .mutation(async ({ input, ctx }) => {
-      const { cvText, jobDescription, credential, provider, options } = input
+      const { cvText, jobDescription, credential, provider, options, moreInfo } = input
 
       if (!cvText || !jobDescription || !credential) {
         throw new TRPCError({
@@ -680,7 +681,7 @@ export const appRouter = createTRPCRouter({
         let response
 
         if (ctx.user?.isProJobApplicationTailor) {
-          response = await tailorCVPro(cvText, jobDescription, options, credential, provider)
+          response = await tailorCVPro(cvText, jobDescription,moreInfo, options, credential, provider)
         } else {
           if (ctx.user && ctx.user.trialsUsed < 3) {
             response = await tailorCVFree(cvText, jobDescription, options, credential, provider)

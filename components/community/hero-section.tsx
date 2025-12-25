@@ -15,7 +15,7 @@ export const HeroCommunity = () => {
                     Generate personalized educational podcasts and get expert CV Feedback - all powered
                     by artifical intelligence
                 </p>
-                <div className='flex gap-5'>
+                <div className='flex flex-wrap gap-5'>
                     <Button className="bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 text-white" asChild>
                         <Link href="/services/podcast">
                         Generate Podcast

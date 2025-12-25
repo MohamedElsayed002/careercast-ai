@@ -321,7 +321,12 @@ export async function tailorCVFree(
         const { object } = await generateObject({
             model: getModel(),
             schema: TailoredCVFreeTierSchema,
-            prompt
+            prompt,
+            experimental_telemetry: {
+                isEnabled: true,
+                recordInputs: true,
+                recordOutputs: true
+            }
         })
 
         return {
@@ -346,6 +351,7 @@ export async function tailorCVFree(
 export async function tailorCVPro(
     originalCvText: string,
     jobDescription: string,
+    moreInfo: string,
     options: Partial<TailoringOptions>,
     credentialId: string,
     provider: AIProvider = 'openai'
@@ -407,6 +413,10 @@ export async function tailorCVPro(
         ${originalCvText}
         --- END ORIGINAL CV ---
 
+        --- EXTRA INFO FROM THE USER ---
+        ${moreInfo}
+        --- END EXTRA INFO FROM THE USER ---
+
         --- USER PREFERENCES ---
         Rewrite Summary: ${validatedOptions.rewriteSummary}
         Rewrite Experience: ${validatedOptions.rewriteExperience}
@@ -430,6 +440,7 @@ export async function tailorCVPro(
         4. Comprehensive match analysis with breakdown
         5. Full ATS optimization report with keyword density
         6. Complete changes summary
+        7. If the user provide more info about him just rank the best project that included in his CV or from the info that he added. and If something it doesn't mention in the CV we can put it cover letter. if it will boost his cover letter
 
         Requirements:
         - Maintain 100% truthfulness - NEVER INVENT EXPERIENCE
@@ -447,7 +458,12 @@ export async function tailorCVPro(
         const { object } = await generateObject({
             model: getModel(),
             schema: TailoredCVProTierSchema,
-            prompt
+            prompt,
+            experimental_telemetry: {
+                isEnabled: true,
+                recordInputs: true,
+                recordOutputs: true
+            }
         })
 
         return {

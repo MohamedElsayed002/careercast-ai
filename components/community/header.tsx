@@ -118,6 +118,11 @@ export const Header = () => {
                                                         CV Reviews
                                                     </Link>
                                                 </DropdownMenuItem>
+                                                <DropdownMenuItem>
+                                                    <Link href="/community/user/application-tailored">
+                                                        Applications Tailored
+                                                    </Link>
+                                                </DropdownMenuItem>
                                             </>
                                         )}
                                         {!user?.isProCVReviewer && !isLoading && (
@@ -204,6 +209,11 @@ export const Header = () => {
                                     <DropdownMenuItem>
                                         <Link href="/community/user/cv-reviews">
                                             CV Reviews
+                                        </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <Link href="/community/user/application-tailored">
+                                            Applications Tailored
                                         </Link>
                                     </DropdownMenuItem>
                                 </>

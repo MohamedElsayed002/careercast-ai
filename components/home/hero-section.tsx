@@ -54,7 +54,7 @@ export const HeroSection = async () => {
                 size="lg"
                 className="bg-white text-purple-600 hover:bg-gray-100 text-lg px-8 py-6 h-auto shadow-2xl hover:shadow-3xl transition-all"
               >
-                <Link href="/podcast/create-podcast" className="flex items-center gap-2">
+                <Link href="/services/podcast/create-podcast" className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5" />
                   Create Your Podcast
                   <ArrowRight className="w-5 h-5" />

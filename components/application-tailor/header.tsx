@@ -60,7 +60,7 @@ export const ApplicationTailorHeader = () => {
                 {/* Logo */}
                 <Link
                     className="text-2xl md:text-3xl border-b border-orange-600 font-bold flex gap-1 items-center"
-                    href="/reviewer"
+                    href="/services/job-application-tailor"
                 >
                     <WandSparkles className='text-orange-600' />
                     <span>Application Tailor</span>

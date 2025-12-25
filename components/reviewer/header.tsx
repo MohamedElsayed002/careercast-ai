@@ -60,7 +60,7 @@ export const ReviewerHeader = () => {
                 {/* Logo */}
                 <Link
                     className="text-2xl md:text-3xl border-b border-teal-600 font-bold flex gap-1 items-center"
-                    href="/reviewer"
+                    href="/services/reviewer"
                 >
                     <ClipboardList className='text-teal-600' />
                     <span>CV Reviewer</span>
@@ -68,10 +68,10 @@ export const ReviewerHeader = () => {
 
                 {/* Desktop Nav */}
                 <ul className="hidden md:flex flex-row gap-6 items-center">
-                    <li><Link href="/reviewer#how-it-works">How it works</Link></li>
-                    <li><Link href="/reviewer#pricing">Pricing</Link></li>
-                    <li><Link href="/reviewer#features">Features</Link></li>
-                    <li><Link href="/reviewer#testimonials">Testimonials</Link></li>
+                    <li><Link href="/services/reviewer#how-it-works">How it works</Link></li>
+                    <li><Link href="/services/reviewer#pricing">Pricing</Link></li>
+                    <li><Link href="/services/reviewer#features">Features</Link></li>
+                    <li><Link href="/services/reviewer#testimonials">Testimonials</Link></li>
                     <li>
                         {data ? (
                             <>
@@ -112,6 +112,11 @@ export const ReviewerHeader = () => {
                                                 <DropdownMenuItem>
                                                     <Link href="/community/user/cv-reviews">
                                                         CV Reviews
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem>
+                                                    <Link href="/community/user/application-tailored">
+                                                        Applications Tailored
                                                     </Link>
                                                 </DropdownMenuItem>
                                             </>
@@ -207,25 +212,30 @@ export const ReviewerHeader = () => {
                                             CV Reviews
                                         </Link>
                                     </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <Link href="/community/user/application-tailored">
+                                            Applications Tailored
+                                        </Link>
+                                    </DropdownMenuItem>
                                 </>
                             )
                         }
 
                         <DropdownMenuItem>
-                            <Link href="/reviewer#how-it-works" className="w-full">How it works</Link>
+                            <Link href="/services/reviewer#how-it-works" className="w-full">How it works</Link>
                         </DropdownMenuItem>
 
                         <DropdownMenuItem>
-                            <Link href="/reviewer#pricing" className="w-full">Pricing</Link>
+                            <Link href="/services/reviewer#pricing" className="w-full">Pricing</Link>
                         </DropdownMenuItem>
 
 
                         <DropdownMenuItem>
-                            <Link href="/reviewer#features" className="w-full">Features</Link>
+                            <Link href="/services/reviewer#features" className="w-full">Features</Link>
                         </DropdownMenuItem>
 
                         <DropdownMenuItem>
-                            <Link href="/reviewer#testimonials" className="w-full">Testimonials</Link>
+                            <Link href="/services/reviewer#testimonials" className="w-full">Testimonials</Link>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

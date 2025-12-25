@@ -47,7 +47,7 @@ const Header = () => {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
-                    <Link href='/' className="flex items-center gap-2 group cursor-pointer">
+                    <Link href='/services/podcast' className="flex items-center gap-2 group cursor-pointer">
                         <div className="relative">
                             <div className="absolute inset-0 bg-white/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
                             <div className="relative bg-white/10 backdrop-blur-md rounded-full p-2 border border-white/20">
@@ -62,7 +62,7 @@ const Header = () => {
                     {/* Navigation & Auth */}
                     <div className="flex items-center gap-3">
                         <Button asChild variant="outline" className='bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white'>
-                            <Link href='/podcast/all-podcasts' className="cursor-pointer">
+                            <Link href='/services/podcast/all-podcasts' className="cursor-pointer">
                                 All Podcasts
                             </Link>
                         </Button>

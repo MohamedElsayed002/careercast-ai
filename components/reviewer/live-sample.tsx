@@ -55,7 +55,7 @@ export const LiveSample = () => {
                     </div>
                 </div>
                 <Button size='sm' className='bg-teal-200 text-teal-600' asChild>
-                    <Link href="/reviewer/cv-reviewer">Try Sample</Link>
+                    <Link href="/services/reviewer/cv-reviewer">Try Sample</Link>
                 </Button>
             </div>
         </div>

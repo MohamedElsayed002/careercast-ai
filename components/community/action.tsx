@@ -8,7 +8,7 @@ export const ActionSection = () => {
             <h1 className='text-center text-5xl md:text-7xl font-bold'>
                 Ready to Level Up Your English and Career?
             </h1>
-            <div className='flex gap-5'>
+            <div className='flex flex-wrap gap-5'>
                 <Button className="bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900" asChild>
                     <Link href="/services/podcast">
                         Generate Podcast

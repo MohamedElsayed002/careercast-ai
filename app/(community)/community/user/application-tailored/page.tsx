@@ -5,6 +5,12 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { FileText, TrendingUp, Calendar, ArrowRight, Sparkles } from "lucide-react"
 import { TailoredCVFreeTier, TailoredCVProTier } from "@/actions/ai-job-application-tailor"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "All Application Tailored",
+    description: "All user applications tailored"
+  };
 
 const ApplicationTailoredPage = async () => {
     await requireAuth()
@@ -51,7 +57,7 @@ const ApplicationTailoredPage = async () => {
                         No Tailored CVs Yet
                     </h1>
                     <p className="text-gray-600 dark:text-gray-400 mb-8 text-center max-w-md">
-                        You haven't tailored any CVs yet. Start by creating your first tailored CV for a job application.
+                        You haven&apos;t tailored any CVs yet. Start by creating your first tailored CV for a job application.
                     </p>
                     <Link
                         href="/services/job-application-tailor"

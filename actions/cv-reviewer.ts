@@ -166,7 +166,12 @@ export async function analyzeCVMatchFree(
         const { object } = await generateObject({
             model: getModel(),
             schema: CVReviewSchemaFree,
-            prompt
+            prompt,
+            experimental_telemetry: {
+                isEnabled: true,
+                recordInputs: true,
+                recordOutputs: true,
+            }
         })
 
         return {
@@ -251,7 +256,12 @@ export async function analyzeCVMatchPro(
         const { object } = await generateObject({
             model: getModel(),
             schema: CVReviewSchemaPro,
-            prompt
+            prompt,
+            experimental_telemetry: {
+                isEnabled: true,
+                recordInputs: true,
+                recordOutputs: true
+            }
         })
 
         return {

@@ -5,17 +5,26 @@ import { Label } from "../ui/label"
 import { Checkbox } from "../ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { TailoringOptions } from "@/actions/ai-job-application-tailor"
+import { Textarea } from "../ui/textarea"
 
 interface ProCustomizationProps {
     setStep: Dispatch<SetStateAction<number>>
     options: Partial<TailoringOptions>
-    setOptions: Dispatch<SetStateAction<Partial<TailoringOptions>>>
+    setOptions: Dispatch<SetStateAction<Partial<TailoringOptions>>>,
+    moreInfo: string
+    openMoreInfo: boolean
+    setOpenMoreInfo: Dispatch<SetStateAction<boolean>>
+    setMoreInfo: Dispatch<SetStateAction<string>>
 }
 
 export const ProCustomization = ({
     setStep,
     options,
     setOptions,
+    moreInfo,
+    openMoreInfo,
+    setMoreInfo,
+    setOpenMoreInfo
 }: ProCustomizationProps) => {
     const updateOption = <K extends keyof TailoringOptions>(
         key: K,
@@ -221,6 +230,38 @@ export const ProCustomization = ({
                         </Select>
                     </div>
                 </div>
+
+                {/* Custom Data */}
+                {openMoreInfo ? (
+                    <>
+
+                        <h1 className='text-2xl font-bold'>Add More Info</h1>
+                        <div className="border rounded-xl p-1 bg-white shadow-sm">
+                            <Textarea
+                                value={moreInfo}
+                                onChange={(e) => setMoreInfo(e.target.value)}
+                                placeholder={`Add more Info about you
+                                    e.g.
+                                    1- Projects that not included in the CV
+                                    2- Work experience
+                                    
+                                    Will give you the best project or work experience to put it on the CV. or to put it in the
+                                    Cover letter as you wish
+                                `}
+                                className="border-gray-300 min-h-[260px] resize-none text-base border-dashed"
+                            />
+                        </div>
+                        <Button onClick={() => setOpenMoreInfo(false)}>
+                            Hide
+                        </Button>
+                    </>
+                ) : (
+                    <>
+                        <Button onClick={() => setOpenMoreInfo(true)}>
+                            Add Custom data
+                        </Button>
+                    </>
+                )}
             </div>
 
             {/* Bottom actions */}

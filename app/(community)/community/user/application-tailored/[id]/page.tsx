@@ -5,6 +5,13 @@ import { requireAuth } from "@/utils/auth-utils"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "Single Application",
+    description: "User single application tailored"
+  };
+
 
 interface Props {
     params: {

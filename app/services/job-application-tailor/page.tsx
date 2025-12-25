@@ -1,4 +1,11 @@
 import Link from "next/link"
+import { Metadata } from "next"
+
+
+export const metadata: Metadata = {
+  title: "Job Application Tailor | Home",
+  description: "Tailor your application with the job description with a cover letter!"
+};
 
 
 const JobApplicationTailorPage = () => {

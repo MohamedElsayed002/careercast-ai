@@ -25,7 +25,7 @@ export function PricingSection() {
 
     const handleGetStarted = () => {
         // Navigate to sign up page or create podcast
-        router.push('/create-podcast')
+        router.push('/services/podcast/create-podcast')
     }
 
     const handleUpgradeToPro = () => {
@@ -153,7 +153,7 @@ export function PricingSection() {
                             All plans include access to our AI-powered podcast creation tools.
                             <br />
                             <Link
-                                href="/podcast/create-podcast"
+                                href="/services/podcast/create-podcast"
                                 className="text-purple-600 dark:text-purple-400 hover:underline font-medium"
                             >
                                 Start creating your first podcast →
