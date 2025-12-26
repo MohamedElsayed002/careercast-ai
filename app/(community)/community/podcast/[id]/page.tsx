@@ -1,7 +1,6 @@
-import { CustomAudioPlayer } from "@/components/custom-audio-player";
+import { CustomAudioPlayer } from "@/components/podcast/custom-audio-player";
 import { ModeToggle } from "@/components/mode-toggle";
-import { ShareButtons } from "@/components/share-buttons"
-import { SummaryScript } from "@/components/summary-script"
+import { SummaryScript } from "@/components/podcast/summary-script"
 import { Card, CardTitle } from "@/components/ui/card";
 import { caller } from "@/trpc/server"
 import Image from "next/image"
@@ -15,6 +14,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { notFound } from "next/navigation";
+import { ShareButtons } from "@/components/podcast/share-buttons";
 
 type Params = { params: { id: string } };
 

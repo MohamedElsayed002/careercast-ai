@@ -59,10 +59,10 @@ export const ApplicationTailorHeader = () => {
 
                 {/* Logo */}
                 <Link
-                    className="text-2xl md:text-3xl border-b border-orange-600 font-bold flex gap-1 items-center"
+                    className="text-2xl md:text-3xl border-b border-purple-600 font-bold flex gap-1 items-center"
                     href="/services/job-application-tailor"
                 >
-                    <WandSparkles className='text-orange-600' />
+                    <WandSparkles className='text-purple-600' />
                     <span>Application Tailor</span>
                 </Link>
 
@@ -77,7 +77,7 @@ export const ApplicationTailorHeader = () => {
                             <>
                                 <DropdownMenu open={open} onOpenChange={setOpen} >
                                     <DropdownMenuTrigger>
-                                        <div className="sm:flex items-center gap-3 px-4 py-2 rounded-lg bg-orange-600 backdrop-blur-md border border-white/20">
+                                        <div className="sm:flex items-center gap-3 px-4 py-2 rounded-lg bg-purple-600 backdrop-blur-md border border-white/20">
                                             <Avatar className="h-8 w-8 border-2 border-white/30">
                                                 <AvatarImage src={data.user?.image || undefined} alt={userName} />
                                                 <AvatarFallback className=" bg-gradient-to-br from-purple-400 to-pink-400 text-white text-sm font-semibold">

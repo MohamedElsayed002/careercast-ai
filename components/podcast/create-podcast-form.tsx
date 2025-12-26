@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from 'zod'
 
-import { Button } from "./ui/button"
-import { Form } from "./ui/form"
+import { Button } from "../ui/button"
+import { Form } from "../ui/form"
 import { useMutation } from "@tanstack/react-query"
 import { useTRPC } from "@/trpc/client"
 import { toast } from "sonner"
@@ -16,9 +16,9 @@ import {
     Loader2,
 } from "lucide-react"
 import { formSchema } from "@/types"
-import { PodcastDetailsSection } from "./podcast-form/podcast-details-section"
-import { GeneratedContentSection } from "./podcast-form/generated-content-section"
-import Header from "./header"
+import { PodcastDetailsSection } from "../podcast-form/podcast-details-section"
+import { GeneratedContentSection } from "../podcast-form/generated-content-section"
+import Header from "../header"
 
 
 
@@ -71,8 +71,8 @@ export const CreatePodcastForm = () => {
             toast.error('Image is required')
             return
         }
-        
-        mutate.mutate({ 
+
+        mutate.mutate({
             title: values.title,
             message: values.description,
             duration: values.duration as "1" | "5" | "10" | "20",

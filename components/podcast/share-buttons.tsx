@@ -4,8 +4,8 @@ import {
     Popover,
     PopoverContent,
     PopoverTrigger
-} from "./ui/popover"
-import { Button } from './ui/button'
+} from "../ui/popover"
+import { Button } from '../ui/button'
 // import { LuShare2 } from 'react-icons/lu';
 import {
     TwitterShareButton,

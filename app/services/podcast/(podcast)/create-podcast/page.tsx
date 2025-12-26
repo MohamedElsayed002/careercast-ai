@@ -1,15 +1,15 @@
-import { CreatePodcastForm } from "@/components/create-podcast-form"
+import { CreatePodcastForm } from "@/components/podcast/create-podcast-form"
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Podcastr | Create Podcast Page",
-    description: "Create your podcast"
-  };
+  title: "Podcastr | Create Podcast Page",
+  description: "Create your podcast"
+};
 
 
-const CreatePodcastPage =   () => {
+const CreatePodcastPage = () => {
 
-    return <CreatePodcastForm/>
+  return <CreatePodcastForm />
 }
 
 export default CreatePodcastPage

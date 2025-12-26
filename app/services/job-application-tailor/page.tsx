@@ -1,5 +1,10 @@
-import Link from "next/link"
 import { Metadata } from "next"
+import { HeroSection } from "@/components/application-tailor/hero-section";
+import { Features } from "@/components/application-tailor/features";
+import { HowItWorks } from "@/components/application-tailor/how-it-woks";
+import { LiveSample } from "@/components/application-tailor/live-sample";
+import { MoreFeatures } from "@/components/application-tailor/more-features";
+import { Pricing } from "@/components/application-tailor/pricing";
 
 
 export const metadata: Metadata = {
@@ -10,13 +15,13 @@ export const metadata: Metadata = {
 
 const JobApplicationTailorPage = () => {
     return (
-        <div className='min-h-screen grid place-items-center'>
-            <h1 className='text-5xl'>
-                Job Application Tailor Page
-            </h1>
-            <Link href="/services/job-application-tailor/application">
-                Go to Application Page
-            </Link>
+        <div className='min-h-screen'>
+           <HeroSection/>
+           <Features/>
+           <HowItWorks/>
+           <LiveSample/>
+           <MoreFeatures/>
+           <Pricing/>
         </div>
     )
 }
