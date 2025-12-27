@@ -9,15 +9,12 @@ export const HeroSection = () => {
       <div className="mx-auto max-w-7xl px-6 md:px-0  py-20">
         <div className="grid grid-cols-1 items-center gap-16 md:grid-cols-2">
 
-          {/* LEFT CONTENT */}
           <div className="space-y-8">
-            {/* Badge */}
             <div className="inline-flex items-center gap-2 rounded-full border bg-white px-4 py-1.5 text-sm font-medium text-purple-600 shadow-sm">
               <WandSparkles className="h-4 w-4" />
               AI-POWERED OPTIMIZATION
             </div>
 
-            {/* Heading */}
             <h1 className="text-4xl font-bold leading-tight tracking-tight text-gray-900 md:text-6xl">
               Tailor your CV to{" "}
               <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
@@ -26,17 +23,15 @@ export const HeroSection = () => {
               — instantly
             </h1>
 
-            {/* Description */}
             <p className="max-w-xl text-lg text-gray-500">
               Upload your CV and the job description — our AI rewrites,
               prioritizes, and optimizes your application so you apply with
               confidence.
             </p>
 
-            {/* CTA Buttons */}
             <div className="flex flex-wrap items-center gap-4">
               <Button asChild size="lg" className="px-8">
-                <Link href="/">
+                <Link href="/services/job-application-tailor/application">
                   Start Tailoring
                 </Link>
               </Button>
@@ -47,7 +42,7 @@ export const HeroSection = () => {
                 variant="outline"
                 className="gap-2"
               >
-                <Link href="/">
+                <Link href="/services/job-application-tailor#live-samples">
                   <PlayCircle className="h-5 w-5" />
                   Try live sample
                 </Link>

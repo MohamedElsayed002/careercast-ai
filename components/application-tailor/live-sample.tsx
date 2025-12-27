@@ -1,10 +1,11 @@
 import { PlayCircle, Check, KeyRound, Sparkles, LucideIcon } from "lucide-react"
 import { Button } from "../ui/button"
 import Image from "next/image"
+import Link from "next/link"
 
 export const LiveSample = () => {
   return (
-    <section className="relative bg-gradient-to-b from-white to-gray-50 py-24">
+    <section id="live-samples" className="relative bg-gradient-to-b from-white to-gray-50 py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid items-center gap-16 md:grid-cols-2">
 
@@ -73,13 +74,17 @@ export const LiveSample = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-4 pt-4">
-              <Button size="lg" className="gap-2 px-8">
-                <PlayCircle className="h-5 w-5" />
-                Try Interactive Sample
+              <Button size="lg" asChild>
+                <Link className='gap-2 px-8' href="/services/job-application-tailor/application">
+                  <PlayCircle className="h-5 w-5" />
+                  Try Interactive Sample
+                </Link>
               </Button>
 
-              <Button size="lg" variant="outline">
-                View All Features
+              <Button size="lg" variant="outline" asChild>
+                <Link href="/services/job-application-tailor#more-features">
+                  View All Features
+                </Link>
               </Button>
             </div>
 

@@ -220,23 +220,6 @@ export const ApplicationTailorHeader = () => {
                                 </>
                             )
                         }
-
-                        <DropdownMenuItem>
-                            <Link href="/reviewer#how-it-works" className="w-full">How it works</Link>
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem>
-                            <Link href="/reviewer#pricing" className="w-full">Pricing</Link>
-                        </DropdownMenuItem>
-
-
-                        <DropdownMenuItem>
-                            <Link href="/reviewer#features" className="w-full">Features</Link>
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem>
-                            <Link href="/reviewer#testimonials" className="w-full">Testimonials</Link>
-                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </nav>

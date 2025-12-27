@@ -12,7 +12,7 @@ import {
 
 export const MoreFeatures = () => {
   return (
-    <section className="bg-white py-24">
+    <section id='more-features' className="bg-white py-24">
       <div className="mx-auto max-w-7xl px-6">
 
         {/* Header */}

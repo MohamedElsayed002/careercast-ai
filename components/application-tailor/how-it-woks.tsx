@@ -5,6 +5,7 @@ import {
   CheckCircle,
 } from "lucide-react"
 import { Button } from "../ui/button"
+import Link from "next/link"
 
 const steps = [
   {
@@ -92,8 +93,10 @@ export const HowItWorks = () => {
 
         {/* CTA */}
         <div className="mt-16 flex justify-center">
-          <Button size="lg" className="px-10">
-            Start Tailoring Now →
+          <Button size="lg" className="px-10" asChild>
+            <Link href="/services/job-application-tailor/application">
+              Start Tailoring Now →
+            </Link>
           </Button>
         </div>
       </div>
