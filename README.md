@@ -460,18 +460,10 @@ npx prisma generate
 - Verify credential is valid
 - Check PDF format is correct
 
-## 📚 Documentation
-
-- [Project Analysis](./PROJECT_ANALYSIS.md) - Detailed code review and ratings
-- [Notion Project Doc](./NOTION_PROJECT_DOC.md) - Comprehensive project documentation
-
 ## 🤝 Contributing
 
-This is a private project. For questions or suggestions, please contact the development team.
+This is a public project. For questions or suggestions, please contact the development team.
 
-## 📄 License
-
-Proprietary - All rights reserved
 
 ## 🙏 Acknowledgments
 
@@ -479,9 +471,3 @@ Proprietary - All rights reserved
 - UploadThing for file storage
 - Radix UI for accessible components
 - Next.js team for the amazing framework
-
----
-
-**Version**: 0.1.0  
-**Last Updated**: 2025  
-**Status**: Active Development
