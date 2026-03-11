@@ -20,6 +20,7 @@ import { PodcastDetailsSection } from "../podcast-form/podcast-details-section"
 import { GeneratedContentSection } from "../podcast-form/generated-content-section"
 import Header from "../header"
 import { useInngestSubscription } from "@inngest/realtime/hooks"
+import { PodcastProgress } from "./podcast-progress"
 
 
 
@@ -31,6 +32,8 @@ export const CreatePodcastForm = () => {
         pdfURL: "",
         pdfId: ""
     })
+
+
     const [isGenerating, setIsGenerating] = useState(false)
     const [expectedLastStep, setExpectedLastStep] = useState<number | null>(null)
 
@@ -46,6 +49,7 @@ export const CreatePodcastForm = () => {
         return res.json()
     }, [])
 
+
     const { latestData, error: subscriptionError } = useInngestSubscription({
         refreshToken: fetchSubscriptionToken,
         enabled: isGenerating
@@ -53,7 +57,7 @@ export const CreatePodcastForm = () => {
 
     const latestPayload = latestData?.data as { step?: number; stepName?: string } | undefined
     const currentStep = typeof latestPayload?.step === "number" ? latestPayload.step : null
-    const currentStepName = typeof latestPayload?.stepName === "string" ? latestPayload.stepName : null
+    const includeSummary = expectedLastStep === 8
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -166,23 +170,12 @@ export const CreatePodcastForm = () => {
                                     </>
                                 )}
                             </Button>
-                            {isGenerating && (
-                                <div className="rounded-md border border-white/10 bg-black/30 px-4 py-3 text-white">
-                                    <div className="text-xs uppercase tracking-wide text-white/70">Podcast status</div>
-                                    <div className="mt-1 text-sm">
-                                        {currentStep ? (
-                                            <span>Step {currentStep}{expectedLastStep ? `/${expectedLastStep}` : ""}: {currentStepName ?? "Working..."}</span>
-                                        ) : (
-                                            <span>Waiting for progress updates...</span>
-                                        )}
-                                    </div>
-                                    {subscriptionError && (
-                                        <div className="mt-2 text-xs text-red-300">
-                                            {subscriptionError.message}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                            <PodcastProgress
+                                isGenerating={isGenerating}
+                                currentStep={currentStep}
+                                includeSummary={includeSummary}
+                                errorMessage={subscriptionError?.message}
+                            />
                         </div>
                     </form>
                 </Form>
