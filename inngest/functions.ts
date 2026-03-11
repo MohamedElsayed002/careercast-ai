@@ -11,22 +11,6 @@ import { utapi } from "@/utils/server";
 import { getPodcastGeneratedEmail } from "@/lib/emails";
 import { sendEmail } from "@/utils/nodemailer";
 
-interface GeneratePodcastEvent {
-  name: "podcast/generate";
-  data: {
-    userId: string;
-    title: string;
-    message: string;
-    duration: string;
-    voice1: string;
-    voice2: string;
-    image: string;
-    credential: string;
-    voiceSpeed?: number;
-    audioModel: string;
-    textModel: string;
-  };
-}
 
 export const generatePodcast = inngest.createFunction(
   { id: "generate-podcast", retries: 5 },

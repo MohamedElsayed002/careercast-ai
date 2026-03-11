@@ -56,3 +56,34 @@ export function sanitizeObject<T>(obj: T): T {
     return obj;
 }
 
+
+
+type StepItem = {
+  id: number;
+  label: string;
+};
+
+const STEPS_WITH_SUMMARY: StepItem[] = [
+  { id: 1, label: "Get user data" },
+  { id: 2, label: "Get user credential" },
+  { id: 3, label: "Generate debate" },
+  { id: 4, label: "Generate summary" },
+  { id: 5, label: "Generate audio" },
+  { id: 6, label: "Generate PDF" },
+  { id: 7, label: "Create podcast record" },
+  { id: 8, label: "Send email" },
+];
+
+const STEPS_NO_SUMMARY: StepItem[] = [
+  { id: 1, label: "Get user data" },
+  { id: 2, label: "Get user credential" },
+  { id: 3, label: "Generate debate" },
+  { id: 4, label: "Generate audio" },
+  { id: 5, label: "Generate PDF" },
+  { id: 6, label: "Create podcast record" },
+  { id: 7, label: "Send email" },
+];
+
+export function getSteps(includeSummary: boolean) {
+  return includeSummary ? STEPS_WITH_SUMMARY : STEPS_NO_SUMMARY;
+}

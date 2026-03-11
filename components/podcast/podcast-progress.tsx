@@ -1,36 +1,8 @@
 "use client";
 
+import { getSteps } from "@/lib/utils";
 import { Check, Loader2 } from "lucide-react";
 
-type StepItem = {
-  id: number;
-  label: string;
-};
-
-const STEPS_WITH_SUMMARY: StepItem[] = [
-  { id: 1, label: "Get user data" },
-  { id: 2, label: "Get user credential" },
-  { id: 3, label: "Generate debate" },
-  { id: 4, label: "Generate summary" },
-  { id: 5, label: "Generate audio" },
-  { id: 6, label: "Generate PDF" },
-  { id: 7, label: "Create podcast record" },
-  { id: 8, label: "Send email" },
-];
-
-const STEPS_NO_SUMMARY: StepItem[] = [
-  { id: 1, label: "Get user data" },
-  { id: 2, label: "Get user credential" },
-  { id: 3, label: "Generate debate" },
-  { id: 4, label: "Generate audio" },
-  { id: 5, label: "Generate PDF" },
-  { id: 6, label: "Create podcast record" },
-  { id: 7, label: "Send email" },
-];
-
-function getSteps(includeSummary: boolean) {
-  return includeSummary ? STEPS_WITH_SUMMARY : STEPS_NO_SUMMARY;
-}
 
 export function PodcastProgress({
   isGenerating,
@@ -48,7 +20,7 @@ export function PodcastProgress({
   const steps = getSteps(includeSummary);
 
   return (
-    <div className="rounded-md border border-white/10 bg-black/30 px-4 py-3 text-white">
+    <div className="rounded-md border border-white/10 bg-black/30 px-4 py-3 text-white my-10">
       <div className="text-xs uppercase tracking-wide text-white/70">
         Podcast status
       </div>
