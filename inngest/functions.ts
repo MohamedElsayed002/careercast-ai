@@ -1,3 +1,4 @@
+
 import { inngest } from "./client";
 import { createPodcastPdfBytes, createPdfBytes } from "@/utils/pdf-utils";
 import { createDebateText, generateSummaryAndExercise, generateDebateAudio } from "@/actions/index";
@@ -30,7 +31,7 @@ interface GeneratePodcastEvent {
 export const generatePodcast = inngest.createFunction(
   { id: "generate-podcast", retries: 5 },
   { event: "podcast/generate" },
-  async ({ event, step }) => {
+  async ({ event, step,publish  }) => {
     const {
       userId,
       title,
@@ -55,6 +56,15 @@ export const generatePodcast = inngest.createFunction(
       return user
     })
 
+    await publish({
+      channel: `user:${userId}`,
+      topic: "progress",
+      data: {
+        step: 1,
+        stepName: "Get User data"
+      }
+    })
+
     const credentialValue = await step.run("get-credential", async () => {
       const credential = await prisma.credential.findUniqueOrThrow({
         where: {
@@ -63,6 +73,15 @@ export const generatePodcast = inngest.createFunction(
         }
       })
       return credential
+    })
+
+    await publish({
+      channel: `user:${userId}`,
+      topic: 'progress',
+      data: {
+        step: 2,
+        stepName: 'Get User Credential'
+      }
     })
 
 
@@ -85,6 +104,15 @@ export const generatePodcast = inngest.createFunction(
       );
     });
 
+    await publish({
+      channel: `user:${userId}`,
+      topic: 'progress',
+      data: {
+        step: 3,
+        stepName:'Generate debate'
+      }
+    })
+
     // 3. Generate summary (if needed)
     let summaryData = null;
     if (duration !== "1") {
@@ -96,6 +124,15 @@ export const generatePodcast = inngest.createFunction(
           textModel
         );
       });
+
+      await publish({
+        channel: `user:${userId}`,
+        topic: 'progress',
+        data: {
+          step: 4,
+          stepName: 'Generate summary'
+        }
+      })
     }
 
     // 4. Generate audio
@@ -110,8 +147,18 @@ export const generatePodcast = inngest.createFunction(
         audioModel
       );
 
+      await publish({
+        channel: `user:${userId}`,
+        topic: 'progress',
+        data: {
+          step: summaryData !== null ? 5 : 4,
+          stepName: 'Generating audio'
+        }
+      })
+
       // create a UTFile from the local buffer and upload
       const audioFilename = `ai-audio-${uuid()}.mp3`;
+
       const audioUtFile = new UTFile([audioBytes as any], audioFilename, { type: "audio/mpeg" });
       const result = await utapi.uploadFiles([audioUtFile]);
       if (!result?.[0]?.data?.url) {
@@ -153,6 +200,15 @@ export const generatePodcast = inngest.createFunction(
       return result[0].data;
     });
 
+    await publish({
+      channel: `user:${userId}`,
+      topic: 'progress',
+      data: {
+        step: summaryData !== null ? 6 : 5,
+        stepName: 'Generating PDF'
+      }
+    })
+
     // 6. Create podcast record
     const podcast = await step.run("create-podcast", async () => {
       return prisma.podcast.create({
@@ -172,6 +228,15 @@ export const generatePodcast = inngest.createFunction(
         }
       });
     });
+
+    await publish({
+      channel: `user:${userId}`,
+      topic: 'progress',
+      data: {
+        step: summaryData !== null ? 7 : 6,
+        stepName: 'Creating the podcast. save all info (audio, pdf)'
+      }
+    })
 
 
     // 7. Update user trial count if needed
@@ -201,6 +266,15 @@ export const generatePodcast = inngest.createFunction(
       )
 
       return {emailSent: true}
+    })
+
+    await publish({
+      channel: `user:${userId}`,
+      topic: 'progress',
+      data: {
+        step: summaryData !== null ? 8 : 7,
+        stepName: 'Sending Email to user '
+      }
     })
 
     Sentry.logger.info('Inngest_result', {

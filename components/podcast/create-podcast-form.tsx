@@ -9,7 +9,7 @@ import { Form } from "../ui/form"
 import { useMutation } from "@tanstack/react-query"
 import { useTRPC } from "@/trpc/client"
 import { toast } from "sonner"
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
     Mic,
     Music2,
@@ -19,6 +19,7 @@ import { formSchema } from "@/types"
 import { PodcastDetailsSection } from "../podcast-form/podcast-details-section"
 import { GeneratedContentSection } from "../podcast-form/generated-content-section"
 import Header from "../header"
+import { useInngestSubscription } from "@inngest/realtime/hooks"
 
 
 
@@ -30,6 +31,29 @@ export const CreatePodcastForm = () => {
         pdfURL: "",
         pdfId: ""
     })
+    const [isGenerating, setIsGenerating] = useState(false)
+    const [expectedLastStep, setExpectedLastStep] = useState<number | null>(null)
+
+    const fetchSubscriptionToken = useCallback(async () => {
+        const res = await fetch("/api/inngest/token")
+        if (!res.ok) {
+            const payload = await res.json().catch(() => ({}))
+            const message = typeof payload?.error === "string"
+                ? payload.error
+                : "Failed to get subscription token"
+            throw new Error(message)
+        }
+        return res.json()
+    }, [])
+
+    const { latestData, error: subscriptionError } = useInngestSubscription({
+        refreshToken: fetchSubscriptionToken,
+        enabled: isGenerating
+    })
+
+    const latestPayload = latestData?.data as { step?: number; stepName?: string } | undefined
+    const currentStep = typeof latestPayload?.step === "number" ? latestPayload.step : null
+    const currentStepName = typeof latestPayload?.stepName === "string" ? latestPayload.stepName : null
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -63,6 +87,7 @@ export const CreatePodcastForm = () => {
         onError: (error: unknown) => {
             const errorMessage = error instanceof Error ? error.message : 'Failed to create podcast';
             toast.error(errorMessage)
+            setIsGenerating(false)
         }
     }))
 
@@ -71,6 +96,9 @@ export const CreatePodcastForm = () => {
             toast.error('Image is required')
             return
         }
+
+        setIsGenerating(true)
+        setExpectedLastStep(values.duration === "1" ? 7 : 8)
 
         mutate.mutate({
             title: values.title,
@@ -85,6 +113,19 @@ export const CreatePodcastForm = () => {
             textModel: values.textModel
         })
     }
+
+    useEffect(() => {
+        if (!isGenerating || !expectedLastStep) return
+        if (typeof currentStep === "number" && currentStep >= expectedLastStep) {
+            setIsGenerating(false)
+        }
+    }, [currentStep, expectedLastStep, isGenerating])
+
+    useEffect(() => {
+        if (subscriptionError) {
+            setIsGenerating(false)
+        }
+    }, [subscriptionError])
 
     return (
         <div className='bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900'>
@@ -125,6 +166,23 @@ export const CreatePodcastForm = () => {
                                     </>
                                 )}
                             </Button>
+                            {isGenerating && (
+                                <div className="rounded-md border border-white/10 bg-black/30 px-4 py-3 text-white">
+                                    <div className="text-xs uppercase tracking-wide text-white/70">Podcast status</div>
+                                    <div className="mt-1 text-sm">
+                                        {currentStep ? (
+                                            <span>Step {currentStep}{expectedLastStep ? `/${expectedLastStep}` : ""}: {currentStepName ?? "Working..."}</span>
+                                        ) : (
+                                            <span>Waiting for progress updates...</span>
+                                        )}
+                                    </div>
+                                    {subscriptionError && (
+                                        <div className="mt-2 text-xs text-red-300">
+                                            {subscriptionError.message}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </form>
                 </Form>
