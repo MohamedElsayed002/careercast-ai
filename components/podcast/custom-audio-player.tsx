@@ -194,6 +194,7 @@ export function CustomAudioPlayer({ audioUrl }: CustomAudioPlayerProps) {
                         step='0.01'
                         value={isMuted ? 0 : volume}
                         onChange={handleVolumeChange}
+                        aria-label='Volumne control'
                         disabled={!isReady}
                         className='w-24 h-2 bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 rounded-lg appearance-none cursor-pointer disabled:opacity-40'
                     />

@@ -14,8 +14,11 @@ export const ActionSection = () => {
                         Generate Podcast
                     </Link>
                 </Button>
-                <Button className='bg-teal-600 text-white cursor-pointer' asChild>
-                    <Link href="/services/reviewer">Review My CV</Link>
+                <Button
+                    className="shrink-0 bg-teal-600 text-white cursor-pointer hover:bg-teal-700"
+                    asChild
+                >
+                    <Link href="/services/cv-feedback">Expert CV feedback</Link>
                 </Button>
                 <Button className="bg-orange-600 text-white cursor-pointer" asChild>
                     <Link href="/services/job-application-tailor">

@@ -122,8 +122,8 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
 
                             <FormControl>
                                 <Select onValueChange={field.onChange} value={field.value}>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select credential..." />
+                                    <SelectTrigger aria-label="Select Credential (OpenAI/Gemini)" className="w-full">
+                                        <SelectValue aria-label="Select Credential" placeholder="Select credential..." />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {credentials && credentials.length > 0 ? (
@@ -144,17 +144,21 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                     )}
                 />
                 <FormField
-
                     control={form.control}
-                    name='voiceSpeed'
+                    name="voiceSpeed"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="text-base font-semibold">
+                            <FormLabel
+                                id="voice-speed-label"
+                                className="text-base font-semibold"
+                            >
                                 Voice Speed
                             </FormLabel>
-                            <FormDescription>
+
+                            <FormDescription id="voice-speed-description">
                                 Choose the speed of the AI voices in the podcast
                             </FormDescription>
+
                             <FormControl>
                                 <Slider
                                     min={0.8}
@@ -163,10 +167,14 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                                     value={[field.value ?? 1]}
                                     onValueChange={(v) => field.onChange(v[0])}
                                     className="w-full"
+                                    aria-labelledby="voice-speed-label"
+                                    aria-describedby="voice-speed-description"
                                 />
                             </FormControl>
-                            <p className='text-sm text-muted-foreground mt-2'>
-                                Current: <span className='font-semibold'>
+
+                            <p className="text-sm text-muted-foreground mt-2">
+                                Current:{" "}
+                                <span className="font-semibold">
                                     {field.value ?? 1}x
                                 </span>
                             </p>
@@ -184,7 +192,7 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                             </FormDescription>
                             <FormControl>
                                 <Select onValueChange={field.onChange} value={field.value}>
-                                    <SelectTrigger className="w-full">
+                                    <SelectTrigger aria-label="Podcast Duration" className="w-full">
                                         <SelectValue placeholder="Select duration..." />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -211,7 +219,7 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                                 </FormDescription>
                                 <FormControl>
                                     <Select onValueChange={field.onChange} value={field.value}>
-                                        <SelectTrigger className="w-full">
+                                        <SelectTrigger aria-label="Select voice 1" className="w-full">
                                             <SelectValue placeholder="Choose voice 1..." />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -241,7 +249,7 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                                 </FormDescription>
                                 <FormControl>
                                     <Select onValueChange={field.onChange} value={field.value}>
-                                        <SelectTrigger className="w-full">
+                                        <SelectTrigger aria-label="Voice 2 Select" className="w-full">
                                             <SelectValue placeholder="Choose voice 2..." />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -288,7 +296,7 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
 
                                 <FormControl>
                                     <Select onValueChange={(v) => field.onChange(v)} value={field.value}>
-                                        <SelectTrigger className="w-full">
+                                        <SelectTrigger aria-label='Select text modal' className="w-full">
                                             <SelectValue placeholder="Choose text model" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -340,7 +348,7 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
 
                                 <FormControl>
                                     <Select onValueChange={(v) => field.onChange(v)} value={field.value}>
-                                        <SelectTrigger className="w-full">
+                                        <SelectTrigger aria-label="Select Audio Modal" className="w-full">
                                             <SelectValue placeholder="Choose audio model" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -427,7 +435,7 @@ export const PodcastDetailsSection = ({ form }: PodcastDetailsSectionProps) => {
                             </FormDescription>
                             <FormControl>
                                 <Select onValueChange={field.onChange} value={field.value}>
-                                    <SelectTrigger className="w-full">
+                                    <SelectTrigger aria-label="Select Image Modal" className="w-full">
                                         <SelectValue placeholder="Choose image model" />
                                     </SelectTrigger>
                                     <SelectContent>

@@ -155,8 +155,9 @@ export const CreatePodcastForm = () => {
                             <Button
                                 disabled={mutate.isPending}
                                 type="submit"
-                                className="w-full text-lg h-12 font-semibold bg-blue-500 cursor-button mb-4"
+                                className="w-full text-lg h-12 font-semibold bg-blue-500 text-white cursor-button mb-4"
                                 size="lg"
+                                aria-label="Generate Podcast"
                             >
                                 {mutate.isPending ? (
                                     <>

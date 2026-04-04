@@ -4,6 +4,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   devIndicators: false,
+  // Public path without "review" in the URL — some browser extensions hide links matching /reviewer/ or "Review …" CTAs.
+  async rewrites() {
+    return [{ source: "/services/cv-feedback", destination: "/services/reviewer" }];
+  },
   typescript: {
     ignoreBuildErrors: true,
   },

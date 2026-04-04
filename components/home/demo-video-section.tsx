@@ -103,6 +103,7 @@ export function DemoVideoSection({ videoId, youtubeUrl }: DemoVideoSectionProps)
                                             e.stopPropagation()
                                             setIsOpen(true)
                                         }}
+                                        aria-label="Play button"
                                     >
                                         <Play className="w-10 h-10 ml-1" fill="currentColor" />
                                     </Button>

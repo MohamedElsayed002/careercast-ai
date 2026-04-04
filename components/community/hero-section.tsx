@@ -29,29 +29,30 @@ export const HeroCommunity = () => {
                             by artifical intelligence
                         </p>
                         <div className='flex flex-wrap justify-center text-center items-center gap-5'>
-                            <Button className="bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 text-white" asChild>
+                            <Button
+                                className="shrink-0 bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 text-white"
+                                asChild
+                            >
                                 <Link href="/services/podcast">
                                     Generate Podcast
                                 </Link>
                             </Button>
-                            <Button className='bg-teal-600 text-white cursor-pointer' asChild>
-                                <Link href="/services/reviewer">Review My CV</Link>
+                            <Button
+                                className="shrink-0 bg-teal-600 text-white cursor-pointer hover:bg-teal-700"
+                                asChild
+                            >
+                                <Link href="/services/cv-feedback">Expert CV feedback</Link>
                             </Button>
-                            <Button className="bg-orange-600 text-white cursor-pointer" asChild>
+                            <Button
+                                className="shrink-0 bg-orange-600 text-white cursor-pointer hover:bg-orange-700"
+                                asChild
+                            >
                                 <Link href="/services/job-application-tailor">
                                     Tailor My Application
                                 </Link>
                             </Button>
                         </div>
                     </div>
-                    {/* <Image
-                        src="/community-image.png"
-                        width={600}
-                        height={600}
-                        priority
-                        alt='Hero Image'
-                        className='rounded-xl'
-                    /> */}
                 </div>
             </div>
         </AuroraBackground>

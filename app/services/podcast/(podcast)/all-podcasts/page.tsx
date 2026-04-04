@@ -51,7 +51,7 @@ const AllPodcastPageContent = async ({ searchParams }: AllPodcastPageProps) => {
                         <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                             All Podcasts
                         </h1>
-                        <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
+                        <p className="text-lg text-white max-w-2xl mx-auto mb-6">
                             Discover amazing podcasts created by our community. Listen, read, and download your favorites.
                         </p>
                     </div>

@@ -78,7 +78,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
                 </p>
                 {/* Share Buttons */}
                 <div className='flex items-center justify-end gap-4'>
-                    <ModeToggle />
+                    {/* <ModeToggle /> */}
                     <ShareButtons
                         podcastId={data.id}
                         title={data.title ?? ""}

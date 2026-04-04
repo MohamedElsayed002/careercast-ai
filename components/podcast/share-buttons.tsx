@@ -26,7 +26,7 @@ export const ShareButtons = ({ title, podcastId }: { title: string, podcastId: s
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant='outline' size='icon' className='p-2'>
+                <Button aria-label="Share" variant='outline' size='icon' className='p-2'>
                     <Share2 />
                 </Button>
             </PopoverTrigger>

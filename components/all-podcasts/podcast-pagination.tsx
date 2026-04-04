@@ -89,8 +89,8 @@ export function PodcastPagination({ currentPage, totalPages }: PodcastPagination
                         }}
                         className={
                             currentPage === 1
-                                ? "pointer-events-none opacity-50"
-                                : "cursor-pointer"
+                                ? "pointer-events-none opacity-50 border"
+                                : "cursor-pointer border text-white"
                         }
                     />
                 </PaginationItem>
@@ -132,8 +132,8 @@ export function PodcastPagination({ currentPage, totalPages }: PodcastPagination
                         }}
                         className={
                             currentPage === totalPages
-                                ? "pointer-events-none opacity-50"
-                                : "cursor-pointer"
+                                ? "pointer-events-none opacity-50 border text-white"
+                                : "cursor-pointer border text-white"
                         }
                     />
                 </PaginationItem>

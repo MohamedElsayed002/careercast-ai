@@ -31,7 +31,7 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
     const [uploadImage, setUploadImage] = useState(false)
     const [images, setImages] = useState<string[]>([])
     const [imagePrompt, setImagePrompt] = useState('')
-    const {hasActiveSubscription} = useHasActiveSubscription()
+    const { hasActiveSubscription } = useHasActiveSubscription()
     const trpc = useTRPC()
     const mutate = useMutation(trpc.generateImage.mutationOptions({
         onSuccess: (data) => {
@@ -67,12 +67,12 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
             return
         }
 
-        if(!imageModel) {
+        if (!imageModel) {
             toast.error("Please choose image model")
-            return 
+            return
         }
 
-        mutate.mutate({message: imagePrompt,credential,imageModel})
+        mutate.mutate({ message: imagePrompt, credential, imageModel })
     }
 
     return (
@@ -91,9 +91,10 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
                             type="button"
                             onClick={() => setUploadImage(false)}
                             className={`flex-1 px-4 py-2 rounded-md transition-all font-medium ${!uploadImage
-                                ? 'bg-background text-foreground shadow-sm'
-                                : 'text-muted-foreground hover:text-foreground'
+                                ? 'text-white hover:text-foreground'
+                                : 'bg-background text-foreground shadow-sm'
                                 }`}
+                            aria-label="Upload Image Button"
                         >
                             Upload Image
                         </Button>
@@ -101,11 +102,14 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
                             type="button"
                             onClick={() => setUploadImage(true)}
                             className={`relative flex-1 px-4 py-2 rounded-md transition-all font-medium ${uploadImage
-                                ? 'bg-background text-foreground shadow-sm'
-                                : 'text-muted-foreground hover:text-foreground'
+                                ? 'text-white hover:text-foreground'
+                                : 'bg-background text-foreground shadow-sm'
                                 }`}
+                            aria-label="Generate Image button"
                         >
-                            <Badge className='absolute bg-blue-500 -top-2 -right-5 text-white'>Pro</Badge>
+                            <Badge className="absolute bg-blue-500 -top-2 -right-5 text-white">
+                                Pro
+                            </Badge>
                             Generate Image
                         </Button>
                     </div>
@@ -126,7 +130,7 @@ export const CoverImageSection = ({ form }: CoverImageSectionProps) => {
                                     type="button"
                                     onClick={handleGenerateImage}
                                     disabled={mutate.isPending || !imagePrompt.trim()}
-                                    // disabled={true}
+                                // disabled={true}
                                 >
                                     {mutate.isPending ? (
                                         <>
