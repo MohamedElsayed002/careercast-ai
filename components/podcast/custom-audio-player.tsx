@@ -2,63 +2,89 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward } from 'lucide-react';
+import WaveSurfer from 'wavesurfer.js';
+import { waveformBarStyle } from '@/lib/wavesurfer-bar-style';
+import { cn } from '@/lib/utils';
 
 interface CustomAudioPlayerProps {
     audioUrl: string;
 }
 
 export function CustomAudioPlayer({ audioUrl }: CustomAudioPlayerProps) {
-    const audioRef = useRef<HTMLAudioElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const wsRef = useRef<WaveSurfer | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(1);
     const [isMuted, setIsMuted] = useState(false);
+    const [isReady, setIsReady] = useState(false);
+    const [loadError, setLoadError] = useState<string | null>(null);
 
     useEffect(() => {
-        const audio = audioRef.current;
-        if (!audio) return;
+        const container = containerRef.current;
+        if (!container) return;
 
-        const updateTime = () => setCurrentTime(audio.currentTime);
-        const updateDuration = () => setDuration(audio.duration);
-        const handleEnded = () => setIsPlaying(false);
+        setIsReady(false);
+        setLoadError(null);
+        setCurrentTime(0);
+        setDuration(0);
+        setIsPlaying(false);
 
-        audio.addEventListener('timeupdate', updateTime);
-        audio.addEventListener('loadedmetadata', updateDuration);
-        audio.addEventListener('ended', handleEnded);
+        const ws = WaveSurfer.create({
+            container,
+            url: audioUrl,
+            ...waveformBarStyle,
+            barMinHeight: 4,
+            height: 96,
+            progressColor: 'rgb(147, 51, 234)',
+            cursorWidth: 2,
+            cursorColor: 'rgb(88, 28, 135)',
+            dragToSeek: true,
+            interact: true,
+        });
+
+        wsRef.current = ws;
+
+        const onReady = (d: number) => {
+            setDuration(d);
+            setIsReady(true);
+        };
+
+        ws.on('ready', onReady);
+        ws.on('timeupdate', (t) => setCurrentTime(t));
+        ws.on('play', () => setIsPlaying(true));
+        ws.on('pause', () => setIsPlaying(false));
+        ws.on('finish', () => setIsPlaying(false));
+        ws.on('error', (err) => {
+            setLoadError(err.message || 'Failed to load audio');
+            setIsReady(false);
+        });
 
         return () => {
-            audio.removeEventListener('timeupdate', updateTime);
-            audio.removeEventListener('loadedmetadata', updateDuration);
-            audio.removeEventListener('ended', handleEnded);
+            ws.destroy();
+            wsRef.current = null;
         };
-    }, []);
+    }, [audioUrl]);
+
+    useEffect(() => {
+        const ws = wsRef.current;
+        if (!ws || !isReady) return;
+        ws.setVolume(isMuted ? 0 : volume);
+    }, [isReady, isMuted, volume]);
 
     const togglePlay = () => {
-        if (audioRef.current) {
-            if (isPlaying) {
-                audioRef.current.pause();
-            } else {
-                audioRef.current.play();
-            }
-            setIsPlaying(!isPlaying);
-        }
+        wsRef.current?.playPause().catch(() => {});
     };
 
-    const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const time = parseFloat(e.target.value);
-        setCurrentTime(time);
-        if (audioRef.current) {
-            audioRef.current.currentTime = time;
-        }
+    const skip = (seconds: number) => {
+        wsRef.current?.skip(seconds);
     };
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const vol = parseFloat(e.target.value);
         setVolume(vol);
-        if (audioRef.current) {
-            audioRef.current.volume = vol;
-        }
+        wsRef.current?.setVolume(vol);
         if (vol === 0) {
             setIsMuted(true);
         } else if (isMuted) {
@@ -67,20 +93,14 @@ export function CustomAudioPlayer({ audioUrl }: CustomAudioPlayerProps) {
     };
 
     const toggleMute = () => {
-        if (audioRef.current) {
-            if (isMuted) {
-                audioRef.current.volume = volume;
-                setIsMuted(false);
-            } else {
-                audioRef.current.volume = 0;
-                setIsMuted(true);
-            }
-        }
-    };
-
-    const skip = (seconds: number) => {
-        if (audioRef.current) {
-            audioRef.current.currentTime += seconds;
+        const ws = wsRef.current;
+        if (!ws || !isReady) return;
+        if (isMuted) {
+            ws.setVolume(volume);
+            setIsMuted(false);
+        } else {
+            ws.setVolume(0);
+            setIsMuted(true);
         }
     };
 
@@ -93,42 +113,46 @@ export function CustomAudioPlayer({ audioUrl }: CustomAudioPlayerProps) {
 
     return (
         <div className='bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 shadow-lg border border-purple-100 dark:border-gray-700'>
-            <audio ref={audioRef} src={audioUrl} preload='metadata' />
+            {/* Waveform — same bar style as useAudioRecorder; progress moves while playing */}
+            <div
+                className={cn(
+                    'mb-4 rounded-xl bg-white/60 dark:bg-black/20 overflow-hidden min-h-[96px] transition-opacity',
+                    !isReady && 'animate-pulse',
+                    isReady && isPlaying && 'ring-1 ring-purple-300/60 dark:ring-purple-600/40',
+                )}
+            >
+                <div ref={containerRef} className='w-full' />
+            </div>
 
-            {/* Progress Bar */}
-            <div className='mb-4'>
-                <input
-                    type='range'
-                    min='0'
-                    max={duration || 0}
-                    value={currentTime}
-                    onChange={handleTimeChange}
-                    className='w-full h-2 bg-gray-300 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer slider'
-                    style={{
-                        background: `linear-gradient(to right, rgb(147, 51, 234) 0%, rgb(147, 51, 234) ${(currentTime / duration) * 100}%, rgb(209, 213, 219) ${(currentTime / duration) * 100}%, rgb(209, 213, 219) 100%)`
-                    }}
-                />
-                <div className='flex justify-between text-sm text-gray-600 dark:text-gray-400 mt-2'>
-                    <span>{formatTime(currentTime)}</span>
-                    <span>{formatTime(duration)}</span>
-                </div>
+            {loadError && (
+                <p className='text-sm text-red-600 dark:text-red-400 mb-3' role='alert'>
+                    {loadError}
+                </p>
+            )}
+
+            <div className='flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-4'>
+                <span>{formatTime(currentTime)}</span>
+                <span>{formatTime(duration)}</span>
             </div>
 
             {/* Controls */}
             <div className='flex items-center justify-center md:justify-between'>
-                {/* Play Controls */}
                 <div className='flex justify-center items-center gap-3'>
                     <button
+                        type='button'
                         onClick={() => skip(-10)}
-                        className='p-2 rounded-full hover:bg-purple-100 dark:hover:bg-gray-700 transition-colors'
+                        disabled={!isReady}
+                        className='p-2 rounded-full hover:bg-purple-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:pointer-events-none'
                         aria-label='Skip back 10 seconds'
                     >
                         <SkipBack className='w-5 h-5 text-gray-700 dark:text-gray-300' />
                     </button>
 
                     <button
+                        type='button'
                         onClick={togglePlay}
-                        className='p-4 rounded-full bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 transition-colors shadow-lg'
+                        disabled={!isReady}
+                        className='p-4 rounded-full bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 transition-colors shadow-lg disabled:opacity-40 disabled:pointer-events-none'
                         aria-label={isPlaying ? 'Pause' : 'Play'}
                     >
                         {isPlaying ? (
@@ -139,19 +163,22 @@ export function CustomAudioPlayer({ audioUrl }: CustomAudioPlayerProps) {
                     </button>
 
                     <button
+                        type='button'
                         onClick={() => skip(10)}
-                        className='p-2 rounded-full hover:bg-purple-100 dark:hover:bg-gray-700 transition-colors'
+                        disabled={!isReady}
+                        className='p-2 rounded-full hover:bg-purple-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:pointer-events-none'
                         aria-label='Skip forward 10 seconds'
                     >
                         <SkipForward className='w-5 h-5 text-gray-700 dark:text-gray-300' />
                     </button>
                 </div>
 
-                {/* Volume Controls */}
                 <div className='hidden md:flex items-center gap-2'>
                     <button
+                        type='button'
                         onClick={toggleMute}
-                        className='p-2 rounded-full hover:bg-purple-100 dark:hover:bg-gray-700 transition-colors'
+                        disabled={!isReady}
+                        className='p-2 rounded-full hover:bg-purple-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-40 disabled:pointer-events-none'
                         aria-label={isMuted ? 'Unmute' : 'Mute'}
                     >
                         {isMuted ? (
@@ -167,24 +194,24 @@ export function CustomAudioPlayer({ audioUrl }: CustomAudioPlayerProps) {
                         step='0.01'
                         value={isMuted ? 0 : volume}
                         onChange={handleVolumeChange}
-                        className='w-24 h-2 bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 rounded-lg appearance-none cursor-pointer'
+                        disabled={!isReady}
+                        className='w-24 h-2 bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 rounded-lg appearance-none cursor-pointer disabled:opacity-40'
                     />
                 </div>
             </div>
 
             <style jsx>{`
-input[type='range']::-webkit-slider-thumb {
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: linear-gradient(to bottom right, #111827, #4c1d95, #db2777);
-  cursor: pointer;
-  border: 2px solid white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
+                input[type='range']::-webkit-slider-thumb {
+                    appearance: none;
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    background: linear-gradient(to bottom right, #111827, #4c1d95, #db2777);
+                    cursor: pointer;
+                    border: 2px solid white;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                }
 
-                
                 input[type='range']::-moz-range-thumb {
                     width: 16px;
                     height: 16px;

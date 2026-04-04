@@ -80,12 +80,12 @@ export const CreatePodcastForm = () => {
     const mutate = useMutation(trpc.createPodcast.mutationOptions({
         onSuccess: (data) => {
             toast.success('Podcast Created Successfully! 🎉')
-            setData({
-                audioURL: data.audioUrl,
-                audioID: data.audioId || '',
-                pdfURL: data.pdfUrl,
-                pdfId: data.pdfId || ''
-            })
+            // setData({
+            //     audioURL: data.audioUrl,
+            //     audioID: data.audioId || '',
+            //     pdfURL: data.pdfUrl,
+            //     pdfId: data.pdfId || ''
+            // })
             form.reset()
         },
         onError: (error: unknown) => {

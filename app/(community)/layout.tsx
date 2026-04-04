@@ -11,7 +11,7 @@ const CommunityLayout = ({ children }: { children: React.ReactNode }) => {
                 defaultTheme="light"
                 disableTransitionOnChange
             >
-                <Header />
+                {/* <Header/> */}
                 <main>
                     {children}
                 </main>
