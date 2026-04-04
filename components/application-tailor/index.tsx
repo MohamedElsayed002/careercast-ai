@@ -25,6 +25,8 @@ import { Button } from "../ui/button";
 import Lottie from 'lottie-react';
 import animationData from '@/public/loading.json';
 import { XCircle, RefreshCw } from "lucide-react";
+import { DotPattern } from "../community/dot-pattern";
+import { ApplicationTailorHeader } from "./header";
 
 
 
@@ -40,14 +42,13 @@ export const ApplicationTailor = () => {
             setError(null)
         },
         onError: (error: any) => {
-            console.log("Error", error)
             const errorMessage = error?.message || 'Failed to tailor CV. Please try again.'
             setError(errorMessage)
             toast.error(errorMessage)
         }
     }))
     const isPro = user?.isProJobApplicationTailor ?? false
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(3)
     const [cvText, setCvText] = useState('')
     const [fileName, setFileName] = useState('')
     const [credential, setCredential] = useState('')
@@ -129,7 +130,20 @@ export const ApplicationTailor = () => {
     }
 
     return (
-        <div className='min-h-screen w-4/5 mx-auto my-10'>
+      <DotPattern
+       layout="section"
+       vignette={false}
+       className="border-b border-violet-200/40 bg-gradient-to-br from-white via-violet-50/50 to-indigo-100/35 dark:border-white/10 dark:from-zinc-950 dark:via-purple-950/25 dark:to-zinc-900"
+       baseColor="#a1a1aa"
+       glowColor="#7c3aed"
+       gap={20}
+       dotSize={2}
+       proximity={110}
+       glowIntensity={0.85}
+       waveSpeed={0.35}
+     >
+        <ApplicationTailorHeader/>
+         <div className='container mx-auto min-h-screen my-10'>
             <div className='flex justify-between gap-5 flex-col md:flex-row items-center mb-10'>
                 <Breadcrumb>
                     <BreadcrumbList>
@@ -144,36 +158,36 @@ export const ApplicationTailor = () => {
                 </Breadcrumb>
                 <div className='bg-gray-200 p-2 rounded-md'>
                     <div className='flex items-center justify-center gap-2 flex-wrap'>
-                        <div className={`flex items-center gap-2 ${step >= 1 ? 'text-teal-600' : 'text-gray-400'}`}>
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 1 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <div className={`flex items-center gap-2 ${step >= 1 ? 'text-violet-600' : 'text-gray-400'}`}>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 1 ? 'bg-violet-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
                                 1
                             </div>
                             <span className="font-medium hidden sm:inline">Upload CV</span>
                         </div>
-                        <ArrowRight className={`${step >= 2 ? 'text-teal-600' : 'text-gray-400'} hidden sm:block`} />
-                        <div className={`flex items-center gap-2 ${step >= 2 ? 'text-teal-600' : 'text-gray-400'}`}>
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 2 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <ArrowRight className={`${step >= 2 ? 'text-violet-600' : 'text-gray-400'} hidden sm:block`} />
+                        <div className={`flex items-center gap-2 ${step >= 2 ? 'text-violet-600' : 'text-gray-400'}`}>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 2 ? 'bg-violet-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
                                 2
                             </div>
                             <span className="font-medium hidden sm:inline">Credential</span>
                         </div>
-                        <ArrowRight className={`${step >= 3 ? 'text-teal-600' : 'text-gray-400'} hidden sm:block`} />
-                        <div className={`flex items-center gap-2 ${step >= 3 ? 'text-teal-600' : 'text-gray-400'}`}>
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 3 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <ArrowRight className={`${step >= 3 ? 'text-violet-600' : 'text-gray-400'} hidden sm:block`} />
+                        <div className={`flex items-center gap-2 ${step >= 3 ? 'text-violet-600' : 'text-gray-400'}`}>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 3 ? 'bg-violet-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
                                 3
                             </div>
                             <span className="font-medium hidden sm:inline">Job Description</span>
                         </div>
-                        <ArrowRight className={`${step >= 4 ? 'text-teal-600' : 'text-gray-400'} hidden sm:block`} />
-                        <div className={`flex items-center gap-2 ${step >= 4 ? 'text-teal-600' : 'text-gray-400'}`}>
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 4 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <ArrowRight className={`${step >= 4 ? 'text-violet-600' : 'text-gray-400'} hidden sm:block`} />
+                        <div className={`flex items-center gap-2 ${step >= 4 ? 'text-violet-600' : 'text-gray-400'}`}>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 4 ? 'bg-violet-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
                                 4
                             </div>
                             <span className="font-medium hidden sm:inline">Customization</span>
                         </div>
-                        <ArrowRight className={`${step >= 7 ? 'text-teal-600' : 'text-gray-400'} hidden sm:block`} />
-                        <div className={`flex items-center gap-2 ${step >= 7 ? 'text-teal-600' : 'text-gray-400'}`}>
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 5 ? 'bg-teal-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <ArrowRight className={`${step >= 7 ? 'text-violet-600' : 'text-gray-400'} hidden sm:block`} />
+                        <div className={`flex items-center gap-2 ${step >= 7 ? 'text-violet-600' : 'text-gray-400'}`}>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${step >= 5 ? 'bg-violet-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
                                 5
                             </div>
                             <span className="font-medium hidden sm:inline">Finalization</span>
@@ -249,7 +263,7 @@ export const ApplicationTailor = () => {
                     </div>
                     <div className='flex justify-between mt-5'>
                         <Button variant="outline" onClick={() => setStep(4)}>Back</Button>
-                        <Button onClick={() => handleTailoredCV()}>
+                        <Button className="bg-violet-600" onClick={() => handleTailoredCV()}>
                             Tailor Now
                         </Button>
                     </div>
@@ -270,7 +284,7 @@ export const ApplicationTailor = () => {
                         <Button variant="outline" onClick={() => setStep(4)}>
                             Back
                         </Button>
-                        <Button onClick={() => handleTailoredCV()}>
+                        <Button className="bg-violet-600" onClick={() => handleTailoredCV()}>
                             Tailor Now
                         </Button>
                     </div>
@@ -347,6 +361,7 @@ export const ApplicationTailor = () => {
                 </div>
             )}
         </div>
+         </DotPattern>
     )
 }
 

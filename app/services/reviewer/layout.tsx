@@ -5,7 +5,7 @@ import { ReviewerHeader } from "@/components/reviewer/header"
 const ReviewLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <div>
-            <ReviewerHeader />
+            {/* <ReviewerHeader /> */}
             <main>
                 {children}
             </main>

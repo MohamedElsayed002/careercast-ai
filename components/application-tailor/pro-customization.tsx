@@ -276,7 +276,7 @@ export const ProCustomization = ({
 
                 <Button
                     onClick={() => setStep(5)}
-                    className="px-6"
+                    className="px-6 bg-violet-600"
                 >
                     Continue to Tailoring →
                 </Button>

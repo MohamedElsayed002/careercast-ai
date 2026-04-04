@@ -54,7 +54,7 @@ export const ReviewerHeader = () => {
     }, []);
 
     return (
-        <header className="container mx-auto px-6 py-6">
+        <header className="container mx-auto px-6 py-6 z-50">
             <nav className="flex justify-between items-center">
 
                 {/* Logo */}

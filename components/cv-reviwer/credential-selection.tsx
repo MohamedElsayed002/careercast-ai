@@ -137,6 +137,7 @@ export const CredentialSelection = ({ credential, setCredential, provider, setPr
                     </p>
                     <Button
                         onClick={handleAddCredential}
+                        size="sm"
                         className="w-full bg-yellow-600 hover:bg-yellow-700 text-white"
                     >
                         Go to Credentials Page
@@ -156,7 +157,7 @@ export const CredentialSelection = ({ credential, setCredential, provider, setPr
                 <Button
                     onClick={handleNext}
                     disabled={!credential || isLoading}
-                    className="flex-1 bg-teal-600 hover:bg-teal-700 text-white"
+                    className="flex-1 bg-violet-600 hover:bg-violet-700 text-white"
                 >
                     Next: Job Description
                     <ArrowRight className="w-5 h-5 ml-2" />

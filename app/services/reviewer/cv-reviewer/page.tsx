@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 const CVReviwerPage = () => {
     return (
+
             <CVReviewer/>
     )
 }

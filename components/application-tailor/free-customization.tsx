@@ -115,7 +115,7 @@ export const FreeCustomization = ({
 
         <Button
           onClick={() => setStep(6)}
-          className="px-6"
+          className="px-6 bg-violet-600"
         >
           Continue to Tailoring →
         </Button>

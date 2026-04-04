@@ -45,11 +45,10 @@ Responsibilities:
 Requirements:
 - 5+ years experience in product management
 - Strong communication skills`}
-          className={`min-h-[260px] resize-none text-base border-dashed ${
-            isExceeded
+          className={`min-h-[260px] resize-none text-base border-dashed ${isExceeded
               ? "border-red-500 focus-visible:ring-red-500"
               : "border-gray-300"
-          }`}
+            }`}
         />
 
         {/* Footer info */}
@@ -92,7 +91,7 @@ Requirements:
         <Button
           onClick={() => setStep(4)}
           disabled={isExceeded || jobDescription.length === 0}
-          className="px-6 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 bg-violet-600 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Analyze Description →
         </Button>

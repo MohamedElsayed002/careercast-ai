@@ -16,7 +16,7 @@ const UploadCV = ({ fileName, cvText, setStep, handleFileUpload }: UploadCVProps
             <div className="space-y-3">
                 <h1 className="text-4xl font-bold">Let&apos;s start with your Resume</h1>
                 <h2 className='text-xl font-medium text-gray-400'>Upload your existing CV so our AI can analyze your experience</h2>
-                <div className='inline-block p-2 rounded-2xl bg-green-400 text-green-700'>
+                <div className='inline-block p-2 rounded-2xl bg-violet-500 text-green-700'>
                     <Lock className="w-5 h-5 text-white inline-block mr-1" />
                     <span className="text-sm font-medium text-white">Your CV is securely processed and never stored.</span>
                 </div>
@@ -61,7 +61,7 @@ const UploadCV = ({ fileName, cvText, setStep, handleFileUpload }: UploadCVProps
 
                     <button
                         onClick={() => setStep(2)}
-                        className='w-full py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-semibold flex items-center justify-center gap-2 mb-10'
+                        className='w-full py-3 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors font-semibold flex items-center justify-center gap-2 mb-10'
                     >
                         Proceed to Credential <ArrowRight className="w-5 h-5" />
                     </button>

@@ -1,22 +1,30 @@
 import Link from "next/link"
 import { Button } from "../ui/button"
+import { AuroraBackground } from "../community/aurora"
+import { ReviewerHeader } from "@/components/reviewer/header"
 
 
 export const HeroReviewer = () => {
     return (
-        <div className='min-h-screen flex flex-col justify-center items-center text-center space-y-6 -mt-[90px]'>
-            <h1 className='text-5xl md:text-7xl  font-bold max-w-3xl px-6 md:px-8'>Create Amazing CV Matches</h1>
-            <p className='text-gray-400 text-md px-6 md:px-8'>Our AI analyzes your CV against any job description to give you a detailed 
-                match report and suggestions for improvement 
-            </p>
-            <div className='flex gap-5'>
-                <Button className='bg-teal-600 hover:bg-teal-400' asChild>
-                    <Link href="/services/reviewer/cv-reviewer">
-                        Review my CV
-                    </Link>
-                </Button>
+        <AuroraBackground
+            animationSpeed={18}
+            className="min-h-[calc(100vh-4rem)] items-stretch justify-start bg-white/95 px-0 pb-12 pt-0 dark:bg-zinc-950/95"
+        >
+            <ReviewerHeader/>
+            <div className='min-h-screen flex flex-col justify-center items-center text-center space-y-6 -mt-[90px]'>
+                <h1 className='text-5xl md:text-7xl  font-bold max-w-3xl px-6 md:px-8'>Create Amazing CV Matches</h1>
+                <p className='text-gray-400 text-md px-6 md:px-8'>Our AI analyzes your CV against any job description to give you a detailed
+                    match report and suggestions for improvement
+                </p>
+                <div className='flex gap-5'>
+                    <Button className='bg-teal-600 hover:bg-teal-400' asChild>
+                        <Link href="/services/reviewer/cv-reviewer">
+                            Review my CV
+                        </Link>
+                    </Button>
+                </div>
+                <p className='text-gray-400 text-md px-6'>Trusted by 10,000+ professionals worldwide</p>
             </div>
-            <p className='text-gray-400 text-md px-6'>Trusted by 10,000+ professionals worldwide</p>
-        </div>
+        </AuroraBackground>
     )
 }
