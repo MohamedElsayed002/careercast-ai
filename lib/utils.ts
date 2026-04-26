@@ -87,3 +87,34 @@ const STEPS_NO_SUMMARY: StepItem[] = [
 export function getSteps(includeSummary: boolean) {
   return includeSummary ? STEPS_WITH_SUMMARY : STEPS_NO_SUMMARY;
 }
+
+
+export function getScoreTone(score: number) {
+    if (score >= 80) {
+        return {
+            label: "Strong match",
+            accent: "text-emerald-700",
+            track: "from-emerald-500 via-green-400 to-lime-300",
+            surface: "from-emerald-50 to-lime-50",
+            ring: "border-emerald-200",
+        };
+    }
+
+    if (score >= 60) {
+        return {
+            label: "Promising fit",
+            accent: "text-amber-700",
+            track: "from-amber-500 via-orange-400 to-yellow-300",
+            surface: "from-amber-50 to-orange-50",
+            ring: "border-amber-200",
+        };
+    }
+
+    return {
+        label: "Needs work",
+        accent: "text-rose-700",
+        track: "from-rose-500 via-pink-400 to-orange-300",
+        surface: "from-rose-50 to-orange-50",
+        ring: "border-rose-200",
+    };
+}

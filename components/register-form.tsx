@@ -56,7 +56,7 @@ export function RegisterForm() {
     const isPending = form.formState.isSubmitting
 
     return (
-        <div className="flex flex-col gap-6">
+        <main className="flex flex-col gap-6">
             <Card>
                 <CardHeader className="text-center">
                     <CardTitle>
@@ -83,6 +83,7 @@ export function RegisterForm() {
                                                         type='email'
                                                         placeholder="m@example.com"
                                                         {...field}
+                                                        disabled
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -100,6 +101,7 @@ export function RegisterForm() {
                                                         type='password'
                                                         placeholder="******"
                                                         {...field}
+                                                        disabled
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -111,12 +113,13 @@ export function RegisterForm() {
                                         name='confirmPassword'
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Password</FormLabel>
+                                                <FormLabel>Confirm Password</FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         type='password'
                                                         placeholder="******"
                                                         {...field}
+                                                        disabled
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -138,7 +141,7 @@ export function RegisterForm() {
                     </Form>
                 </CardContent>
             </Card>
-        </div>
+        </main>
     )
 
 }

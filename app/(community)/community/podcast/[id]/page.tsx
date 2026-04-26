@@ -1,5 +1,4 @@
 import { CustomAudioPlayer } from "@/components/podcast/custom-audio-player";
-import { ModeToggle } from "@/components/mode-toggle";
 import { SummaryScript } from "@/components/podcast/summary-script"
 import { Card, CardTitle } from "@/components/ui/card";
 import { caller } from "@/trpc/server"
@@ -78,7 +77,6 @@ const Page = async ({ params }: { params: { id: string } }) => {
                 </p>
                 {/* Share Buttons */}
                 <div className='flex items-center justify-end gap-4'>
-                    {/* <ModeToggle /> */}
                     <ShareButtons
                         podcastId={data.id}
                         title={data.title ?? ""}

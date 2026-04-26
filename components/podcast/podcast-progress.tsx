@@ -20,7 +20,7 @@ export function PodcastProgress({
   const steps = getSteps(includeSummary);
 
   return (
-    <div className="rounded-md border border-white/10 bg-black/30 px-4 py-3 text-white my-10">
+    <div className="rounded-md border border-white/10 bg-black/30 px-4 py-3 text-white mt-5">
       <div className="text-xs uppercase tracking-wide text-white/70">
         Podcast status
       </div>

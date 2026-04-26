@@ -53,7 +53,7 @@ export function LoginForm() {
     const isPending = form.formState.isSubmitting
 
     return (
-        <div className="flex flex-col gap-6">
+        <main className="flex flex-col gap-6">
             <Card>
                 <CardHeader className="text-center">
                     <CardTitle>
@@ -82,6 +82,7 @@ export function LoginForm() {
                                                         type='email'
                                                         placeholder="m@example.com"
                                                         {...field}
+                                                        disabled
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -99,6 +100,7 @@ export function LoginForm() {
                                                         type='password'
                                                         placeholder="******"
                                                         {...field}
+                                                        disabled
                                                     />
                                                 </FormControl>
                                                 <FormMessage />
@@ -120,7 +122,7 @@ export function LoginForm() {
                     </Form>
                 </CardContent>
             </Card>
-        </div>
+        </main>
     )
 
 }

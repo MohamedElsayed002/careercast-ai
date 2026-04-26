@@ -1,3 +1,4 @@
+import { User } from "lucide-react";
 import Image from "next/image";
 
 export const Testimonials = () => {
@@ -22,13 +23,10 @@ export const Testimonials = () => {
           </p>
 
           <div className="flex items-center gap-4">
-            <Image
-              src="/ana.jpg"
-              alt="person-1"
-              priority
+            <User
               width={40}
               height={40}
-              className="rounded-full object-cover"
+              className="rounded-full object-cover border"
             />
 
             <div className="text-sm">
@@ -46,13 +44,10 @@ export const Testimonials = () => {
           </p>
 
           <div className="flex items-center gap-4">
-            <Image
-              src="/ana.jpg"
-              alt="person-2"
-              priority
+            <User
               width={40}
               height={40}
-              className="rounded-full object-cover"
+              className="rounded-full object-cover border"
             />
 
             <div className="text-sm">
@@ -70,15 +65,11 @@ export const Testimonials = () => {
           </p>
 
           <div className="flex items-center gap-4">
-            <Image
-              src="/ana.jpg"
-              alt="person-3"
-              priority
+            <User
               width={40}
               height={40}
-              className="rounded-full object-cover"
+              className="rounded-full object-cover border"
             />
-
             <div className="text-sm">
               <p className="font-bold text-gray-900">Jennifer P.</p>
               <p className="text-gray-600">Product Manager</p>

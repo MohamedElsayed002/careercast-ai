@@ -13,7 +13,7 @@ import { sendEmail } from "@/utils/nodemailer";
 
 
 export const generatePodcast = inngest.createFunction(
-  { id: "generate-podcast", retries: 5 },
+  { id: "generate-podcast", retries: 3},
   { event: "podcast/generate" },
   async ({ event, step,publish  }) => {
     const {

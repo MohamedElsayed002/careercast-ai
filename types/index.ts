@@ -92,13 +92,13 @@ export type HomePageProps = {
 }
 
 export const DebateSchema = z.object({
-    title: z.string(),
-    summary: z.string(),
+    title: z.string().describe("Podcast's title"),
+    summary: z.string().describe("Podcast's Summary"),
     dialogue: z.array(
         z.object({
             speaker: z.enum(["SPEAKER1", "SPEAKER2"]),
             text: z.string(),
-        })
+        }).describe('Podcast dialogue')
     )
 })
 
@@ -146,3 +146,60 @@ export type optionsType = {
     prompt: string,
     quality?: "standard" | "hd" | "low" | "medium" | "high" | "auto" | null
 }
+
+
+import type { Briefing } from "@/actions/briefing-schema";
+
+export type ResearchSource = {
+  id: string;
+  sourceType: "url" | "document";
+  title: string;
+  url?: string;
+  hostname?: string;
+  mediaType?: string;
+  filename?: string;
+};
+
+export type AnalysisResponse = {
+  briefing: Briefing;
+  extractedText: string;
+  companyName: string;
+  fileName: string;
+  sources: ResearchSource[];
+};
+
+export type WorkflowStage =
+  | "idle"
+  | "uploading"
+  | "extracting"
+  | "researching"
+  | "writing"
+  | "completed";
+
+export type ActivityItem = {
+  id: string;
+  label: string;
+};
+
+export type CompanyBriefingStreamEvent =
+  | {
+      type: "status";
+      stage: WorkflowStage;
+      message: string;
+    }
+  | {
+      type: "activity";
+      item: ActivityItem;
+    }
+  | {
+      type: "source";
+      source: ResearchSource;
+    }
+  | {
+      type: "result";
+      result: AnalysisResponse;
+    }
+  | {
+      type: "error";
+      error: string;
+    };

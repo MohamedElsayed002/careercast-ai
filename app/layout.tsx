@@ -1,17 +1,22 @@
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import { TRPCReactProvider } from "@/trpc/client";
 import ScrollToTopButton from "@/components/scroll-top-button";
+import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const SariaStencilFont = localFont({
+  src: [
+    {
+      path: "../public/fonts/SairaStencil-Italic-VariableFont_wdth,wght.ttf",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/SairaStencil-VariableFont_wdth,wght.ttf",
+      weight: "500",
+      style: "normal",
+    },
+  ],
 });
 
 
@@ -30,7 +35,7 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest"></link>
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${SariaStencilFont.className} antialiased`}
       >
         <TRPCReactProvider>
           {children}
