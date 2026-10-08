@@ -21,9 +21,6 @@ export async function POST(request: Request) {
     // My Backend 
     const response = await fetch(process.env.PDF_EXTRACT_API_URL!, {
         method: "POST",
-        headers: {
-            "Authorization": `Bearer ${process.env.PDF_EXTRACT_API_TOKEN}`
-        },
         body: extractFormData
     })
 

@@ -13,9 +13,12 @@ import { sendEmail } from "@/utils/nodemailer";
 
 
 export const generatePodcast = inngest.createFunction(
-  { id: "generate-podcast", retries: 3},
+  {
+    id: "generate-podcast",
+    retries: 3,
+  },
   { event: "podcast/generate" },
-  async ({ event, step,publish  }) => {
+  async ({ event, step, publish }) => {
     const {
       userId,
       title,
@@ -31,7 +34,7 @@ export const generatePodcast = inngest.createFunction(
     } = event.data;
 
 
-    const user = await step.run("get-user",async () => {
+    const user = await step.run("get-user", async () => {
       const user = await prisma.user.findUniqueOrThrow({
         where: {
           id: userId
@@ -93,7 +96,7 @@ export const generatePodcast = inngest.createFunction(
       topic: 'progress',
       data: {
         step: 3,
-        stepName:'Generate debate'
+        stepName: 'Generate debate'
       }
     })
 
@@ -228,7 +231,7 @@ export const generatePodcast = inngest.createFunction(
       await step.run("update-user-trials", async () => {
         return prisma.user.update({
           where: { id: userId },
-          data: { trialsUsed: { increment: 1 } } 
+          data: { trialsUsed: { increment: 1 } }
         });
       });
     }
@@ -236,7 +239,7 @@ export const generatePodcast = inngest.createFunction(
     // 8. Send email
     await step.run("send-email-notification", async () => {
       const podcastUrl = `${process.env.NEXT_PUBLIC_WEBSITE_URL}/community/podcast/${podcast.id}`
-      const { subject,text,html} = getPodcastGeneratedEmail(
+      const { subject, text, html } = getPodcastGeneratedEmail(
         user.name || user.email || 'User',
         podcast?.title || 'Untitled',
         podcastUrl
@@ -249,7 +252,7 @@ export const generatePodcast = inngest.createFunction(
         html
       )
 
-      return {emailSent: true}
+      return { emailSent: true }
     })
 
     await publish({
